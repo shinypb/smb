@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Super Markio</title>
+  </head>
+
+  <style>
+    body {
+      background: #000;
+    }
+  </style>
+
+  <body>
+
+    <canvas id="c"></canvas>
+
+  </body>
+
+  <script id="defineClass">
+    (function() {
+      function defineClass() {
+        var kDefineClassMagicValue = 'defineClass_do_not_call_user_provided_constructor';
+        var args = Array.prototype.slice.apply(arguments);
+        var className, superClassName, constructor, properties;
+
+        className = args.shift();
+        if (typeof args[0] == 'string') {
+          superClassName = args.shift();
+        }
+        if (typeof args[0] == 'function') {
+          constructor = args.shift();
+        } else if(superClassName) {
+          constructor = window[superClassName].prototype.constructor;
+        } else {
+          constructor = function() {};
+        }
+        if (typeof args[0] == 'object') {
+          properties = args.shift();
+        } else {
+          properties = {};
+        }
+
+        console.log('className', className);
+        console.log('properties', properties);
+
+        (function(className, superClassName, constructor, properties) {
+          function theNewClass() {
+            this.className = className;
+            this.constructor = constructor;
+
+            if (arguments[0] != kDefineClassMagicValue) {
+              this.constructor.apply(this, arguments);
+            }
+          }
+
+          if (superClassName) {
+            console.log(className, 'hooking up prototype to', superClassName);
+            theNewClass.prototype = new window[superClassName](kDefineClassMagicValue);
+          }
+          theNewClass.constructor = constructor;
+
+          console.log(className, 'hooking up properties');
+          theNewClass.className = className;
+          Object.keys(properties).forEach(function(key) {
+            theNewClass.prototype[key] = properties[key];
+          }.bind(this));
+
+          window[className] = theNewClass;
+        })(className, superClassName, constructor, properties);
+      }
+      window.defineClass = defineClass;
+    })();
+  </script>
+
+  <script>
+    (function() {
+
+      var kSMEngineFPS = 60;
+      var kSMEngineBlockSize = 32;
+      var kSMEngineGameWidth = 16;
+      var kSMEngineGameHeight = 12;
+
+      function SMCanvas(aCanvas) {
+        this.element = aCanvas;
+        this.context = aCanvas.getContext('2d');
+
+        this.element.style.height = kSMEngineBlockSize * kSMEngineGameHeight + 'px';
+        this.element.style.width = kSMEngineBlockSize * kSMEngineGameWidth + 'px';
+        this.element.style.background = '#A9FDF4';
+      }
+
+      ///
+
+      defineClass('SMAgent', function(engine) {
+        this.engine = engine;
+      }, {
+        tick: function() {
+          console.log('agent tick');
+        }
+      });
+
+      defineClass('SMPlayer', 'SMAgent', {
+        isPlayer: true,
+        tick: function() {
+          console.log('player tick');
+        }
+      });
+
+      defineClass('SMEngine', function(aCanvas) {
+        this.canvas = new SMCanvas(aCanvas);
+        this.agents = [];
+
+        this.player = new SMPlayer(this);
+        this.addAgent(this.player);
+      }, {
+        addAgent: function(anAgent) {
+          this.agents.push(anAgent);
+        },
+
+        tick: function() {
+          console.log('engine tick');
+          this.agents.forEach(function(agent) {
+            agent.tick();
+          });
+        },
+
+        startRunLoop: function() {
+          if (this.runTimer) {
+            return;
+          }
+
+          this.runTimer = setInterval(this.tick.bind(this), 1000 / (kSMEngineFPS/10));
+        },
+
+        stopRunLoop: function() {
+          clearTimeout(this.runTimer);
+          this.runTimer = null;
+        }
+      });
+
+      var eng = window.eng = new SMEngine(document.getElementById('c'));
+
+//       eng.startRunLoop();
+
+    })();
+  </script>
+
+</html>
