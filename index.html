@@ -7,9 +7,8 @@
   <style>
     body {
       background: #000;
-      border-top: 10px solid #000;
       margin: 0;
-      padding: 1em;
+      padding: 10px;
     }
 
     #resources {
@@ -118,14 +117,14 @@
       var kSMKeyDown = 39;
 
       //  Physics
-      var kSMPlayerWalkInitialSpeed = 0.25; // in blocks-per-second
+      var kSMPlayerInitialSpeed = 0.25; // in blocks-per-second
       var kSMPlayerWalkAcceleration = 1.0912;
-      var kSMPlayerDeceleration = 0.965;
-      var kSMPlayerWalkMaxBlocksPerSecond = 8;
-      var kSMPlayerRunAcceleration = 1.2;
-      var kSMPlayerRunMaxBlocksPerSecond = 5;
-      var kSMPlayerChangedDirectionPenalty = 0.1;
-      var kSMPlayerSkidDurationInSeconds = 0.25;
+      var kSMPlayerDeceleration = 0.95;
+      var kSMPlayerWalkMaxBlocksPerSecond = 5;
+      var kSMPlayerRunAcceleration = 1.0925;
+      var kSMPlayerRunMaxBlocksPerSecond = 12;
+      var kSMPlayerChangedDirectionPenalty = 0.125;
+      var kSMPlayerSkidDurationInSeconds = 0.35;
 
       //  Load images
       console.log('Loading images');
@@ -148,7 +147,8 @@
         this.element = aCanvas;
         this.context = aCanvas.getContext('2d');
 
-        this.width = SMMetrics.BlockToPx(kSMEngineGameWidth);
+//         this.width = SMMetrics.BlockToPx(kSMEngineGameWidth);
+        this.width = document.body.clientWidth - 20;
         this.height = SMMetrics.BlockToPx(kSMEngineGameHeight);
 
         this.element.height = this.height;
@@ -200,13 +200,11 @@
 
           this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-right' : 'player-left';
 
+          var acceleration = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunAcceleration : kSMPlayerWalkAcceleration;
+          var maxSpeed = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunMaxBlocksPerSecond : kSMPlayerWalkMaxBlocksPerSecond;
+
           if (this.engine.keyMap[kSMKeyLeft] || this.engine.keyMap[kSMKeyRight]) {
-            //  walking
-
-            //  this.speed is measured in pixels
-            //  kSMFrameUnit is block size divided by the frame rate
-            //  e.g. given a speed of 1 block per second and a FPS of 60, we should move 1/60th of a block width per tick
-
+            //  walking/running
             if (this.engine.keyMap[kSMKeyLeft]) {
               this.hState = kSMPlayerHorizontalStateLeft;
               this.facingDirection = kSMPlayerFaceLeft;
@@ -216,7 +214,7 @@
             }
 
             if (this.speed == 0) {
-              this.speed = kSMPlayerWalkInitialSpeed;
+              this.speed = kSMPlayerInitialSpeed;
 
               //  Always start out with the walking animation frame
               this.walkState = true;
@@ -224,14 +222,17 @@
             } else if (this.hState != kSMPlayerHorizontalStateIdle && this.prevHState != kSMPlayerHorizontalStateIdle && this.hState != this.prevHState) {
               //  Just turned around; cut speed
               this.skidStartedAt = this.engine.tickNumber;
-              this.speed *= kSMPlayerChangedDirectionPenalty;
+              this.skidDuration = kSMPlayerSkidDurationInSeconds * (this.speed / maxSpeed);
+              this.speed = Math.max(1, this.speed * kSMPlayerChangedDirectionPenalty);
             } else {
-              this.speed = Math.min(this.speed * kSMPlayerWalkAcceleration, kSMPlayerWalkMaxBlocksPerSecond);
+              this.speed = Math.min(this.speed * acceleration, maxSpeed);
             }
 
           } else if (this.speed > 0) {
             //  slowing down...
             console.log('slow down');
+            this.skidStartedAt = null;
+
             this.speed = Math.max(0, this.speed * kSMPlayerDeceleration);
             if (this.speed < 1) {
               //  stopped.
@@ -244,7 +245,8 @@
           if (this.skidStartedAt) {
             //  see how long it's been
             var timeSinceSkidStarted = (this.engine.tickNumber - this.skidStartedAt) / kSMEngineFPS;
-            if (timeSinceSkidStarted <= kSMPlayerSkidDurationInSeconds) {
+
+            if (timeSinceSkidStarted <= this.skidDuration) {
               //  Still skidding
               this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-left-skid' : 'player-right-skid';
             } else {
@@ -259,7 +261,6 @@
 
             this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || new Date;
             var frameDuration = Math.max((1 / fractionOfFullSpeed) * 15, 60);
-            console.log('fd', frameDuration);
             if (new Date - this.timeOfLastWalkFrame > frameDuration) {
               this.timeOfLastWalkFrame = new Date;
               this.walkState = !this.walkState;
@@ -342,8 +343,6 @@
         tick: function() {
           try {
             this.tickNumber++;
-            var greyValue = ((+new Date) % 48);
-            document.body.style.borderTopColor = 'rgb(' + [greyValue, greyValue, greyValue].join(',') + ')';
 
             this.agents.forEach(function(agent) {
               agent.tick();
