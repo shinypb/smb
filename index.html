@@ -11,11 +11,24 @@
       margin: 0;
       padding: 1em;
     }
+
+    #resources {
+      display: none;
+    }
   </style>
 
   <body>
 
     <canvas id="c"></canvas>
+
+    <div id="resources">
+      <img src="player-right.png" id="player-right">
+      <img src="player-right-walk.png" id="player-right-walk">
+      <img src="player-right-skid.png" id="player-right-skid">
+      <img src="player-left.png" id="player-left">
+      <img src="player-left-walk.png" id="player-left-walk">
+      <img src="player-left-skid.png" id="player-left-skid">
+    </div>
 
   </body>
 
@@ -83,7 +96,7 @@
       var kSMFrameUnit = 1 / kSMEngineFPS;
 
       //  Player
-      var kSMPlayerHeightPx = 64;
+      var kSMPlayerHeightPx = 32;
       var kSMPlayerWidthPx = 32;
       var kSMPlayerVerticalStateIdle = 'idle';
       var kSMPlayerVerticalStateJumping = 'jumping';
@@ -106,12 +119,21 @@
 
       //  Physics
       var kSMPlayerWalkInitialSpeed = 0.25; // in blocks-per-second
-      var kSMPlayerWalkAcceleration = 1.12;
-      var kSMPlayerDeceleration = 0.4;
+      var kSMPlayerWalkAcceleration = 1.0912;
+      var kSMPlayerDeceleration = 0.965;
       var kSMPlayerWalkMaxBlocksPerSecond = 8;
       var kSMPlayerRunAcceleration = 1.2;
       var kSMPlayerRunMaxBlocksPerSecond = 5;
       var kSMPlayerChangedDirectionPenalty = 0.1;
+      var kSMPlayerSkidDurationInSeconds = 0.25;
+
+      //  Load images
+      console.log('Loading images');
+      var SMImages = {};
+      Array.prototype.slice.apply(document.querySelectorAll('#resources img')).forEach(function(elem) {
+        SMImages[elem.id] = elem;
+      });
+      console.log('Images:', SMImages);
 
       var SMMetrics = {
         BlockToPx: function(blockValue) {
@@ -155,7 +177,9 @@
       defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
         SMAgent.prototype.constructor.apply(this, arguments);
 
+        this.playerImageName = 'player-right';
         this.facingDirection = kSMPlayerFaceRight;
+        this.skidStartedAt = null;
         this.hState = kSMPlayerHorizontalStateIdle;
         this.vState = kSMPlayerVerticalStateIdle;
         this.speed = 0;
@@ -170,11 +194,11 @@
           this.engine.canvas.clear();
 
           var c = this.engine.canvas.context;
-          c.strokeStyle = 'red';
-          c.strokeRect(this.pxPos.x, this.pxPos.y, kSMPlayerWidthPx, kSMPlayerHeightPx);
-
+          c.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y);
         },
         updateHState: function() {
+
+          this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-right' : 'player-left';
 
           if (this.engine.keyMap[kSMKeyLeft] || this.engine.keyMap[kSMKeyRight]) {
             //  walking
@@ -183,15 +207,26 @@
             //  kSMFrameUnit is block size divided by the frame rate
             //  e.g. given a speed of 1 block per second and a FPS of 60, we should move 1/60th of a block width per tick
 
-            var magnitude = (this.engine.keyMap[kSMKeyLeft]) ? -1 : 1;
+            if (this.engine.keyMap[kSMKeyLeft]) {
+              this.hState = kSMPlayerHorizontalStateLeft;
+              this.facingDirection = kSMPlayerFaceLeft;
+            } else {
+              this.hState = kSMPlayerHorizontalStateRight;
+              this.facingDirection = kSMPlayerFaceRight;
+            }
+
             if (this.speed == 0) {
               this.speed = kSMPlayerWalkInitialSpeed;
-            } else if (magnitude != this.prevMagnitude) {
+
+              //  Always start out with the walking animation frame
+              this.walkState = true;
+              this.timeOfLastWalkFrame = new Date;
+            } else if (this.hState != kSMPlayerHorizontalStateIdle && this.prevHState != kSMPlayerHorizontalStateIdle && this.hState != this.prevHState) {
               //  Just turned around; cut speed
+              this.skidStartedAt = this.engine.tickNumber;
               this.speed *= kSMPlayerChangedDirectionPenalty;
             } else {
               this.speed = Math.min(this.speed * kSMPlayerWalkAcceleration, kSMPlayerWalkMaxBlocksPerSecond);
-              console.log('s', this.speed, 'fU', kSMFrameUnit);
             }
 
           } else if (this.speed > 0) {
@@ -199,17 +234,51 @@
             console.log('slow down');
             this.speed = Math.max(0, this.speed * kSMPlayerDeceleration);
             if (this.speed < 1) {
+              //  stopped.
+              console.log('stopped');
               this.speed = 0;
+              this.hState = kSMPlayerHorizontalStateIdle;
+            }
+          }
+
+          if (this.skidStartedAt) {
+            //  see how long it's been
+            var timeSinceSkidStarted = (this.engine.tickNumber - this.skidStartedAt) / kSMEngineFPS;
+            if (timeSinceSkidStarted <= kSMPlayerSkidDurationInSeconds) {
+              //  Still skidding
+              this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-left-skid' : 'player-right-skid';
+            } else {
+              this.skidStartedAt = null;
+            }
+          } else if (this.speed) {
+            //  See if we want to draw the alterate walk frame
+
+            //  slowest = 0.5 seconds per frame (0.5 * kSMEngineFPS ticks)
+            //  fastest = 0.1 seconds per frame (0.1 * kSMEngineFPS ticks)
+            var fractionOfFullSpeed = this.speed / kSMPlayerWalkMaxBlocksPerSecond;
+
+            this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || new Date;
+            var frameDuration = Math.max((1 / fractionOfFullSpeed) * 15, 60);
+            console.log('fd', frameDuration);
+            if (new Date - this.timeOfLastWalkFrame > frameDuration) {
+              this.timeOfLastWalkFrame = new Date;
+              this.walkState = !this.walkState;
+            }
+
+            if (this.walkState) {
+              this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-right-walk' : 'player-left-walk';
             }
           }
 
           if (this.speed != 0) {
             //  Move the player
-            this.prevMagnitude = magnitude;
+
+            var magnitude = (this.hState == kSMPlayerHorizontalStateLeft) ? -1 : 1;
+
             this.pxPos.x += (magnitude * this.speed * kSMEngineBlockSize * kSMFrameUnit);
-            console.log(this.pxPos.x);
           }
 
+          this.prevHState = this.hState;
         },
         updateVState: function() {
           //  TODO: falling/jumping
@@ -220,7 +289,6 @@
           this.updateVState();
 
           this.draw();
-          console.log('player tick');
         }
       });
 
@@ -230,6 +298,8 @@
       });
 
       defineClass('SMEngine', function(aCanvas) {
+        this.tickNumber = 0;
+
         this.canvas = new SMCanvas(aCanvas);
         this.registerEventListeners();
         this.agents = [];
@@ -247,6 +317,22 @@
           this.keyMap = {};
           document.addEventListener('keydown', this.onKeyPress.bind(this, true), false);
           document.addEventListener('keyup', this.onKeyPress.bind(this, false), false);
+
+//           window.addEventListener('blur', this.onWindowBlur.bind(this), false);
+//           window.addEventListener('focus', this.onWindowFocus.bind(this), false);
+        },
+
+        onWindowBlur: function() {
+          if (this.runTimer) {
+            this.wasRunning = true;
+            this.stopRunLoop();
+          }
+        },
+
+        onWindowFocus: function() {
+          if (this.wasRunning) {
+            this.startRunLoop();
+          }
         },
 
         onKeyPress: function(keyState, e) {
@@ -254,15 +340,24 @@
         },
 
         tick: function() {
-          var greyValue = ((+new Date) % 48);
-          document.body.style.borderTopColor = 'rgb(' + [greyValue, greyValue, greyValue].join(',') + ')';
+          try {
+            this.tickNumber++;
+            var greyValue = ((+new Date) % 48);
+            document.body.style.borderTopColor = 'rgb(' + [greyValue, greyValue, greyValue].join(',') + ')';
 
-          this.agents.forEach(function(agent) {
-            agent.tick();
-          });
+            this.agents.forEach(function(agent) {
+              agent.tick();
+            });
+          } catch (e) {
+            console.log('Uncaught exception; halting run loop :(');
+            this.stopRunLoop();
+
+            throw e;
+          }
         },
 
         startRunLoop: function() {
+          console.log('Starting run loop');
           if (this.runTimer) {
             return;
           }
@@ -271,6 +366,7 @@
         },
 
         stopRunLoop: function() {
+          console.log('Stopping run loop');
           clearTimeout(this.runTimer);
           this.runTimer = null;
         }
