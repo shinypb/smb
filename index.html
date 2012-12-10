@@ -7,6 +7,9 @@
   <style>
     body {
       background: #000;
+      border-top: 10px solid #000;
+      margin: 0;
+      padding: 1em;
     }
   </style>
 
@@ -40,9 +43,6 @@
           properties = {};
         }
 
-        console.log('className', className);
-        console.log('properties', properties);
-
         (function(className, superClassName, constructor, properties) {
           function theNewClass() {
             this.className = className;
@@ -54,12 +54,10 @@
           }
 
           if (superClassName) {
-            console.log(className, 'hooking up prototype to', superClassName);
             theNewClass.prototype = new window[superClassName](kDefineClassMagicValue);
           }
           theNewClass.constructor = constructor;
 
-          console.log(className, 'hooking up properties');
           theNewClass.className = className;
           Object.keys(properties).forEach(function(key) {
             theNewClass.prototype[key] = properties[key];
@@ -74,20 +72,75 @@
 
   <script>
     (function() {
+      console.log(+new Date);
+
+      var kSMColorSkyBlue = '#A9FDF4';
 
       var kSMEngineFPS = 60;
       var kSMEngineBlockSize = 32;
-      var kSMEngineGameWidth = 16;
+      var kSMEngineGameWidth = 48; // should be 16 once scrolling is available
       var kSMEngineGameHeight = 12;
+      var kSMFrameUnit = 1 / kSMEngineFPS;
 
-      function SMCanvas(aCanvas) {
+      //  Player
+      var kSMPlayerHeightPx = 64;
+      var kSMPlayerWidthPx = 32;
+      var kSMPlayerVerticalStateIdle = 'idle';
+      var kSMPlayerVerticalStateJumping = 'jumping';
+      var kSMPlayerVerticalStateFalling = 'falling';
+      var kSMPlayerVerticalSpeed = 0;
+      var kSMPlayerHorizontalStateIdle = 'idle';
+      var kSMPlayerHorizontalStateLeft = 'left';
+      var kSMPlayerHorizontalStateRight = 'right';
+      var kSMPlayerHorizontalSpeed = 0;
+      var kSMPlayerFaceLeft = 'left';
+      var kSMPlayerFaceRight = 'right';
+
+      //  Keycodes
+      var kSMKeyAction = 90;
+      var kSMKeyJump = 88;
+      var kSMKeyLeft = 37;
+      var kSMKeyUp = 378
+      var kSMKeyRight = 39;
+      var kSMKeyDown = 39;
+
+      //  Physics
+      var kSMPlayerWalkInitialSpeed = 0.25; // in blocks-per-second
+      var kSMPlayerWalkAcceleration = 1.12;
+      var kSMPlayerDeceleration = 0.4;
+      var kSMPlayerWalkMaxBlocksPerSecond = 8;
+      var kSMPlayerRunAcceleration = 1.2;
+      var kSMPlayerRunMaxBlocksPerSecond = 5;
+      var kSMPlayerChangedDirectionPenalty = 0.1;
+
+      var SMMetrics = {
+        BlockToPx: function(blockValue) {
+          return blockValue * kSMEngineBlockSize;
+        },
+        PxToBlock: function(pxValue) {
+          return Math.floor(pxValue / kSMEngineBlockSize);
+        }
+      };
+
+      defineClass('SMCanvas',  function (aCanvas) {
         this.element = aCanvas;
         this.context = aCanvas.getContext('2d');
 
-        this.element.style.height = kSMEngineBlockSize * kSMEngineGameHeight + 'px';
-        this.element.style.width = kSMEngineBlockSize * kSMEngineGameWidth + 'px';
-        this.element.style.background = '#A9FDF4';
-      }
+        this.width = SMMetrics.BlockToPx(kSMEngineGameWidth);
+        this.height = SMMetrics.BlockToPx(kSMEngineGameHeight);
+
+        this.element.height = this.height;
+        this.element.width = this.width;
+        this.element.style.height = this.height + 'px';
+        this.element.style.width = this.width + 'px';
+
+        this.clear();
+      }, {
+        clear: function() {
+          this.context.fillStyle = kSMColorSkyBlue;
+          this.context.fillRect(0, 0, this.width, this.height);
+        }
+      });
 
       ///
 
@@ -99,26 +152,111 @@
         }
       });
 
-      defineClass('SMPlayer', 'SMAgent', {
-        isPlayer: true,
+      defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
+        SMAgent.prototype.constructor.apply(this, arguments);
+
+        this.facingDirection = kSMPlayerFaceRight;
+        this.hState = kSMPlayerHorizontalStateIdle;
+        this.vState = kSMPlayerVerticalStateIdle;
+        this.speed = 0;
+
+        this.pxPos = {
+          x: SMMetrics.BlockToPx(startBlockX),
+          y: SMMetrics.BlockToPx(startBlockY)
+        };
+      }, {
+        draw: function() {
+
+          this.engine.canvas.clear();
+
+          var c = this.engine.canvas.context;
+          c.strokeStyle = 'red';
+          c.strokeRect(this.pxPos.x, this.pxPos.y, kSMPlayerWidthPx, kSMPlayerHeightPx);
+
+        },
+        updateHState: function() {
+
+          if (this.engine.keyMap[kSMKeyLeft] || this.engine.keyMap[kSMKeyRight]) {
+            //  walking
+
+            //  this.speed is measured in pixels
+            //  kSMFrameUnit is block size divided by the frame rate
+            //  e.g. given a speed of 1 block per second and a FPS of 60, we should move 1/60th of a block width per tick
+
+            var magnitude = (this.engine.keyMap[kSMKeyLeft]) ? -1 : 1;
+            if (this.speed == 0) {
+              this.speed = kSMPlayerWalkInitialSpeed;
+            } else if (magnitude != this.prevMagnitude) {
+              //  Just turned around; cut speed
+              this.speed *= kSMPlayerChangedDirectionPenalty;
+            } else {
+              this.speed = Math.min(this.speed * kSMPlayerWalkAcceleration, kSMPlayerWalkMaxBlocksPerSecond);
+              console.log('s', this.speed, 'fU', kSMFrameUnit);
+            }
+
+          } else if (this.speed > 0) {
+            //  slowing down...
+            console.log('slow down');
+            this.speed = Math.max(0, this.speed * kSMPlayerDeceleration);
+            if (this.speed < 1) {
+              this.speed = 0;
+            }
+          }
+
+          if (this.speed != 0) {
+            //  Move the player
+            this.prevMagnitude = magnitude;
+            this.pxPos.x += (magnitude * this.speed * kSMEngineBlockSize * kSMFrameUnit);
+            console.log(this.pxPos.x);
+          }
+
+        },
+        updateVState: function() {
+          //  TODO: falling/jumping
+        },
         tick: function() {
+
+          this.updateHState();
+          this.updateVState();
+
+          this.draw();
           console.log('player tick');
         }
       });
 
+      defineClass('SMMap', function(width, height) {
+        this.width = width;
+        this.height = height;
+      });
+
       defineClass('SMEngine', function(aCanvas) {
         this.canvas = new SMCanvas(aCanvas);
+        this.registerEventListeners();
         this.agents = [];
 
-        this.player = new SMPlayer(this);
+        this.map = new SMMap();
+
+        this.player = new SMPlayer(this, 4, 8);
         this.addAgent(this.player);
       }, {
         addAgent: function(anAgent) {
           this.agents.push(anAgent);
         },
 
+        registerEventListeners: function() {
+          this.keyMap = {};
+          document.addEventListener('keydown', this.onKeyPress.bind(this, true), false);
+          document.addEventListener('keyup', this.onKeyPress.bind(this, false), false);
+        },
+
+        onKeyPress: function(keyState, e) {
+          this.keyMap[e.keyCode] = keyState;
+        },
+
         tick: function() {
-          console.log('engine tick');
+          var greyValue = ((+new Date) % 48);
+          document.body.style.borderTopColor = 'rgb(' + [greyValue, greyValue, greyValue].join(',') + ')';
+
           this.agents.forEach(function(agent) {
             agent.tick();
           });
@@ -129,7 +267,7 @@
             return;
           }
 
-          this.runTimer = setInterval(this.tick.bind(this), 1000 / (kSMEngineFPS/10));
+          this.runTimer = setInterval(this.tick.bind(this), 1000 / kSMEngineFPS);
         },
 
         stopRunLoop: function() {
@@ -140,7 +278,7 @@
 
       var eng = window.eng = new SMEngine(document.getElementById('c'));
 
-//       eng.startRunLoop();
+      eng.startRunLoop();
 
     })();
   </script>
