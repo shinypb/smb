@@ -1,0 +1,21 @@
+html {
+  background: #000;
+}
+
+body {
+  background: #000 left top url(background.png);
+  color: #fff;
+  font-family: monospace;
+  margin: 0;
+  padding: 10px;
+  height: 440px !important;
+}
+
+body p {
+  background: #000;
+  display: inline;
+}
+
+#resources {
+  display: none;
+}
