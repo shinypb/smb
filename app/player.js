@@ -21,8 +21,13 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     c.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y);
   },
   updateHState: function() {
+    /**
+     *  Updates the player's horizontal state — that is, movement to the left or right from
+     *  walking or running (and eventually, movement when jumping/falling).
+     */
 
-    this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-right' : 'player-left';
+    this.prevHState = this.hState;
+    var now = new Date;
 
     var acceleration = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunAcceleration : kSMPlayerWalkAcceleration;
     var maxSpeed = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunMaxBlocksPerSecond : kSMPlayerWalkMaxBlocksPerSecond;
@@ -38,13 +43,14 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       }
 
       if (this.speed == 0) {
+        //  Player just started moving
         this.speed = kSMPlayerInitialSpeed;
 
         //  Always start out with the walking animation frame
         this.walkState = true;
-        this.timeOfLastWalkFrame = new Date;
+        this.timeOfLastWalkFrame = now;
       } else if (this.hState != kSMPlayerHorizontalStateIdle && this.prevHState != kSMPlayerHorizontalStateIdle && this.hState != this.prevHState) {
-        //  Just turned around; cut speed
+        //  Just turned around; cut speed and start skidding
         this.skidStartedAt = this.engine.tickNumber;
         this.skidDuration = kSMPlayerSkidDurationInSeconds * (this.speed / maxSpeed);
         this.speed = Math.max(1, this.speed * kSMPlayerChangedDirectionPenalty);
@@ -66,44 +72,44 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       }
     }
 
+    //  Figure out which animation frame to draw -- walking, skidding, etc.
+    this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? kSMPlayerImageRight : kSMPlayerImageLeft;
     if (this.skidStartedAt) {
-      //  see how long it's been
+      //  Player is skidding; see how long it's been since we started
       var timeSinceSkidStarted = (this.engine.tickNumber - this.skidStartedAt) / kSMEngineFPS;
 
       if (timeSinceSkidStarted <= this.skidDuration) {
         //  Still skidding
-        this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-left-skid' : 'player-right-skid';
+        this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? kSMPlayerImageLeftSkid : kSMPlayerImageRightSkid;
       } else {
+        //  Done skidding
         this.skidStartedAt = null;
       }
     } else if (this.speed) {
-      //  See if we want to draw the alterate walk frame
+      //  Walking/running; see if we want to draw the alterate walk frame
 
-      //  slowest = 0.5 seconds per frame (0.5 * kSMEngineFPS ticks)
-      //  fastest = 0.1 seconds per frame (0.1 * kSMEngineFPS ticks)
       var fractionOfFullSpeed = this.speed / kSMPlayerWalkMaxBlocksPerSecond;
+      var frameDuration = Math.max((1 / fractionOfFullSpeed) * (kSMPlayerMinimumWalkFrameDuration * kSMEngineFPS), kSMEngineFPS);
 
-      this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || new Date;
-      var frameDuration = Math.max((1 / fractionOfFullSpeed) * 15, 60);
-      if (new Date - this.timeOfLastWalkFrame > frameDuration) {
-        this.timeOfLastWalkFrame = new Date;
+      this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || now;
+      if (now - this.timeOfLastWalkFrame > frameDuration) {
+        this.timeOfLastWalkFrame = now;
         this.walkState = !this.walkState;
       }
 
       if (this.walkState) {
-        this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? 'player-right-walk' : 'player-left-walk';
+        //  Draw alternate animation frame of walking
+        this.playerImageName = (this.facingDirection == kSMPlayerFaceRight) ? kSMPlayerImageRightWalk : kSMPlayerImageLeftWalk;
       }
     }
 
     if (this.speed != 0) {
-      //  Move the player
+      //  Move the player's position
 
       var magnitude = (this.hState == kSMPlayerHorizontalStateLeft) ? -1 : 1;
 
       this.pxPos.x += (magnitude * this.speed * kSMEngineBlockSize * kSMFrameUnit);
     }
-
-    this.prevHState = this.hState;
   },
   updateVState: function() {
     //  TODO: falling/jumping
