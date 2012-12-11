@@ -55,6 +55,20 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
         this.skidDuration = kSMPlayerSkidDurationInSeconds * (this.speed / maxSpeed);
         this.speed = Math.max(1, this.speed * kSMPlayerChangedDirectionPenalty);
       } else {
+
+        if (this.engine.keyMap[kSMKeyAction]) {
+          //  Running; if going slower than walking max speed, using walking acceleration value
+          if (this.speed < kSMPlayerWalkMaxBlocksPerSecond) {
+            acceleration = kSMPlayerWalkAcceleration;
+          }
+        } else {
+          //  Walking; if going faster than walking max speed, declerate gradually
+          if (this.speed > kSMPlayerWalkMaxBlocksPerSecond) {
+            acceleration = kSMPlayerDecelerationFromRunToWalk;
+            maxSpeed = kSMPlayerRunMaxBlocksPerSecond; // bump our max speed temporarily
+          }
+        }
+
         this.speed = Math.min(this.speed * acceleration, maxSpeed);
       }
 

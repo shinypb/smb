@@ -49,6 +49,7 @@ var kSMPlayerMinimumWalkFrameDuration = 0.25;
 //  Speed coefficients
 var kSMPlayerWalkAcceleration = 1.0912;
 var kSMPlayerDeceleration = 0.95;
+var kSMPlayerDecelerationFromRunToWalk = 0.9825
 var kSMPlayerRunAcceleration = 1.0925;
 var kSMPlayerChangedDirectionPenalty = 0.125;
 
