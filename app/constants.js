@@ -57,3 +57,4 @@ var kSMPlayerChangedDirectionPenalty = 0.125;
 var kSMPlayerInitialSpeed = 0.25;
 var kSMPlayerWalkMaxBlocksPerSecond = 5;
 var kSMPlayerRunMaxBlocksPerSecond = 12;
+var kSMPlayerSpeedAfterSkidFinishes = 3;

@@ -56,17 +56,10 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
         this.speed = Math.max(1, this.speed * kSMPlayerChangedDirectionPenalty);
       } else {
 
-        if (this.engine.keyMap[kSMKeyAction]) {
-          //  Running; if going slower than walking max speed, using walking acceleration value
-          if (this.speed < kSMPlayerWalkMaxBlocksPerSecond) {
-            acceleration = kSMPlayerWalkAcceleration;
-          }
-        } else {
+        if (!this.engine.keyMap[kSMKeyAction] && this.speed > kSMPlayerWalkMaxBlocksPerSecond) {
           //  Walking; if going faster than walking max speed, declerate gradually
-          if (this.speed > kSMPlayerWalkMaxBlocksPerSecond) {
-            acceleration = kSMPlayerDecelerationFromRunToWalk;
-            maxSpeed = kSMPlayerRunMaxBlocksPerSecond; // bump our max speed temporarily
-          }
+          acceleration = kSMPlayerDecelerationFromRunToWalk;
+          maxSpeed = kSMPlayerRunMaxBlocksPerSecond; // bump our max speed temporarily
         }
 
         this.speed = Math.min(this.speed * acceleration, maxSpeed);
@@ -98,11 +91,12 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       } else {
         //  Done skidding
         this.skidStartedAt = null;
+        this.speed = kSMPlayerSpeedAfterSkidFinishes;
       }
     } else if (this.speed) {
       //  Walking/running; see if we want to draw the alterate walk frame
 
-      var fractionOfFullSpeed = this.speed / kSMPlayerWalkMaxBlocksPerSecond;
+      var fractionOfFullSpeed = this.speed / maxSpeed;
       var frameDuration = Math.max((1 / fractionOfFullSpeed) * (kSMPlayerMinimumWalkFrameDuration * kSMEngineFPS), kSMEngineFPS);
 
       this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || now;
