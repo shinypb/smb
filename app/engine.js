@@ -5,9 +5,17 @@ defineClass('SMEngine', function(aCanvas) {
   this.registerEventListeners();
   this.agents = [];
 
-  this.map = new SMMap();
+  this.map = new SMMap(0);
 
-  this.player = new SMPlayer(this, 4, 8);
+  //  TODO: change to use pixels
+  this.viewportPx = {
+    x: 0,
+    y: (this.map.height - kSMEngineGameHeight) * kSMEngineBlockSize,
+    width: kSMEngineGameWidth * kSMEngineBlockSize,
+    height: kSMEngineGameHeight * kSMEngineBlockSize
+  }
+
+  this.player = new SMPlayer(this, this.map.playerStartBlock.x, this.map.playerStartBlock.y);
   this.addAgent(this.player);
 }, {
   addAgent: function(anAgent) {
@@ -19,22 +27,26 @@ defineClass('SMEngine', function(aCanvas) {
     document.addEventListener('keydown', this.onKeyPress.bind(this, true), false);
     document.addEventListener('keyup', this.onKeyPress.bind(this, false), false);
 
-    //  Eventually, we'll want to pause the game when the window is unfocused
-//           window.addEventListener('blur', this.onWindowBlur.bind(this), false);
-//           window.addEventListener('focus', this.onWindowFocus.bind(this), false);
+    window.addEventListener('blur', this.onWindowBlur.bind(this), false);
+    window.addEventListener('focus', this.onWindowFocus.bind(this), false);
   },
 
   onWindowBlur: function() {
+    this.keyMap = {};
+    /*  Eventually, we'll want to pause the game when the window is unfocused
     if (this.runTimer) {
       this.wasRunning = true;
       this.stopRunLoop();
     }
+    */
   },
 
   onWindowFocus: function() {
+    /*  Eventually, we'll want to pause the game when the window is unfocused
     if (this.wasRunning) {
       this.startRunLoop();
     }
+    */
   },
 
   onKeyPress: function(keyState, e) {
@@ -45,6 +57,11 @@ defineClass('SMEngine', function(aCanvas) {
     try {
       this.tickNumber++;
 
+      this.canvas.clear(); // TODO: stop doing this once we can do incremental draws
+      this.updateViewport();
+      this.canvas.setViewport(this.viewportPx);
+      this.map.renderFrame(this.canvas);
+
       this.agents.forEach(function(agent) {
         agent.tick();
       });
@@ -54,6 +71,10 @@ defineClass('SMEngine', function(aCanvas) {
 
       throw e;
     }
+  },
+
+  updateViewport: function() {
+    //  TODO: follow player's position;
   },
 
   startRunLoop: function() {

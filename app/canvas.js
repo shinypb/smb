@@ -9,6 +9,13 @@ defineClass('SMCanvas',  function (aCanvas) {
   this.width = document.body.clientWidth - 20;
   this.height = SMMetrics.BlockToPx(kSMEngineGameHeight);
 
+  this.viewport = {
+    x: 0,
+    y: 0,
+    width: this.width,
+    height: this.height
+  }
+
   this.element.height = this.height;
   this.element.width = this.width;
   this.element.style.height = this.height + 'px';
@@ -17,7 +24,41 @@ defineClass('SMCanvas',  function (aCanvas) {
   this.clear();
 }, {
   clear: function() {
-    this.context.fillStyle = kSMColorSkyBlue;
-    this.context.fillRect(0, 0, this.width, this.height);
+    this.context.fillStyle = '#000';
+    this.context.fillRect(0, 0, this.width, this.height); // note: intentionally not using our wrapper method
+  },
+  fillRect: function(absoluteX, absoluteY, width, height) {
+    var adjustedPos = this.adjustPos(absoluteX, absoluteY);
+    if (adjustedPos.x > this.viewport.x + this.viewport.width || adjustedPos.y > this.viewport.y + this.viewport.height) {
+      return;
+    }
+
+    var adjustedWidth = Math.min(this.width - adjustedPos.x, width);
+    var adjustedHeight = Math.min(this.height - adjustedPos.y, height);
+
+    this.context.fillRect(adjustedPos.x, adjustedPos.y, adjustedWidth, adjustedHeight);
+  },
+  adjustPos: function(absoluteX, absoluteY) {
+    return {
+      x: absoluteX - this.viewport.x,
+      y: absoluteY + this.viewport.y
+    };
+  },
+  drawImage: function(image, absoluteX, absoluteY) {
+    var adjustedPos = this.adjustPos(absoluteX, absoluteY);
+
+    if (adjustedPos.x > this.viewport.x + this.viewport.width || adjustedPos.y > this.viewport.y + this.viewport.height) {
+      //  off screen
+      return;
+    }
+
+    //  TODO: clip right-hand edge of image to edge of viewable area in canvas (only needed when canvas is wider than viewport)
+
+    this.context.drawImage(image, adjustedPos.x, adjustedPos.y);
+  },
+  setViewport: function(viewport) {
+    //  Copy graphics to new viewport -- e.g. if the new viewport is offset by 10px horizontally, move current contents over horizontally
+    //  We only want to adjust what we need
+    this.viewport = viewport;
   }
 });

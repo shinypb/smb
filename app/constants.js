@@ -2,9 +2,36 @@ var kSMColorSkyBlue = '#A9FDF4';
 
 var kSMEngineFPS = 60;
 var kSMEngineBlockSize = 32;
-var kSMEngineGameWidth = 48; // should be 16 once scrolling is available
-var kSMEngineGameHeight = 12;
 var kSMFrameUnit = 1 / kSMEngineFPS;
+
+//  TODO: rename these to kSMEngineViewportHeight/Width
+var kSMEngineGameWidth = 16; // should be 16 once scrolling is available
+var kSMEngineGameHeight = 12;
+
+
+//  Map data values
+var kSMBlockSky = ' ';
+var kSMBlockWood = '#';
+var kSMBlockQuestion = '?';
+var kSMBlockBush = '%';
+
+//  Map block characteristics
+window.SMBlockProperties = {}
+SMBlockProperties[kSMBlockSky] = {
+  color: kSMColorSkyBlue
+};
+SMBlockProperties[kSMBlockWood] = {
+  image: 'wood-block',
+  isSolid: true
+};
+SMBlockProperties[kSMBlockQuestion] = {
+  image: 'question-block',
+  isSolid: true
+};
+SMBlockProperties[kSMBlockBush] = {
+  image: 'bush',
+  isSolid: false
+};
 
 //  Player
 var kSMPlayerHeightPx = 32;
