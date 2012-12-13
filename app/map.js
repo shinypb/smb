@@ -37,6 +37,7 @@ defineClass('SMMap', function(mapId) {
     }
 
     this.playerStartBlock = this.rawMapData.playerStartBlock;
+    this.goombaStartBlock = this.rawMapData.goombaStartBlock;
   },
 
   renderFrame: function(canvas) {

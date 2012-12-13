@@ -17,6 +17,9 @@ defineClass('SMEngine', function(aCanvas) {
 
   this.player = new SMPlayer(this, this.map.playerStartBlock.x, this.map.playerStartBlock.y);
   this.addAgent(this.player);
+
+  this.goomba = new SMGoomba(this, this.map.goombaStartBlock.x, this.map.goombaStartBlock.y);
+  this.addAgent(this.goomba);
 }, {
   addAgent: function(anAgent) {
     this.agents.push(anAgent);
