@@ -53,6 +53,13 @@ var kSMPlayerImageRightSkid = 'player-right-skid';
 var kSMPlayerImageLeftWalk = 'player-left-walk';
 var kSMPlayerImageRightWalk = 'player-right-walk';
 
+//  Goomba
+var kSMGoombaSpeed = 1;
+var kSMGoombaStartingDirection = -1;
+var kSMGoombaWalkFrameDuration = kSMEngineFPS * 5.83;
+var kSMGoombaSquishFrameDuration = kSMEngineFPS * 11.6;
+var kSMGoombaWalkImages = ['goomba-walk-1', 'goomba-walk-2'];
+var kSMGoombaSquishImage = 'goomba-squish';
 
 //  Keycodes
 var kSMKeyAction = 90;
