@@ -51,7 +51,7 @@ defineClass('SMMap', function(mapId) {
     canvas.fillRect(0, 0, viewport.width - 1, viewport.height - 1);
 
     var x, y, blockInfo, xPx, yPx;
-    for(x = minX; x < maxX; x++) {
+    for(x = minX; x <= maxX; x++) {
       for(y = minY; y < maxY; y++) {
 
         xPx = SMMetrics.BlockToPx(x);

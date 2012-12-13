@@ -25,7 +25,12 @@
 
     </div>
 
-    <p>Arrow keys to move, Z to run.</p>
+    <pre id="instructions"><img src="resources/title.png" alt="Super Markio Bros." height="150" width="392">
+
+Arrow keys to move, Z to run.
+
+<label><input type="checkbox" id="auto-scroll"> Auto-scroll</label>
+    </pre>
 
     <!--
 
@@ -55,6 +60,8 @@
       console.log(+new Date);
       var eng = window.eng = new SMEngine(document.getElementById('c'));
       eng.startRunLoop();
+
+
     })();
   </script>
 

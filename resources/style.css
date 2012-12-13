@@ -11,11 +11,21 @@ body {
   height: 440px !important;
 }
 
-body p {
-  background: #000;
-  display: inline;
+#instructions {
+  background: #F8D5AA;
+  color: #000;
+  height: 358px;
+  width: 400px;
+  padding: 1em;
+  float: left;
+  margin-left: 1em;
+  margin-top: 0;
 }
 
 #resources {
   display: none;
+}
+
+#c {
+  float: left;
 }

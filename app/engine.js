@@ -75,6 +75,9 @@ defineClass('SMEngine', function(aCanvas) {
 
   updateViewport: function() {
     //  TODO: follow player's position;
+    if (this.tickNumber % 4 == 0 && document.getElementById('auto-scroll').checked) {
+      this.viewportPx.x++;
+    }
   },
 
   startRunLoop: function() {

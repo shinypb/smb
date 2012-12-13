@@ -5,8 +5,7 @@ defineClass('SMCanvas',  function (aCanvas) {
   //  Eventually, we'll have an auto-scrolling play field, and we'll want this canvas
   //  to just be a small viewport into it. Until then, let's make it the size of
   //  the window so we have some room to move around.
-  //  this.width = SMMetrics.BlockToPx(kSMEngineGameWidth);
-  this.width = document.body.clientWidth - 20;
+  this.width = SMMetrics.BlockToPx(kSMEngineGameWidth);
   this.height = SMMetrics.BlockToPx(kSMEngineGameHeight);
 
   this.viewport = {
