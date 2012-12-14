@@ -65,9 +65,9 @@ var kSMGoombaSquishImage = 'goomba-squish';
 var kSMKeyAction = 90;
 var kSMKeyJump = 88;
 var kSMKeyLeft = 37;
-var kSMKeyUp = 378
+var kSMKeyUp = 38;
 var kSMKeyRight = 39;
-var kSMKeyDown = 39;
+var kSMKeyDown = 40;
 
 
 /**
@@ -83,12 +83,12 @@ var kSMPlayerMinimumWalkFrameDuration = 0.25;
 //  Speed coefficients
 var kSMPlayerWalkAcceleration = 1.0912;
 var kSMPlayerDeceleration = 0.95;
-var kSMPlayerDecelerationFromRunToWalk = 0.9825
+var kSMPlayerDecelerationFromRunToWalk = 0.9825;
 var kSMPlayerRunAcceleration = 1.0925;
 var kSMPlayerChangedDirectionPenalty = 0.125;
 
 //  Speeds, measured in blocks per second
 var kSMPlayerInitialSpeed = 0.25;
-var kSMPlayerWalkMaxBlocksPerSecond = 5;
+var kSMPlayerWalkMaxBlocksPerSecond = 5.3;
 var kSMPlayerRunMaxBlocksPerSecond = 12;
 var kSMPlayerSpeedAfterSkidFinishes = 3;
