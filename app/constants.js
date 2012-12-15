@@ -16,7 +16,7 @@ var kSMBlockQuestion = '?';
 var kSMBlockBush = '%';
 
 //  Map block characteristics
-window.SMBlockProperties = {}
+window.SMBlockProperties = {};
 SMBlockProperties[kSMBlockSky] = {
   color: kSMColorSkyBlue
 };
@@ -52,6 +52,27 @@ var kSMPlayerImageLeftSkid = 'player-left-skid';
 var kSMPlayerImageRightSkid = 'player-right-skid';
 var kSMPlayerImageLeftWalk = 'player-left-walk';
 var kSMPlayerImageRightWalk = 'player-right-walk';
+var kSMPlayerImages = {
+	left: {
+		small: {
+			walking: ["player-left", "player-left-walk"],
+			jumping: ["player-left-jump"],
+			skidding: ["player-left-skid"]
+		}
+	},
+	right: {
+		small: {
+			walking: ["player-right", "player-right-walk"],
+			jumping: ["player-right-jump"],
+			skidding: ["player-right-skid"]
+		}
+	},
+	center: {
+		small: {
+			dead: ["player-dead"]
+		}
+	}
+};
 
 //  Goomba
 var kSMGoombaSpeed = 1;
