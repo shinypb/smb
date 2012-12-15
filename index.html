@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <head>
     <title>Super Markio Bros.</title>
   </head>
@@ -8,6 +9,7 @@
 
   <body>
     <canvas id="c"></canvas>
+    <img src="resources/button.png" id="button">
 
     <div id="resources">
       <!-- player frames -->
@@ -33,12 +35,14 @@
 
     </div>
 
-    <pre id="instructions"><img src="resources/title.png" alt="Super Markio Bros." height="150" width="392">
+    <div id="instructions"><pre><img src="resources/title.png" alt="Super Markio Bros." height="150" width="392">
 
 Arrow keys to move, Z to run, X to jump.
 
 <label><input type="checkbox" id="auto-scroll"> Auto-scroll</label>
     </pre>
+    <pre id="debug">Okay</pre>
+    </div>
 
     <!--
 
@@ -60,6 +64,7 @@ Arrow keys to move, Z to run, X to jump.
   <script src="app/maps.js"></script>
   <script src="app/map.js"></script>
   <script src="app/agent.js"></script>
+  <script src="app/controls.js"></script>
   <script src="app/player.js"></script>
   <script src="app/goomba.js"></script>
   <script src="app/engine.js"></script>

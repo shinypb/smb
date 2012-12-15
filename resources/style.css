@@ -3,6 +3,7 @@ html {
 }
 
 body {
+  text-align: center;
   background: #000 left top url(background.png);
   color: #fff;
   font-family: monospace;
@@ -15,9 +16,7 @@ body {
   background: #F8D5AA;
   color: #000;
   height: 358px;
-  width: 400px;
   padding: 1em;
-  float: left;
   margin-left: 1em;
   margin-top: 0;
 }
@@ -26,6 +25,7 @@ body {
   display: none;
 }
 
+/*
 #c {
-  float: left;
 }
+*/
