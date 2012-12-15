@@ -28,7 +28,7 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
       // Cycle through the array of animation frames.
       this.goombaImageName = kSMGoombaWalkImages[this.walkFrame];
 
-      
+
     } else {
       // Squished goomba!
       this.goombaImageName = kSMGoombaSquishImage;
@@ -45,9 +45,8 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.squish();
     }
 
-    // Change direction if we're running into a wood block.
-    // TODO: check against more than just a wood block.
-    if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y)][SMMetrics.PxToBlock(this.pxPos.x)] == kSMBlockWood) {
+    // Change direction if we're running into a solid block.
+    if (eng.map.getBlockAtPx(this.pxPos.x, this.pxPos.y).isSolid) {
       this.changeDirection();
     }
 

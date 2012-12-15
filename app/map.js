@@ -6,9 +6,9 @@ defineClass('SMMap', function(mapId) {
 
   this.loadMap(mapId);
 }, {
-  isValid: function() {
-    this.rawMapData.forEach(function(row) {
-      if (row.length != this.rawMapData[0].length) {
+  isValid: function(rawMapData) {
+    rawMapData.forEach(function(row) {
+      if (row.length != rawMapData[0].length) {
         return false;
       }
     }.bind(this));
@@ -18,26 +18,34 @@ defineClass('SMMap', function(mapId) {
 
   loadMap: function(mapId) {
     this.mapId = mapId;
-    this.rawMapData = SMLevels[mapId];
+    var rawMapData = SMLevels[mapId];
 
-    if (!this.isValid()) {
+    if (!this.isValid(rawMapData)) {
       throw new Error('Invalid map');
     }
 
-    this.width = this.rawMapData[0].length;
-    this.height = this.rawMapData.length;
+    this.width = rawMapData[0].length;
+    this.height = rawMapData.length;
     this.data = [];
 
     var x, y;
     for(x = 0; x < this.width; x++) {
       this.data[x] = [];
       for (y = 0; y < this.height; y++) {
-        this.data[x][y] = this.rawMapData[y][x]; // yes, [y][x] -- data is stored by row
+        this.data[x][y] = rawMapData[y][x]; // yes, [y][x] -- data is stored by row
       }
     }
 
-    this.playerStartBlock = this.rawMapData.playerStartBlock;
-    this.goombaStartBlock = this.rawMapData.goombaStartBlock;
+    this.playerStartBlock = rawMapData.playerStartBlock;
+    this.goombaStartBlock = rawMapData.goombaStartBlock;
+  },
+
+  getBlockAt: function(x, y) {
+    return SMBlockProperties[this.data[x][y]];
+  },
+
+  getBlockAtPx: function(xPx, yPx) {
+    return this.getBlockAt(SMMetrics.PxToBlock(xPx), SMMetrics.PxToBlock(yPx));
   },
 
   renderFrame: function(canvas) {
@@ -58,7 +66,7 @@ defineClass('SMMap', function(mapId) {
         xPx = SMMetrics.BlockToPx(x);
         yPx = SMMetrics.BlockToPx(y);
 
-        blockInfo = SMBlockProperties[this.data[x][y]];
+        blockInfo = this.getBlockAt(x, y);
         if (!blockInfo) {
           debugger;
         } else if (!blockInfo.color && !blockInfo.image) {

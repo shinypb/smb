@@ -67,7 +67,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.playerImageName = kSMPlayerImages[this.directionSprite[this.direction * -1]][this.state].skidding[0];
       this.reduceHSpeedTo(0, 20);
     }
-    
+
     this.hSpeed += (this.direction * acceleration * kSMFrameUnit);
     this.reduceHSpeedTo(maxSpeed, 30);
 
@@ -75,25 +75,25 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.pxPos.x += this.hSpeed * kSMEngineBlockSize * kSMFrameUnit;
 
       // Check upper left horizontal movement point (moving left)
-      if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y + 4)][SMMetrics.PxToBlock(this.pxPos.x)] == kSMBlockWood) {
+      if (eng.map.getBlockAtPx(this.pxPos.x, this.pxPos.y + 4).isSolid) {
         this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.x) + 1);
         this.hSpeed = 0;
       }
 
       // Check lower left horizontal movement point (moving left)
-      if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y + 28)][SMMetrics.PxToBlock(this.pxPos.x)] == kSMBlockWood) {
+      if (eng.map.getBlockAtPx(this.pxPos.x, this.pxPos.y + 28).isSolid) {
         this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.x) + 1);
         this.hSpeed = 0;
       }
 
       // Check upper right horizontal movement point (moving right)
-      if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y + 4)][SMMetrics.PxToBlock(this.pxPos.x + 32)] == kSMBlockWood) {
+      if (eng.map.getBlockAtPx(this.pxPos.x + 32, this.pxPos.y + 4).isSolid) {
         this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.x + 32) - 1);
         this.hSpeed = 0;
       }
 
       // Check lower right horizontal movement point (moving right)
-      if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y + 28)][SMMetrics.PxToBlock(this.pxPos.x + 32)] == kSMBlockWood) {
+      if (eng.map.getBlockAtPx(this.pxPos.x + 32, this.pxPos.y + 28).isSolid) {
         this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.x + 32) - 1);
         this.hSpeed = 0;
       }
@@ -112,32 +112,32 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     var now = new Date().getTime();
     this.standing = false;
     this.vSpeed += 1.2;
-    
+
     this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
 
     // Check upper left vertical movement point (moving up)
-    if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y)][SMMetrics.PxToBlock(this.pxPos.x + 4)] == kSMBlockWood) {
+    if (eng.map.getBlockAtPx(this.pxPos.x, this.pxPos.y + 4).isSolid) {
       this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.y) + 1);
       this.vSpeed = 0;
       this.jumpStarted -= 200;
     }
 
     // Check upper right vertical movement point (moving up)
-    if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y)][SMMetrics.PxToBlock(this.pxPos.x + 28)] == kSMBlockWood) {
+    if (eng.map.getBlockAtPx(this.pxPos.x + 28, this.pxPos.y).isSolid) {
       this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.y) + 1);
       this.vSpeed = 0;
       this.jumpStarted -= 200;
     }
 
     // Check lower left vertical movement point (moving down)
-    if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y + 32)][SMMetrics.PxToBlock(this.pxPos.x + 4)] == kSMBlockWood) {
+    if (eng.map.getBlockAtPx(this.pxPos.x + 4, this.pxPos.y + 32).isSolid) {
       this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.y + 32) - 1);
       this.vSpeed = 0;
       this.standing = true;
     }
 
     // Check lower right vertical movement point (moving down)
-    if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y + 32)][SMMetrics.PxToBlock(this.pxPos.x + 28)] == kSMBlockWood) {
+    if (eng.map.getBlockAtPx(this.pxPos.x + 28, this.pxPos.y + 32).isSolid) {
       this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.y + 32) - 1);
       this.vSpeed = 0;
       this.standing = true;
