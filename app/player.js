@@ -109,9 +109,9 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     }
   },
   updateVState: function() {
-    var now = new Date();
+    var now = new Date().getTime();
     this.standing = false;
-    this.vSpeed += 1;
+    this.vSpeed += 1.2;
     
     this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
 
@@ -119,12 +119,14 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y)][SMMetrics.PxToBlock(this.pxPos.x + 4)] == kSMBlockWood) {
       this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.y) + 1);
       this.vSpeed = 0;
+      this.jumpStarted -= 200;
     }
 
     // Check upper right vertical movement point (moving up)
     if (eng.map.rawMapData[SMMetrics.PxToBlock(this.pxPos.y)][SMMetrics.PxToBlock(this.pxPos.x + 28)] == kSMBlockWood) {
       this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(this.pxPos.y) + 1);
       this.vSpeed = 0;
+      this.jumpStarted -= 200;
     }
 
     // Check lower left vertical movement point (moving down)
@@ -142,9 +144,12 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     }
 
     if (this.engine.keyMap[kSMKeyJump] && this.standing === true && !this.jumpStarted) {
-      this.vSpeed = -16;
       this.jumpStarted = now;
       this.standing = false;
+    }
+
+    if (now - this.jumpStarted < 200) {
+      this.vSpeed = -12;
     }
 
     if (!this.engine.keyMap[kSMKeyJump]) {
