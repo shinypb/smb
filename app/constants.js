@@ -36,43 +36,41 @@ SMBlockProperties[kSMBlockBush] = {
 //  Player
 var kSMPlayerHeightPx = 32;
 var kSMPlayerWidthPx = 32;
-var kSMPlayerVerticalStateIdle = 'idle';
-var kSMPlayerVerticalStateJumping = 'jumping';
-var kSMPlayerVerticalStateFalling = 'falling';
 var kSMPlayerVerticalSpeed = 0;
-var kSMPlayerHorizontalStateIdle = 'idle';
-var kSMPlayerHorizontalStateLeft = 'left';
-var kSMPlayerHorizontalStateRight = 'right';
 var kSMPlayerHorizontalSpeed = 0;
-var kSMPlayerFaceLeft = 'left';
-var kSMPlayerFaceRight = 'right';
-var kSMPlayerImageLeft = 'player-left';
-var kSMPlayerImageRight = 'player-right';
-var kSMPlayerImageLeftSkid = 'player-left-skid';
-var kSMPlayerImageRightSkid = 'player-right-skid';
-var kSMPlayerImageLeftWalk = 'player-left-walk';
-var kSMPlayerImageRightWalk = 'player-right-walk';
-var kSMPlayerImages = {
-	left: {
-		small: {
-			walking: ["player-left", "player-left-walk"],
-			jumping: ["player-left-jump"],
-			skidding: ["player-left-skid"]
-		}
-	},
-	right: {
-		small: {
-			walking: ["player-right", "player-right-walk"],
-			jumping: ["player-right-jump"],
-			skidding: ["player-right-skid"]
-		}
-	},
-	center: {
-		small: {
-			dead: ["player-dead"]
-		}
-	}
+var kSMPlayerStartWalkFrame = 0;
+var kSMPlayerDirectionString = {
+  "1": "right",
+  "-1": "left"
 };
+var kSMPlayerDirectionLeft = -1;
+var kSMPlayerDirectionRight = 1;
+var kSMPlayerStartState = 'small';
+var kSMPlayerImages = {
+  small: {
+    left: {
+      walking: ['player-left', 'player-left-walk'],
+      jumping: ['player-left-jump'],
+      skidding: ['player-left-skid']
+    },
+    right: {
+      walking: ['player-right', 'player-right-walk'],
+      jumping: ['player-right-jump'],
+      skidding: ['player-right-skid']
+    },
+    center: {
+      dead: ['player-dead']
+    }
+  }
+};
+/**
+ * Player bounding constants. I have different bounding boxes for horizontal
+ * and vertical movement at the moment. I got less "tweaky" behavior when
+ * I separated them. Bounding is measured in pixels inwards from the edge of
+ * the sprite, starting at the top and moving clockwise.
+ */
+var kSMPlayerHorizontalBounding = [4, 32, 28, 0];
+var kSMPlayerVerticalBounding   = [0, 28, 32, 4];
 
 //  Goomba
 var kSMGoombaSpeed = 1;
@@ -90,26 +88,32 @@ var kSMKeyUp = 38;
 var kSMKeyRight = 39;
 var kSMKeyDown = 40;
 
-
 /**
  * Physics
  * Speeds should be measured in blocks-per-second
  * Times should be measured in seconds
  */
 
+/**
+ * Sorry, I think my units aren't correct at the moment. I will try to fix them
+ * once I get closer to mario-like movement.
+ */
+
+// Horizontal physics
+var kSMPlayerDeceleration = 30;
+var kSMPlayerSkidDeceleration = 20;
+var kSMPlayerWalkAcceleration = 19;
+var kSMPlayerRunAcceleration = 28;
+
+// Vertical physics
+var kSMPlayerGravity = 1.2;
+var kSMPlayerJumpBoost = -12;
+// This time is in milliseconds.
+var kSMPlayerJumpBoostTime = 200;
+
 //  Times
-var kSMPlayerSkidDurationInSeconds = 0.25;
 var kSMPlayerMinimumWalkFrameDuration = 0.25;
 
-//  Speed coefficients
-var kSMPlayerWalkAcceleration = 1.0912;
-var kSMPlayerDeceleration = 0.95;
-var kSMPlayerDecelerationFromRunToWalk = 0.9825;
-var kSMPlayerRunAcceleration = 1.0925;
-var kSMPlayerChangedDirectionPenalty = 0.125;
-
 //  Speeds, measured in blocks per second
-var kSMPlayerInitialSpeed = 0.25;
 var kSMPlayerWalkMaxBlocksPerSecond = 5.3;
 var kSMPlayerRunMaxBlocksPerSecond = 12;
-var kSMPlayerSpeedAfterSkidFinishes = 3;
