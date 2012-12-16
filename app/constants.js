@@ -52,12 +52,15 @@ var kSMPlayerWidthPx = 32;
 var kSMPlayerVerticalSpeed = 0;
 var kSMPlayerHorizontalSpeed = 0;
 var kSMPlayerStartWalkFrame = 0;
+var kSMPlayerStartAlive = true;
 var kSMPlayerDirectionString = {
   "1": "right",
+  "0": "center",
   "-1": "left"
 };
-var kSMPlayerDirectionLeft = -1;
 var kSMPlayerDirectionRight = 1;
+var kSMPlayerDirectionCenter = 0;
+var kSMPlayerDirectionLeft = -1;
 var kSMPlayerStartState = 'small';
 var kSMPlayerImages = {
   small: {
@@ -82,8 +85,17 @@ var kSMPlayerImages = {
  * I separated them. Bounding is measured in pixels inwards from the edge of
  * the sprite, starting at the top and moving clockwise.
  */
-var kSMPlayerHorizontalBounding = [4, 32, 28, 0];
-var kSMPlayerVerticalBounding   = [0, 28, 32, 4];
+var kSMPlayerHorizontalBounds = [4, 32, 28, 0];
+var kSMPlayerVerticalBounds   = [0, 28, 32, 4];
+var kSMAgentHitBounds = {
+  player: [0, 28, 32, 4],
+  goomba: [0, 28, 32, 4]
+};
+/**
+ * Collisions above this height with downward velocity are considered squishes,
+ * where collisions below will cause damage.
+ */
+var kSMAgentSquishOffset = 16;
 
 //  Goomba
 var kSMGoombaSpeed = 1;
