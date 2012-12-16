@@ -5,6 +5,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
   this.hSpeed = kSMPlayerHorizontalSpeed;
   this.vSpeed = kSMPlayerVerticalSpeed;
   this.walkFrame = kSMPlayerStartWalkFrame;
+  this.alive = kSMPlayerStartAlive;
 
   this.pxPos = {
     x: SMMetrics.BlockToPx(startBlockX),
@@ -19,6 +20,10 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
      *  Updates the player's horizontal state — that is, movement to the left or right from
      *  walking or running (and eventually, movement when jumping/falling).
      */
+    if (!this.alive) {
+      return;
+    }
+
     var acceleration = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunAcceleration : kSMPlayerWalkAcceleration;
     var maxSpeed = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunMaxBlocksPerSecond : kSMPlayerWalkMaxBlocksPerSecond;
 
@@ -69,69 +74,63 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
 
     if (this.hSpeed !== 0) {
       this.pxPos.x += this.hSpeed * kSMEngineBlockSize * kSMFrameUnit;
+      
+      var top = this.pxPos.y + kSMPlayerHorizontalBounds[0],
+        right = this.pxPos.x + kSMPlayerHorizontalBounds[1],
+        bottom = this.pxPos.y + kSMPlayerHorizontalBounds[2],
+        left = this.pxPos.x + kSMPlayerHorizontalBounds[3];
 
-      var ly = this.pxPos.y + kSMPlayerHorizontalBounding[0],
-        rx = this.pxPos.x + kSMPlayerHorizontalBounding[1],
-        ry = this.pxPos.y + kSMPlayerHorizontalBounding[2],
-        lx = this.pxPos.x + kSMPlayerHorizontalBounding[3];
-
-      if (eng.map.getBlockAtPx(lx, ly).isSolid) {
+      if (eng.map.getBlockAtPx(left, top).isSolid) {
         // Check upper left horizontal movement point (moving left)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(lx) + 1);
+        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(left) + 1);
         this.hSpeed = 0;
-      } else if (eng.map.getBlockAtPx(lx, ry).isSolid) {
+      } else if (eng.map.getBlockAtPx(left, bottom).isSolid) {
         // Check lower left horizontal movement point (moving left)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(lx) + 1);
+        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(left) + 1);
         this.hSpeed = 0;
-      } else if (eng.map.getBlockAtPx(rx, ly).isSolid) {
+      } else if (eng.map.getBlockAtPx(right, top).isSolid) {
         // Check upper right horizontal movement point (moving right)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(rx) - 1);
+        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(right) - 1);
         this.hSpeed = 0;
-      } else if (eng.map.getBlockAtPx(rx, ry).isSolid) {
+      } else if (eng.map.getBlockAtPx(right, bottom).isSolid) {
         // Check lower right horizontal movement point (moving right)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(rx) - 1);
+        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(right) - 1);
         this.hSpeed = 0;
       }
     }
   },
-  reduceSpeedTo: function(speed, maxSpeed, deceleration) {
-    if (speed > maxSpeed) {
-      speed = Math.max(0, speed - (deceleration * kSMFrameUnit));
-    }
-
-    if (speed < -maxSpeed) {
-      speed = Math.min(0, speed + (deceleration * kSMFrameUnit));
-    }
-    return speed;
-  },
   updateVState: function() {
+    if (!this.alive) {
+      return;
+    }
+    
     this.standing = false;
     this.vSpeed += kSMPlayerGravity;
 
     this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
-    var ly = this.pxPos.y + kSMPlayerVerticalBounding[0],
-      rx = this.pxPos.x + kSMPlayerVerticalBounding[1],
-      ry = this.pxPos.y + kSMPlayerVerticalBounding[2],
-      lx = this.pxPos.x + kSMPlayerVerticalBounding[3];
+    var top = this.pxPos.y + kSMPlayerVerticalBounds[0],
+      right = this.pxPos.x + kSMPlayerVerticalBounds[1],
+      bottom = this.pxPos.y + kSMPlayerVerticalBounds[2],
+      left = this.pxPos.x + kSMPlayerVerticalBounds[3];
 
-    if (eng.map.getBlockAtPx(lx, ly).isSolid) {
+    if (eng.map.getBlockAtPx(left, top).isSolid) {
       // Check upper left vertical movement point (moving up)
-      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(ly) + 1);
+      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (eng.map.getBlockAtPx(rx, ly).isSolid) {
+    } else if (eng.map.getBlockAtPx(right, top).isSolid) {
       // Check upper right vertical movement point (moving up)
-      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(ly) + 1);
+      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (eng.map.getBlockAtPx(lx, ry).isSolid) {
+    } else if (eng.map.getBlockAtPx(left, bottom).isSolid) {
       // Check lower left vertical movement point (moving down)
-      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(ry) - 1);
+      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
       this.vSpeed = 0;
       this.standing = true;
-    } else if (eng.map.getBlockAtPx(rx, ry).isSolid) {
+    } else if (eng.map.getBlockAtPx(right, bottom).isSolid) {
       // Check lower right vertical movement point (moving down)
-      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(ry) - 1);
+      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
       this.vSpeed = 0;
       this.standing = true;
     }
@@ -151,6 +150,50 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
 
     if (!this.standing) {
       this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].jumping[0];
+    }
+  },
+  die: function() {
+    this.alive = false;
+    this.direction = kSMPlayerDirectionCenter;
+    this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].dead[0];
+  },
+  reduceSpeedTo: function(speed, maxSpeed, deceleration) {
+    if (speed > maxSpeed) {
+      speed = Math.max(0, speed - (deceleration * kSMFrameUnit));
+    }
+
+    if (speed < -maxSpeed) {
+      speed = Math.min(0, speed + (deceleration * kSMFrameUnit));
+    }
+    return speed;
+  },
+  checkCollision: function(otherAgent) {
+    if (otherAgent.squishTime) return;
+
+    var ptop = this.pxPos.y + this.bounds[0],
+        pright = this.pxPos.x + this.bounds[1],
+        pbottom = this.pxPos.y + this.bounds[2],
+        pleft = this.pxPos.x + this.bounds[3];
+
+    var otop = otherAgent.pxPos.y + otherAgent.bounds[0],
+        oright = otherAgent.pxPos.x + otherAgent.bounds[1],
+        obottom = otherAgent.pxPos.y + otherAgent.bounds[2],
+        oleft = otherAgent.pxPos.x + otherAgent.bounds[3],
+        osquish = otherAgent.pxPos.y + kSMAgentSquishOffset;
+
+    var playerHorizontal = pright > oleft && pleft < oright;
+    var playerVertical = pbottom > otop && ptop < obottom;
+
+    if (playerHorizontal && playerVertical) {
+      // collision
+      if (pbottom < osquish && this.vSpeed > 0) {
+        // squish
+        otherAgent.squish();
+        this.vSpeed = -16;
+        return false;
+      } else {
+        this.die();
+      }
     }
   },
   tick: function() {

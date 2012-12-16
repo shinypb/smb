@@ -67,6 +67,8 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.updateVState();
 
       this.draw();
+    } else {
+      this.engine.removeAgent(this);
     }
   }
 });

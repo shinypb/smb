@@ -13,16 +13,25 @@ defineClass('SMEngine', function(aCanvas) {
     y: (this.map.height - kSMEngineGameHeight) * kSMEngineBlockSize,
     width: kSMEngineGameWidth * kSMEngineBlockSize,
     height: kSMEngineGameHeight * kSMEngineBlockSize
-  }
-
-  this.player = new SMPlayer(this, this.map.playerStartBlock.x, this.map.playerStartBlock.y);
-  this.addAgent(this.player);
+  };
 
   this.goomba = new SMGoomba(this, this.map.goombaStartBlock.x, this.map.goombaStartBlock.y);
+  this.goomba.bounds = kSMAgentHitBounds.goomba;
   this.addAgent(this.goomba);
+
+  this.player = new SMPlayer(this, this.map.playerStartBlock.x, this.map.playerStartBlock.y);
+  this.player.bounds = kSMAgentHitBounds.player;
+  this.addAgent(this.player);
 }, {
   addAgent: function(anAgent) {
     this.agents.push(anAgent);
+  },
+
+  removeAgent: function(anAgent) {
+    var index = this.agents.lastIndexOf(anAgent);
+    var rest = this.agents.slice(index + 1 || this.agents.length);
+    this.agents.length = index < 0 ? this.agents.length + index : index;
+    this.agents.push.apply(this.agents, rest);
   },
 
   registerEventListeners: function() {
@@ -64,9 +73,12 @@ defineClass('SMEngine', function(aCanvas) {
       this.updateViewport();
       this.canvas.setViewport(this.viewportPx);
       this.map.renderFrame(this.canvas);
-
+      var that = this;
       this.agents.forEach(function(agent) {
         agent.tick();
+        if (that.player !== agent) {
+          that.player.checkCollision(agent);
+        }
       });
     } catch (e) {
       console.log('Uncaught exception; halting run loop :(');
