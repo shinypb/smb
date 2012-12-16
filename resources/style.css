@@ -2,6 +2,10 @@ html {
   background: #000;
 }
 
+#rotate-me {
+  display: none;
+}
+
 body {
   background: #000 left top url(background.png);
   color: #fff;
@@ -28,4 +32,38 @@ body {
 
 #c {
   float: left;
+}
+
+@media only screen and (max-width: 480px), only screen and (max-device-width: 480px) {
+  * {
+    -webkit-overflow-scrolling: touch;
+    -webkit-user-select: none;
+    overflow-y: auto;
+  }
+
+  #c {
+    margin-left: 35px;
+  }
+
+  #instructions {
+    display: none;
+  }
+}
+
+.portrait #instructions, .portrait #c {
+  display: none;
+}
+
+.portrait #rotate-me {
+  background: #000;
+  padding: 10px;
+  font-size: 2em;
+  display: block;
+}
+
+#rotate-me img {
+  display: block;
+  margin: 10px auto;
+  height: 128px;
+  width: 128px;
 }

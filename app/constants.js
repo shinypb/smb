@@ -122,7 +122,7 @@ var kSMPlayerRunAcceleration = 28;
 var kSMPlayerGravity = 1.2;
 var kSMPlayerJumpBoost = -12;
 // This time is in milliseconds.
-var kSMPlayerJumpBoostTime = 200;
+var kSMPlayerJumpBoostTime = 220;
 
 //  Times
 var kSMPlayerMinimumWalkFrameDuration = 0.25;

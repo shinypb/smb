@@ -2,11 +2,14 @@
 <html>
   <head>
     <title>Super Markio Bros.</title>
+    <meta name="viewport" content="initial-scale = .8,maximum-scale = .8" />
   </head>
 
   <link rel="stylesheet" href="resources/style.css">
 
   <body>
+    <div id="rotate-me">Rotate me! I only work in landscape mode.<img src="resources/player-dead.png"></div>
+
     <canvas id="c"></canvas>
 
     <div id="resources">
@@ -51,6 +54,31 @@ Arrow keys to move, Z to run, X to jump.
     -->
 
   </body>
+
+  <script>
+    (function () {
+      document.body.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+      });
+
+      document.body.addEventListener('orientationchange', setOrientationClass);
+
+      function setOrientationClass() {
+        if (window.orientation == 0) {
+          document.documentElement.className = 'portrait';
+        } else {
+          document.documentElement.className = 'landscape';
+        }
+      }
+
+      window.addEventListener('load', function() {
+        setOrientationClass();
+        setTimeout(function(){
+          window.scrollTo(0, 1);
+        }, 0);
+      });
+    })();
+  </script>
 
   <script src="app/define_class.js"></script>
   <script src="app/constants.js"></script>
