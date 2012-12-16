@@ -79,7 +79,7 @@ defineClass('SMEngine', function(aCanvas) {
   updateViewport: function() {
     //  TODO: follow player's position;
     if (this.tickNumber % 4 == 0 && document.getElementById('auto-scroll').checked) {
-      this.viewportPx.x++;
+      this.viewportPx.x = Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + 1);
     }
   },
 

@@ -28,6 +28,9 @@ defineClass('SMMap', function(mapId) {
     this.height = rawMapData.length;
     this.data = [];
 
+    this.heightPx = this.height * kSMEngineBlockSize;
+    this.widthPx = this.width * kSMEngineBlockSize;
+
     var x, y;
     for(x = 0; x < this.width; x++) {
       this.data[x] = [];
@@ -41,6 +44,9 @@ defineClass('SMMap', function(mapId) {
   },
 
   getBlockAt: function(x, y) {
+    if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+      return SMBlockProperties[kSMBlockOutOfBounds];
+    }
     return SMBlockProperties[this.data[x][y]];
   },
 

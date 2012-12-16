@@ -69,7 +69,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
 
     if (this.hSpeed !== 0) {
       this.pxPos.x += this.hSpeed * kSMEngineBlockSize * kSMFrameUnit;
-      
+
       var ly = this.pxPos.y + kSMPlayerHorizontalBounding[0],
         rx = this.pxPos.x + kSMPlayerHorizontalBounding[1],
         ry = this.pxPos.y + kSMPlayerHorizontalBounding[2],

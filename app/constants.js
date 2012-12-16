@@ -10,6 +10,7 @@ var kSMEngineGameHeight = 12;
 
 
 //  Map data values
+var kSMBlockOutOfBounds = NaN;
 var kSMBlockSky = ' ';
 var kSMBlockWood = '#';
 var kSMBlockQuestion = '?';
@@ -17,6 +18,10 @@ var kSMBlockBush = '%';
 
 //  Map block characteristics
 window.SMBlockProperties = {};
+SMBlockProperties[kSMBlockOutOfBounds] = {
+  color: '#000',
+  isSolid: true,
+}
 SMBlockProperties[kSMBlockSky] = {
   color: kSMColorSkyBlue
 };
@@ -32,6 +37,10 @@ SMBlockProperties[kSMBlockBush] = {
   image: 'bush',
   isSolid: false
 };
+Object.keys(SMBlockProperties).forEach(function(blockName) {
+  //  Cross-reference
+  SMBlockProperties[blockName].name = blockName;
+});
 
 //  Player
 var kSMPlayerHeightPx = 32;
