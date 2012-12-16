@@ -30,8 +30,19 @@ defineClass('SMEngine', function(aCanvas) {
     document.addEventListener('keydown', this.onKeyPress.bind(this, true), false);
     document.addEventListener('keyup', this.onKeyPress.bind(this, false), false);
 
+    document.body.addEventListener('touchstart', this.onTouchStart.bind(this), false);
+    document.body.addEventListener('touchend', this.onTouchEnd.bind(this), false);
+
     window.addEventListener('blur', this.onWindowBlur.bind(this), false);
     window.addEventListener('focus', this.onWindowFocus.bind(this), false);
+  },
+
+  onTouchStart: function(e) {
+    this.keyMap[kSMKeyJump] = true;
+  },
+
+  onTouchEnd: function(e) {
+    this.keyMap[kSMKeyJump] = false;
   },
 
   onWindowBlur: function() {
