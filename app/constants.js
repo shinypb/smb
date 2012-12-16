@@ -8,7 +8,6 @@ var kSMFrameUnit = 1 / kSMEngineFPS;
 var kSMEngineGameWidth = 16; // should be 16 once scrolling is available
 var kSMEngineGameHeight = 12;
 
-
 //  Map data values
 var kSMBlockOutOfBounds = NaN;
 var kSMBlockSky = ' ';
@@ -21,21 +20,26 @@ window.SMBlockProperties = {};
 SMBlockProperties[kSMBlockOutOfBounds] = {
   color: '#000',
   isSolid: true,
+  isTransparent: false
 }
 SMBlockProperties[kSMBlockSky] = {
-  color: kSMColorSkyBlue
+  color: kSMColorSkyBlue,
+  isTransparent: false
 };
 SMBlockProperties[kSMBlockWood] = {
   image: 'wood-block',
-  isSolid: true
+  isSolid: true,
+  isTransparent: true
 };
 SMBlockProperties[kSMBlockQuestion] = {
   image: 'question-block',
-  isSolid: true
+  isSolid: true,
+  isTransparent: false
 };
 SMBlockProperties[kSMBlockBush] = {
   image: 'bush',
-  isSolid: false
+  isSolid: false,
+  isTransparent: true
 };
 Object.keys(SMBlockProperties).forEach(function(blockName) {
   //  Cross-reference

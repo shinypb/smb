@@ -73,23 +73,20 @@ defineClass('SMMap', function(mapId) {
         yPx = SMMetrics.BlockToPx(y);
 
         blockInfo = this.getBlockAt(x, y);
-        if (!blockInfo) {
-          debugger;
-        } else if (!blockInfo.color && !blockInfo.image) {
+        if (!blockInfo.color && !blockInfo.image) {
           //  Need one or the other
           console.log('Invalid block', x, y, this.data[x][y], blockInfo);
           throw new Error('Invalid block');
         }
 
         //  Note: can have both color and image
-        if (blockInfo.color) {
-          canvas.context.fillStyle = blockInfo.color;
+        if (blockInfo.color || blockInfo.isTransparent) {
+          canvas.context.fillStyle = blockInfo.color || this.backgroundColor;
           canvas.fillRect(xPx, yPx, kSMEngineBlockSize, kSMEngineBlockSize);
         }
         if (blockInfo.image) {
           canvas.drawImage(SMImages[blockInfo.image], xPx, yPx);
         }
-
       }
     }
   }
