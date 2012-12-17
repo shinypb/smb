@@ -10,8 +10,13 @@ window.SMAudio = {};
 
 (function() {
   var playFromStart = function() {
-    this.currentTime = 0;
-    this.play();
+    try {
+      this.currentTime = 0;
+      this.play();
+    } catch(err) {
+      // Audio probably not loaded yet?
+      console.log('Audio error: ' + err);
+    }
   };
 
   Array.prototype.slice.apply(document.querySelectorAll('#resources audio')).forEach(function(elem) {
