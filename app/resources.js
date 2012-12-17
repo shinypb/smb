@@ -11,8 +11,10 @@ window.SMAudio = {};
 (function() {
   var playFromStart = function() {
     try {
-      this.currentTime = 0;
-      this.play();
+      if (eng.enableSounds) {
+        this.currentTime = 0;
+        this.play();
+      }
     } catch(err) {
       // Audio probably not loaded yet?
       console.log('Audio error: ' + err);

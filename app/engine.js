@@ -4,6 +4,7 @@ defineClass('SMEngine', function(aCanvas) {
   this.canvas = new SMCanvas(aCanvas);
   this.registerEventListeners();
   this.agents = [];
+  this.enableSounds = false;
 
   this.map = new SMMap(0);
 
