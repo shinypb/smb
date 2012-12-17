@@ -28,5 +28,10 @@ SMLevel([
   id: 0,
   backgroundColor: kSMColorSkyBlue,
   playerStartBlock: { x: 2, y: 0 },
-  goombaStartBlock: { x: 14, y: 9 }
+  goombas: [
+    { x: 14, y: 9 },
+    { x: 10, y: 7 },
+    { x: 17, y: 9 },
+    { x: 22, y: 9 },
+  ]
 });

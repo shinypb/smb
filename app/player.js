@@ -115,22 +115,22 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       bottom = this.pxPos.y + kSMPlayerVerticalBounds[2],
       left = this.pxPos.x + kSMPlayerVerticalBounds[3];
 
-    if (eng.map.getBlockAtPx(left, top).isSolid) {
+    if (this.engine.map.getBlockAtPx(left, top).isSolid) {
       // Check upper left vertical movement point (moving up)
       this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (eng.map.getBlockAtPx(right, top).isSolid) {
+    } else if (this.engine.map.getBlockAtPx(right, top).isSolid) {
       // Check upper right vertical movement point (moving up)
       this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (eng.map.getBlockAtPx(left, bottom).isSolid) {
+    } else if (this.engine.map.getBlockAtPx(left, bottom).isSolid) {
       // Check lower left vertical movement point (moving down)
       this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
       this.vSpeed = 0;
       this.standing = true;
-    } else if (eng.map.getBlockAtPx(right, bottom).isSolid) {
+    } else if (this.engine.map.getBlockAtPx(right, bottom).isSolid) {
       // Check lower right vertical movement point (moving down)
       this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
       this.vSpeed = 0;

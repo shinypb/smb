@@ -40,7 +40,7 @@ defineClass('SMMap', function(mapId) {
     }
 
     this.playerStartBlock = rawMapData.playerStartBlock;
-    this.goombaStartBlock = rawMapData.goombaStartBlock;
+    this.goombas = rawMapData.goombas;
   },
 
   getBlockAt: function(x, y) {

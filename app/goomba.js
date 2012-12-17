@@ -3,6 +3,7 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
 
   this.speed = kSMGoombaSpeed;
   this.direction = kSMGoombaStartingDirection;
+  this.vSpeed = kSMPlayerVerticalSpeed;
   this.alive = true;
   this.walkFrame = 0;
   this.squishTime = null;
@@ -41,14 +42,38 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     }
 
     // Change direction if we're running into a solid block.
-    if (eng.map.getBlockAtPx(this.pxPos.x, this.pxPos.y).isSolid) {
+    if (this.engine.map.getBlockAtPx(this.pxPos.x, this.pxPos.y).isSolid) {
       this.changeDirection();
     }
 
     this.pxPos.x += (this.direction * this.speed * kSMEngineBlockSize * kSMFrameUnit);
   },
   updateVState: function() {
-    //  TODO: falling/jumping
+    this.vSpeed += kSMPlayerGravity;
+
+    this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
+    var top = this.pxPos.y + kSMAgentHitBounds.goomba[0],
+      right = this.pxPos.x + kSMAgentHitBounds.goomba[1],
+      bottom = this.pxPos.y + kSMAgentHitBounds.goomba[2],
+      left = this.pxPos.x + kSMAgentHitBounds.goomba[3];
+
+    if (this.engine.map.getBlockAtPx(left, top).isSolid) {
+      // Check upper left vertical movement point (moving up)
+      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
+      this.vSpeed = 0;
+    } else if (this.engine.map.getBlockAtPx(right, top).isSolid) {
+      // Check upper right vertical movement point (moving up)
+      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
+      this.vSpeed = 0;
+    } else if (this.engine.map.getBlockAtPx(left, bottom).isSolid) {
+      // Check lower left vertical movement point (moving down)
+      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
+      this.vSpeed = 0;
+    } else if (this.engine.map.getBlockAtPx(right, bottom).isSolid) {
+      // Check lower right vertical movement point (moving down)
+      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
+      this.vSpeed = 0;
+    }
   },
   squish: function() {
     SMAudio[kSMAgentAudioSquish].playFromStart();

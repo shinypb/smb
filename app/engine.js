@@ -15,9 +15,12 @@ defineClass('SMEngine', function(aCanvas) {
     height: kSMEngineGameHeight * kSMEngineBlockSize
   };
 
-  this.goomba = new SMGoomba(this, this.map.goombaStartBlock.x, this.map.goombaStartBlock.y);
-  this.goomba.bounds = kSMAgentHitBounds.goomba;
-  this.addAgent(this.goomba);
+  var goomba;
+  for (var i=0;i<this.map.goombas.length;i++) {
+    goomba = new SMGoomba(this, this.map.goombas[i].x, this.map.goombas[i].y);
+    goomba.bounds = kSMAgentHitBounds.goomba;
+    this.addAgent(goomba);
+  }
 
   this.player = new SMPlayer(this, this.map.playerStartBlock.x, this.map.playerStartBlock.y);
   this.player.bounds = kSMAgentHitBounds.player;
