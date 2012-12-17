@@ -13,6 +13,7 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     y: SMMetrics.BlockToPx(startBlockY)
   };
 }, {
+  bounds: kSMAgentHitBounds.goomba,
   draw: function() {
     this.engine.canvas.drawImage(SMImages[this.goombaImageName], this.pxPos.x, this.pxPos.y);
   },

@@ -12,6 +12,8 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     y: SMMetrics.BlockToPx(startBlockY)
   };
 }, {
+  bounds: kSMAgentHitBounds.player,
+
   draw: function() {
     this.engine.canvas.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y);
   },
@@ -74,7 +76,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
 
     if (this.hSpeed !== 0) {
       this.pxPos.x += this.hSpeed * kSMEngineBlockSize * kSMFrameUnit;
-      
+
       var top = this.pxPos.y + kSMPlayerHorizontalBounds[0],
         right = this.pxPos.x + kSMPlayerHorizontalBounds[1],
         bottom = this.pxPos.y + kSMPlayerHorizontalBounds[2],
@@ -105,7 +107,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.pxPos.y = Math.min(this.pxPos.y + (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit), 388);
       return;
     }
-    
+
     this.standing = false;
     this.vSpeed += kSMPlayerGravity;
 
@@ -175,13 +177,21 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     return speed;
   },
   checkCollision: function(otherAgent) {
-    if (!this.alive) return;
-    if (otherAgent.squishTime) return;
+    if (!this.alive) {
+      return;
+    }
+    if (otherAgent.squishTime) {
+      return;
+    }
 
     var ptop = this.pxPos.y + this.bounds[0],
         pright = this.pxPos.x + this.bounds[1],
         pbottom = this.pxPos.y + this.bounds[2],
         pleft = this.pxPos.x + this.bounds[3];
+
+if(!otherAgent.bounds) {
+  debugger
+}
 
     var otop = otherAgent.pxPos.y + otherAgent.bounds[0],
         oright = otherAgent.pxPos.x + otherAgent.bounds[1],
