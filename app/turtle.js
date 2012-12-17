@@ -1,16 +1,27 @@
 defineClass('SMTurtle', 'SMAgent', function(engine, startBlockX, startBlockY) {
   SMAgent.prototype.constructor.apply(this, arguments);
   this.alive = true;
+  this.animFrame = 0;
+  this.turtleImageName = kSMTurtleWalkImages[this.animFrame];
+  this.lastStep = +new Date;
 
   this.pxPos = {
     x: SMMetrics.BlockToPx(startBlockX),
-    y: SMMetrics.BlockToPx(startBlockY)
+    y: SMMetrics.BlockToPx(startBlockY) - 22
   };
 }, {
+  bounds: kSMAgentHitBounds.turtleGreen,
   draw: function() {
-    this.engine.canvas.drawImage(SMImages[this.goombaImageName], this.pxPos.x, this.pxPos.y);
+    this.now = +new Date;
+
+    this.engine.canvas.drawImage(SMImages[this.turtleImageName], this.pxPos.x, this.pxPos.y);
   },
   updateHState: function() {
+    if (this.now - this.lastStep > 300) {
+      this.lastStep = +new Date;
+      this.animFrame = (this.animFrame + 1) % kSMTurtleWalkImages.length;
+      this.turtleImageName = kSMTurtleWalkImages[this.animFrame];
+    }
   },
   updateVState: function() {
   },

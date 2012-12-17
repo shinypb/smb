@@ -43,7 +43,9 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     }
 
     // Change direction if we're running into a solid block.
-    if (this.engine.map.getBlockAtPx(this.pxPos.x, this.pxPos.y).isSolid) {
+    if (this.direction == -1 && this.engine.map.getBlockAtPx(this.pxPos.x, this.pxPos.y).isSolid) {
+      this.changeDirection();
+    } else if (this.direction == 1 && this.engine.map.getBlockAtPx(this.pxPos.x + 32, this.pxPos.y).isSolid) {
       this.changeDirection();
     }
 

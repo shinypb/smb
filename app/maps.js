@@ -45,6 +45,7 @@ SMLevel([
     ['SMGoomba', { x: 14, y: 9 }],
     ['SMGoomba', { x: 10, y: 7}],
     ['SMGoomba', { x: 17, y: 9 }],
-    ['SMGoomba', { x: 22, y: 9}]
+    ['SMGoomba', { x: 22, y: 9}],
+    ['SMTurtle', { x: 7, y: 9}]
   ]
 });
