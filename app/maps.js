@@ -1,3 +1,7 @@
+var kSMLevelPropertyAgents = 'agents';
+var kSMLevelPropertyBackgroundColor = 'backgroundColor';
+var kSMLevelPropertyMapId = 'id';
+
 window.SMLevel = function(mapData, properties) {
   window.SMLevels = window.SMLevels || {};
 
@@ -5,8 +9,17 @@ window.SMLevel = function(mapData, properties) {
     throw new Error("Must include 'id' in properties");
   }
 
+  var validProperties = [
+    'agents',
+    'backgroundColor',
+    'id'
+  ];
+
   SMLevels[properties.id] = mapData;
   Object.keys(properties).forEach(function(key) {
+    if (validProperties.indexOf(key) < 0) {
+      throw new Error('Invalid property ' + key + ' in map definition');
+    }
     SMLevels[properties.id][key] = properties[key];
   });
 }
@@ -27,6 +40,9 @@ SMLevel([
 ], {
   id: 0,
   backgroundColor: kSMColorSkyBlue,
-  playerStartBlock: { x: 2, y: 0 },
-  goombaStartBlock: { x: 14, y: 9 }
+  agents: [
+    ['SMPlayer', { x: 2, y: 0}],
+    ['SMGoomba', { x: 14, y: 9 }],
+    ['SMGoomba', { x: 8, y: 9}]
+  ]
 });

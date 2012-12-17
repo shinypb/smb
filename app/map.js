@@ -39,8 +39,7 @@ defineClass('SMMap', function(mapId) {
       }
     }
 
-    this.playerStartBlock = rawMapData.playerStartBlock;
-    this.goombaStartBlock = rawMapData.goombaStartBlock;
+    this.agents = rawMapData.agents;
   },
 
   getBlockAt: function(x, y) {

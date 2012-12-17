@@ -7,7 +7,6 @@ defineClass('SMEngine', function(aCanvas) {
 
   this.map = new SMMap(0);
 
-  //  TODO: change to use pixels
   this.viewportPx = {
     x: 0,
     y: (this.map.height - kSMEngineGameHeight) * kSMEngineBlockSize,
@@ -15,11 +14,19 @@ defineClass('SMEngine', function(aCanvas) {
     height: kSMEngineGameHeight * kSMEngineBlockSize
   }
 
-  this.player = new SMPlayer(this, this.map.playerStartBlock.x, this.map.playerStartBlock.y);
-  this.addAgent(this.player);
+  this.map.agents.forEach(function(agentDefinition) {
+    var newAgent = SMAgent.FromDefinition(this, agentDefinition);
+    this.addAgent(newAgent);
 
-  this.goomba = new SMGoomba(this, this.map.goombaStartBlock.x, this.map.goombaStartBlock.y);
-  this.addAgent(this.goomba);
+    if (newAgent instanceof SMPlayer) {
+      this.player = newAgent;
+    }
+  }.bind(this));
+
+  if (!this.player) {
+    throw new Error('Map did not specify a player starting position');
+  }
+
 }, {
   addAgent: function(anAgent) {
     this.agents.push(anAgent);
