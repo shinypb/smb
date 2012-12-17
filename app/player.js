@@ -12,7 +12,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
   };
 }, {
   draw: function() {
-    this.engine.canvas.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y);
+    this.engine.canvas.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y, true);
   },
   updateHState: function() {
     /**

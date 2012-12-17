@@ -9,20 +9,16 @@ window.SMLevel = function(mapData, properties) {
     throw new Error("Must include 'id' in properties");
   }
 
-  var validProperties = [
-    'agents',
-    'backgroundColor',
-    'id'
-  ];
-
   SMLevels[properties.id] = mapData;
   Object.keys(properties).forEach(function(key) {
-    if (validProperties.indexOf(key) < 0) {
+    if (SMLevel.ValidProperties.indexOf(key) < 0) {
       throw new Error('Invalid property ' + key + ' in map definition');
     }
+    console.log('setting', key, properties[key]);
     SMLevels[properties.id][key] = properties[key];
   });
 }
+SMLevel.ValidProperties = [kSMLevelPropertyAgents, kSMLevelPropertyBackgroundColor, kSMLevelPropertyMapId];
 
 SMLevel([
   '                                                ',

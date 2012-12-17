@@ -7,6 +7,11 @@ defineClass('SMEngine', function(aCanvas) {
 
   this.map = new SMMap(0);
 
+  //  DEBUG
+  window.pixelsDrawn = [];
+  window.pixelsPerFrame = [];
+  //  END DEBUG
+
   this.viewportPx = {
     x: 0,
     y: (this.map.height - kSMEngineGameHeight) * kSMEngineBlockSize,
@@ -67,14 +72,22 @@ defineClass('SMEngine', function(aCanvas) {
     try {
       this.tickNumber++;
 
-      this.canvas.clear(); // TODO: stop doing this once we can do incremental draws
+      window.pixelsDrawn = [];
+
       this.updateViewport();
       this.canvas.setViewport(this.viewportPx);
-      this.map.renderFrame(this.canvas);
 
+      this.map.renderFrame(this.canvas);
       this.agents.forEach(function(agent) {
         agent.tick();
       });
+
+      var pixelsThisTick = 0;
+      window.pixelsDrawn.forEach(function(pixelCount) {
+        pixelsThisTick += pixelCount;
+      });
+      window.pixelsPerFrame.push(pixelsThisTick);
+
     } catch (e) {
       console.log('Uncaught exception; halting run loop :(');
       this.stopRunLoop();

@@ -1,4 +1,4 @@
-defineClass('SMCanvas',  function (aCanvas) {
+defineClass('SMCanvas', function (aCanvas) {
   this.element = aCanvas;
   this.context = aCanvas.getContext('2d');
 
@@ -24,7 +24,12 @@ defineClass('SMCanvas',  function (aCanvas) {
 }, {
   clear: function() {
     this.context.fillStyle = '#000';
-    this.context.fillRect(0, 0, this.width, this.height); // note: intentionally not using our wrapper method
+
+    // note: intentionally not using our wrapper method; we want screen coordinations, not game coordinations
+    this.context.fillRect(0, 0, this.width, this.height);
+
+    //  Start by marking everything as dirty; this will cause map renderer to render the whole screen.
+    this.dirtyRects = [{ x: 0, y: 0, width: this.width, height: this.height }];
   },
   fillRect: function(absoluteX, absoluteY, width, height) {
     var adjustedPos = this.adjustPos(absoluteX, absoluteY);
@@ -35,6 +40,8 @@ defineClass('SMCanvas',  function (aCanvas) {
     var adjustedWidth = Math.min(this.width - adjustedPos.x, width);
     var adjustedHeight = Math.min(this.height - adjustedPos.y, height);
 
+    this.dirtyRects.push({ x: absoluteX, y: absoluteY, width: adjustedWidth, height: adjustedHeight });
+
     this.context.fillRect(adjustedPos.x, adjustedPos.y, adjustedWidth, adjustedHeight);
   },
   adjustPos: function(absoluteX, absoluteY) {
@@ -43,7 +50,7 @@ defineClass('SMCanvas',  function (aCanvas) {
       y: absoluteY + this.viewport.y
     };
   },
-  drawImage: function(image, absoluteX, absoluteY) {
+  drawImage: function(image, absoluteX, absoluteY, fromPlayer) {
     var adjustedPos = this.adjustPos(absoluteX, absoluteY);
 
     if (adjustedPos.x > this.viewport.x + this.viewport.width || adjustedPos.y > this.viewport.y + this.viewport.height) {
@@ -52,6 +59,8 @@ defineClass('SMCanvas',  function (aCanvas) {
     }
 
     //  TODO: clip right-hand edge of image to edge of viewable area in canvas (only needed when canvas is wider than viewport)
+
+    this.dirtyRects.push({ x: absoluteX, y: absoluteY, width: kSMEngineBlockSize, height: kSMEngineBlockSize, fromPlayer: !!fromPlayer });
 
     this.context.drawImage(image, adjustedPos.x, adjustedPos.y);
   },

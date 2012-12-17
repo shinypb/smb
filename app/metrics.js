@@ -4,5 +4,9 @@ window.SMMetrics = {
   },
   PxToBlock: function(pxValue) {
     return Math.floor(pxValue / kSMEngineBlockSize);
+  },
+  IsRectWithinRect: function(innerRect, outerRect) {
+    //  TODO: write me
+    return true;
   }
 };
