@@ -54,9 +54,9 @@ var kSMPlayerHorizontalSpeed = 0;
 var kSMPlayerStartWalkFrame = 0;
 var kSMPlayerStartAlive = true;
 var kSMPlayerDirectionString = {
-  "1": "right",
-  "0": "center",
-  "-1": "left"
+  '1': 'right',
+  '0': 'center',
+  '-1': 'left'
 };
 var kSMPlayerDirectionRight = 1;
 var kSMPlayerDirectionCenter = 0;
@@ -79,6 +79,11 @@ var kSMPlayerImages = {
     }
   }
 };
+var kSMPlayerAudioLostLife = 'lost-life';
+var kSMPlayerAudioJumpBig = 'jump-big';
+var kSMPlayerAudioJumpSmall = 'jump-small';
+var kSMAgentAudioSquish = 'squish';
+var kSMEngineAudioBackgroundMusic1 = 'background-music-1';
 /**
  * Player bounding constants. I have different bounding boxes for horizontal
  * and vertical movement at the moment. I got less "tweaky" behavior when
@@ -135,6 +140,7 @@ var kSMPlayerGravity = 1.2;
 var kSMPlayerJumpBoost = -12;
 // This time is in milliseconds.
 var kSMPlayerJumpBoostTime = 220;
+var kSMPlayerSquishBoostTime = 120;
 
 //  Times
 var kSMPlayerMinimumWalkFrameDuration = 0.25;

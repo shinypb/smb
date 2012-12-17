@@ -95,6 +95,12 @@ defineClass('SMEngine', function(aCanvas) {
     }
   },
 
+  pauseFor: function(milliseconds) {
+    this.stopRunLoop();
+    var that = this;
+    setTimeout(function() { that.startRunLoop(); }, milliseconds);
+  },
+
   startRunLoop: function() {
     console.log('Starting run loop');
     if (this.runTimer) {

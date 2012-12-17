@@ -101,6 +101,8 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
   },
   updateVState: function() {
     if (!this.alive) {
+      this.vSpeed += kSMPlayerGravity;
+      this.pxPos.y = Math.min(this.pxPos.y + (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit), 388);
       return;
     }
     
@@ -137,6 +139,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
 
     if (this.engine.keyMap[kSMKeyJump] && this.standing && !this.jumpStarted) {
       this.jumpStarted = this.now;
+      SMAudio[kSMPlayerAudioJumpSmall].playFromStart();
       this.standing = false;
     }
 
@@ -155,7 +158,11 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
   die: function() {
     this.alive = false;
     this.direction = kSMPlayerDirectionCenter;
+    SMAudio[kSMEngineAudioBackgroundMusic1].pause();
+    SMAudio[kSMPlayerAudioLostLife].playFromStart();
     this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].dead[0];
+    eng.pauseFor(500);
+    this.vSpeed = kSMPlayerJumpBoost;
   },
   reduceSpeedTo: function(speed, maxSpeed, deceleration) {
     if (speed > maxSpeed) {
@@ -168,6 +175,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     return speed;
   },
   checkCollision: function(otherAgent) {
+    if (!this.alive) return;
     if (otherAgent.squishTime) return;
 
     var ptop = this.pxPos.y + this.bounds[0],
@@ -189,7 +197,8 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       if (pbottom < osquish && this.vSpeed > 0) {
         // squish
         otherAgent.squish();
-        this.vSpeed = -16;
+        this.vSpeed = kSMPlayerJumpBoost;
+        this.jumpStarted = this.now + kSMPlayerSquishBoostTime;
         return false;
       } else {
         this.die();

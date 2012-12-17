@@ -16,7 +16,7 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     this.engine.canvas.drawImage(SMImages[this.goombaImageName], this.pxPos.x, this.pxPos.y);
   },
   updateHState: function() {
-    var now = new Date;
+    var now = +new Date;
     if (!this.squishTime) {
       // Living goomba!
       this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || now;
@@ -40,11 +40,6 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
       }
     }
 
-    // Just testing the squish command.
-    if (SMMetrics.PxToBlock(this.pxPos.x) > 14) {
-      this.squish();
-    }
-
     // Change direction if we're running into a solid block.
     if (eng.map.getBlockAtPx(this.pxPos.x, this.pxPos.y).isSolid) {
       this.changeDirection();
@@ -56,7 +51,8 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     //  TODO: falling/jumping
   },
   squish: function() {
-    this.squishTime = new Date;
+    SMAudio[kSMAgentAudioSquish].playFromStart();
+    this.squishTime = +new Date;
   },
   changeDirection: function() {
     this.direction *= -1;
