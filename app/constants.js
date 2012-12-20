@@ -15,6 +15,23 @@ var kSMBlockWood = '#';
 var kSMBlockQuestion = '?';
 var kSMBlockBush = '%';
 
+var kSMBlockGreenPipeLeft = '[';
+var kSMBlockGreenPipeRight = ']';
+var kSMBlockGreenPipeTopLeft = '<';
+var kSMBlockGreenPipeTopRight = '>';
+
+var kSMBlockBrick = 'o';
+
+var kSMBlockWoodPlankLeft = 'a';
+var kSMBlockWoodPlankRight = 'd';
+var kSMBlockWoodPlankTopLeft = 'q';
+var kSMBlockWoodPlankTopRight = 'e';
+var kSMBlockWoodPlankTop = 'w';
+var kSMBlockWoodPlank = 's';
+
+var kSMBlockBlackCurtain = 'v';
+var kSMBlockBlackSolid = 'b';
+
 //  Map block characteristics
 window.SMBlockProperties = {};
 SMBlockProperties[kSMBlockOutOfBounds] = {
@@ -41,6 +58,76 @@ SMBlockProperties[kSMBlockBush] = {
   isSolid: false,
   isTransparent: true
 };
+
+SMBlockProperties[kSMBlockGreenPipeLeft] = {
+  image: 'green-pipe-left',
+  isSolid: true,
+  isTransparent: true
+};
+SMBlockProperties[kSMBlockGreenPipeRight] = {
+  image: 'green-pipe-right',
+  isSolid: true,
+  isTransparent: true
+};
+SMBlockProperties[kSMBlockGreenPipeTopLeft] = {
+  image: 'green-pipe-top-left',
+  isSolid: true,
+  isTransparent: false
+};
+SMBlockProperties[kSMBlockGreenPipeTopRight] = {
+  image: 'green-pipe-top-right',
+  isSolid: true,
+  isTransparent: false
+};
+
+SMBlockProperties[kSMBlockBrick] = {
+  image: 'brick',
+  isSolid: true,
+  isTransparent: false
+};
+
+SMBlockProperties[kSMBlockWoodPlankLeft] = {
+  image: 'wood-plank-left',
+  isSolid: true,
+  isTransparent: false
+};
+SMBlockProperties[kSMBlockWoodPlankRight] = {
+  image: 'wood-plank-right',
+  isSolid: true,
+  isTransparent: false
+};
+SMBlockProperties[kSMBlockWoodPlankTopLeft] = {
+  image: 'wood-plank-top-left',
+  isSolid: true,
+  isTransparent: true
+};
+SMBlockProperties[kSMBlockWoodPlankTopRight] = {
+  image: 'wood-plank-top-right',
+  isSolid: true,
+  isTransparent: true
+};
+SMBlockProperties[kSMBlockWoodPlankTop] = {
+  image: 'wood-plank-top',
+  isSolid: true,
+  isTransparent: false
+};
+SMBlockProperties[kSMBlockWoodPlank] = {
+  image: 'wood-plank',
+  isSolid: true,
+  isTransparent: false
+};
+
+SMBlockProperties[kSMBlockBlackCurtain] = {
+  image: 'black-curtain',
+  isSolid: false,
+  isTransparent: true
+};
+SMBlockProperties[kSMBlockBlackSolid] = {
+  image: 'black-solid',
+  isSolid: false,
+  isTransparent: true
+};
+
 Object.keys(SMBlockProperties).forEach(function(blockName) {
   //  Cross-reference
   SMBlockProperties[blockName].name = blockName;
@@ -148,6 +235,8 @@ var kSMPlayerDeceleration = 30;
 var kSMPlayerSkidDeceleration = 20;
 var kSMPlayerWalkAcceleration = 19;
 var kSMPlayerRunAcceleration = 28;
+var kSMPlayerScreenEdgePushRight = 250;
+var kSMPlayerScreenEdgePushLeft = 150;
 
 // Vertical physics
 var kSMPlayerGravity = 1.2;

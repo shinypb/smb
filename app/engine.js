@@ -4,7 +4,7 @@ defineClass('SMEngine', function(aCanvas) {
   this.canvas = new SMCanvas(aCanvas);
   this.registerEventListeners();
   this.agents = [];
-  this.enableSounds = false;
+  this.enableSounds = document.getElementById('background-music-1')['autoplay'];
 
   this.map = new SMMap(0);
 
@@ -108,6 +108,15 @@ defineClass('SMEngine', function(aCanvas) {
     //  TODO: follow player's position;
     if (this.tickNumber % 4 == 0 && document.getElementById('auto-scroll').checked) {
       this.viewportPx.x = Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + 1);
+    }
+
+    var diff = this.player.pxPos.x - this.viewportPx.x;
+    if (diff > kSMPlayerScreenEdgePushRight) {
+      this.viewportPx.x = Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + diff - kSMPlayerScreenEdgePushRight);
+    }
+
+    if (diff < kSMPlayerScreenEdgePushLeft && this.viewportPx.x > 0) {
+      this.viewportPx.x = Math.max(0, this.viewportPx.x - (kSMPlayerScreenEdgePushLeft - diff));
     }
   },
 
