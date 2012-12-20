@@ -97,6 +97,21 @@ var kSMAgentHitBounds = {
   goomba: [0, 28, 32, 4],
   turtleGreen: [0, 28, 32, 4]
 };
+var kSMAgentData = {
+  goomba: {
+    normal: {
+      walking: ['goomba-walk-1', 'goomba-walk-2'],
+      squished: ['goomba-squish']
+    }
+  },
+  turtle: {
+    green: {
+      walk: ['turtle-green-walk-1', 'turtle-green-walk-2'],
+      shell: ['turtle-green-shell-1', 'turtle-green-shell-2', 'turtle-green-shell-3', 'turtle-green-shell-4']
+    }
+  }
+};
+
 /**
  * Collisions above this height with downward velocity are considered squishes,
  * where collisions below will cause damage.
@@ -108,12 +123,6 @@ var kSMGoombaSpeed = 1;
 var kSMGoombaStartingDirection = -1;
 var kSMGoombaWalkFrameDuration = kSMEngineFPS * 5.83;
 var kSMGoombaSquishFrameDuration = kSMEngineFPS * 11.6;
-var kSMGoombaWalkImages = ['goomba-walk-1', 'goomba-walk-2'];
-var kSMGoombaSquishImage = 'goomba-squish';
-
-//  Turtle
-var kSMTurtleWalkImages = ['turtle-green-walk-1', 'turtle-green-walk-2'];
-var kSMTurtleShellImages = ['turtle-green-shell-1', 'turtle-green-shell-2', 'turtle-green-shell-3', 'turtle-green-shell-4'];
 
 //  Keycodes
 var kSMKeyAction = 90;

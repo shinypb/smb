@@ -115,6 +115,7 @@ defineClass('SMEngine', function(aCanvas) {
     this.stopRunLoop();
     var that = this;
     setTimeout(function() { that.startRunLoop(); }, milliseconds);
+    this.tick();
   },
 
   startRunLoop: function() {

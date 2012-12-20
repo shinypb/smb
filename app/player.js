@@ -189,9 +189,9 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
         pbottom = this.pxPos.y + this.bounds[2],
         pleft = this.pxPos.x + this.bounds[3];
 
-if(!otherAgent.bounds) {
-  debugger
-}
+    if(!otherAgent.bounds) {
+      debugger
+    }
 
     var otop = otherAgent.pxPos.y + otherAgent.bounds[0],
         oright = otherAgent.pxPos.x + otherAgent.bounds[1],
@@ -209,6 +209,8 @@ if(!otherAgent.bounds) {
         otherAgent.squish();
         this.vSpeed = kSMPlayerJumpBoost;
         this.jumpStarted = this.now + kSMPlayerSquishBoostTime;
+        return false;
+      } else if (pbottom < osquish && this.vSpeed <= 0) {
         return false;
       } else {
         this.die();

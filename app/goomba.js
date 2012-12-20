@@ -8,6 +8,15 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
   this.walkFrame = 0;
   this.squishTime = null;
 
+  this.animations = {};
+  for (var type in kSMAgentData['goomba']) {
+    this.animations[type] = {};
+    for (var anim in kSMAgentData['goomba'][type]) {
+      this.animations[type][anim] = new SMAnimation(kSMAgentData['goomba'][type][anim]);
+    }
+  }
+  this.goombaImageName = this.animations.normal.walking.currentSprite;
+
   this.pxPos = {
     x: SMMetrics.BlockToPx(startBlockX),
     y: SMMetrics.BlockToPx(startBlockY)
@@ -24,16 +33,14 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || now;
       if (now - this.timeOfLastWalkFrame > kSMGoombaWalkFrameDuration) {
         this.timeOfLastWalkFrame = now;
-        this.walkFrame = (this.walkFrame + 1) % kSMGoombaWalkImages.length;
+        // Cycle through the array of animation frames.
+        this.goombaImageName = this.animations.normal.walking.nextSprite();
       }
-
-      // Cycle through the array of animation frames.
-      this.goombaImageName = kSMGoombaWalkImages[this.walkFrame];
 
 
     } else {
       // Squished goomba!
-      this.goombaImageName = kSMGoombaSquishImage;
+      this.goombaImageName = this.animations.normal.squished.currentSprite;
       this.speed = 0;
 
       var squishDuration = kSMGoombaSquishFrameDuration;
