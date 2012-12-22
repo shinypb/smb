@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 
+// Many thanks to Rick N. Bruns for his awesome NES maps at:
+// http://nesmaps.com/maps/SuperMarioBrothers3/SuperMarioBrothers3.html
+//
 // Requires node commander: https://github.com/visionmedia/commander.js/
 // Requires imagemagick: http://www.imagemagick.org/script/download.php
 
 var program = require('commander'),
     childProcess = require('child_process'),
-    assert = require('assert');
+    assert = require('assert')
+    fs = require('fs');
 
 program
   .version('0.0.1')
@@ -13,6 +17,7 @@ program
   .option('-s, --tileSize [tileSize]', 'Specify a tile output directory', 16)
   .option('-d, --outputDir [outputDir]', 'Specify a tile output directory', 'tiles')
   .option('-p, --outputPrefix [outputPrefix]', 'Specify a tile output directory', 'output-')
+  .option('-t, --transparencyColor [transparencyColor]', 'Specify a tile transparency color as a hex color (Do not use a "#" -- ex: 9CFCF0)')
   .parse(process.argv);
 
 var imageHeight,
@@ -21,12 +26,29 @@ var imageHeight,
     md5s = {},
     tiles = {},
     levelString = '',
+    transparencyString = '',
     x = 0,
     y = 0,
     currentCh = 'a',
     currentMD5 = '';
 
 tileSize = parseInt(program.tileSize);
+
+if (program.transparencyColor && program.transparencyColor.length == 6) {
+  transparencyString = '-transparent "#' + program.transparencyColor + '" ';
+} else {
+  console.log('Warning: No transparency color given (or given in an unrecognized format).');
+}
+
+if (!program.image) {
+  console.log('No image to process.');
+  process.exit();
+}
+
+if (!fs.existsSync(program.outputDir) || !fs.statSync(program.outputDir).isDirectory()) {
+  console.log('Output directory does not exist.');
+  process.exit();
+}
 
 // All blocks must be a single character to encode properly.
 // Increment character code skipping unprintable characters.
@@ -85,7 +107,7 @@ childProcess.exec('identify ' + program.image, function (error, stdout, stderr) 
 // -strip remvoes all metadata; important for the md5 comparison and reduces file size.
 // -crop 16x16 is the tile; +x+y is the offset
 function createTile() {
-  var convertCommand = 'convert ' + program.image + ' -strip -crop 16x16+' + (x * tileSize) + '+' + (y * tileSize) + ' ' + program.outputDir + '/' + program.outputPrefix + x + '-' + y + '.png';
+  var convertCommand = 'convert '+ transparencyString + program.image + ' -strip -crop 16x16+' + (x * tileSize) + '+' + (y * tileSize) + ' ' + program.outputDir + '/' + program.outputPrefix + x + '-' + y + '.png';
   childProcess.exec(convertCommand, function (error, stdout, stderr) {
     if (error) {
       dumpError(error);
