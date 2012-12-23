@@ -24,7 +24,6 @@ var imageHeight,
     imageWidth,
     tileSize,
     md5s = {},
-    tiles = {},
     existingTiles = [],
     levelString = '',
     transparencyString = '',
@@ -145,7 +144,6 @@ function registerCurrentTile(filename) {
   if (!md5s[currentMD5]) {
     // Unique tile; add it to the indexes.
     md5s[currentMD5] = {char: currentCh, file: filename};
-    tiles[currentTile] = currentCh;
     currentCh = incrementChar(currentCh);
   } else {
     console.log("Warning: Pre-existing tile has a conflicting md5. This probably shouldn't happen");
@@ -159,7 +157,6 @@ function processCurrentTile(filename) {
   if (!md5s[currentMD5]) {
     // Unique tile; add it to the indexes.
     md5s[currentMD5] = {char: currentCh, file: filename};
-    tiles[x + '-' + y] = currentCh;
     currentCh = incrementChar(currentCh);
   } else {
     // Duplicate tile; record the x and y coordinates so we can
@@ -198,8 +195,8 @@ function processCurrentTile(filename) {
     // Output the text data.
     // This is where a node server would go to make this output prettier.
     console.log('\n');
-    for (var t in tiles) {
-      console.log(tiles[t] + ': ' + '' + program.outputPrefix + t + '.png');
+    for (var t in md5s) {
+      console.log(md5s[t].char + ': ' + md5s[t].file);
     }
     console.log('Level:\n' + levelString + '\n');
     console.log(md5s);
