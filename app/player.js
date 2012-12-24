@@ -77,26 +77,18 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     if (this.hSpeed !== 0) {
       this.pxPos.x += this.hSpeed * kSMEngineBlockSize * kSMFrameUnit;
 
-      var top = this.pxPos.y + kSMPlayerHorizontalBounds[0],
-        right = this.pxPos.x + kSMPlayerHorizontalBounds[1],
-        bottom = this.pxPos.y + kSMPlayerHorizontalBounds[2],
-        left = this.pxPos.x + kSMPlayerHorizontalBounds[3];
+      var top = this.pxPos.y + this.bounds[kSMTop],
+        right = this.pxPos.x + this.bounds[kSMRight],
+        bottom = this.pxPos.y + this.bounds[kSMBottom],
+        left = this.pxPos.x + this.bounds[kSMLeft];
 
-      if (eng.map.getBlockAtPx(left, top).isSolid) {
+      if ((eng.map.getBlockAtPx(left, top + 1).isSolid || eng.map.getBlockAtPx(left, bottom - 1).isSolid) && this.hSpeed < 0) {
         // Check upper left horizontal movement point (moving left)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(left) + 1);
+        this.pxPos.x = eng.map.getBlockRightPx(left) - this.bounds[kSMLeft];
         this.hSpeed = 0;
-      } else if (eng.map.getBlockAtPx(left, bottom).isSolid) {
-        // Check lower left horizontal movement point (moving left)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(left) + 1);
-        this.hSpeed = 0;
-      } else if (eng.map.getBlockAtPx(right, top).isSolid) {
+      } else if ((eng.map.getBlockAtPx(right, top + 1).isSolid || eng.map.getBlockAtPx(right, bottom - 1).isSolid) && this.hSpeed > 0) {
         // Check upper right horizontal movement point (moving right)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(right) - 1);
-        this.hSpeed = 0;
-      } else if (eng.map.getBlockAtPx(right, bottom).isSolid) {
-        // Check lower right horizontal movement point (moving right)
-        this.pxPos.x = SMMetrics.BlockToPx(SMMetrics.PxToBlock(right) - 1);
+        this.pxPos.x = eng.map.getBlockLeftPx(right) - this.bounds[kSMRight];
         this.hSpeed = 0;
       }
     }
@@ -112,29 +104,22 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     this.vSpeed += kSMPlayerGravity;
 
     this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
-    var top = this.pxPos.y + kSMPlayerVerticalBounds[0],
-      right = this.pxPos.x + kSMPlayerVerticalBounds[1],
-      bottom = this.pxPos.y + kSMPlayerVerticalBounds[2],
-      left = this.pxPos.x + kSMPlayerVerticalBounds[3];
+    var top = this.pxPos.y + this.bounds[kSMTop],
+      right = this.pxPos.x + this.bounds[kSMRight],
+      bottom = this.pxPos.y + this.bounds[kSMBottom],
+      left = this.pxPos.x + this.bounds[kSMLeft];
 
-    if (this.engine.map.getBlockAtPx(left, top).isSolid) {
+    if ((this.engine.map.getBlockAtPx(left + 1, top).isSolid || this.engine.map.getBlockAtPx(right - 1, top).isSolid) && this.vSpeed < 0) {
       // Check upper left vertical movement point (moving up)
-      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
+      this.pxPos.y = eng.map.getBlockBottomPx(top) + this.bounds[kSMTop];
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (this.engine.map.getBlockAtPx(right, top).isSolid) {
-      // Check upper right vertical movement point (moving up)
-      this.pxPos.y = SMMetrics.BlockToPx(SMMetrics.PxToBlock(top) + 1);
-      this.vSpeed = 0;
-      this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (this.engine.map.getBlockAtPx(left, bottom).isSolid) {
+    } else if (this.vSpeed > 0 && (this.engine.map.getBlockAtPx(left + 1, bottom).isSolid ||
+        this.engine.map.getBlockAtPx(right - 1, bottom).isSolid ||
+        this.engine.map.getBlockAtPx(left + 1, bottom).canStandOn ||
+        this.engine.map.getBlockAtPx(right - 1, bottom).canStandOn)) {
       // Check lower left vertical movement point (moving down)
-      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
-      this.vSpeed = 0;
-      this.standing = true;
-    } else if (this.engine.map.getBlockAtPx(right, bottom).isSolid) {
-      // Check lower right vertical movement point (moving down)
-      this.pxPos.y  = SMMetrics.BlockToPx(SMMetrics.PxToBlock(bottom) - 1);
+      this.pxPos.y = eng.map.getBlockTopPx(bottom) - this.bounds[kSMBottom];
       this.vSpeed = 0;
       this.standing = true;
     }
@@ -184,19 +169,15 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       return;
     }
 
-    var ptop = this.pxPos.y + this.bounds[0],
-        pright = this.pxPos.x + this.bounds[1],
-        pbottom = this.pxPos.y + this.bounds[2],
-        pleft = this.pxPos.x + this.bounds[3];
+    var ptop = this.pxPos.y + this.bounds[kSMTop],
+        pright = this.pxPos.x + this.bounds[kSMRight],
+        pbottom = this.pxPos.y + this.bounds[kSMBottom],
+        pleft = this.pxPos.x + this.bounds[kSMLeft];
 
-    if(!otherAgent.bounds) {
-      debugger
-    }
-
-    var otop = otherAgent.pxPos.y + otherAgent.bounds[0],
-        oright = otherAgent.pxPos.x + otherAgent.bounds[1],
-        obottom = otherAgent.pxPos.y + otherAgent.bounds[2],
-        oleft = otherAgent.pxPos.x + otherAgent.bounds[3],
+    var otop = otherAgent.pxPos.y + otherAgent.bounds[kSMTop],
+        oright = otherAgent.pxPos.x + otherAgent.bounds[kSMRight],
+        obottom = otherAgent.pxPos.y + otherAgent.bounds[kSMBottom],
+        oleft = otherAgent.pxPos.x + otherAgent.bounds[kSMLeft],
         osquish = otherAgent.pxPos.y + kSMAgentSquishOffset;
 
     var playerHorizontal = pright > oleft && pleft < oright;
@@ -211,6 +192,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
         this.jumpStarted = this.now + kSMPlayerSquishBoostTime;
         return false;
       } else if (pbottom < osquish && this.vSpeed <= 0) {
+        // Player is in the squish zone, but is moving upwards; ignore.
         return false;
       } else {
         this.die();
