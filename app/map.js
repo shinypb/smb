@@ -53,6 +53,31 @@ defineClass('SMMap', function(mapId) {
     return this.getBlockAt(SMMetrics.PxToBlock(xPx), SMMetrics.PxToBlock(yPx));
   },
 
+  getBlockBounds: function(x, y) {
+    return [
+      this.getBlockTopPx(),
+      this.getBlockRightPx(),
+      this.getBlockBottomPx(),
+      this.getBlockLeftPx()
+    ];
+  },
+
+  getBlockTopPx: function(y) {
+    return SMMetrics.PxToBlock(y) * kSMEngineBlockSize;
+  },
+
+  getBlockRightPx: function(x) {
+    return SMMetrics.PxToBlock(x) * kSMEngineBlockSize + kSMEngineBlockSize;
+  },
+
+  getBlockBottomPx: function(y) {
+    return SMMetrics.PxToBlock(y) * kSMEngineBlockSize + kSMEngineBlockSize;
+  },
+
+  getBlockLeftPx: function(x) {
+    return SMMetrics.PxToBlock(x) * kSMEngineBlockSize;
+  },
+
   renderFrame: function(canvas) {
 
     var viewport = canvas.viewport;
