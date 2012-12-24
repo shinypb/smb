@@ -196,7 +196,10 @@ function processCurrentTile(filename) {
     // This is where a node server would go to make this output prettier.
     console.log('\n');
     for (var t in md5s) {
-      console.log(md5s[t].char + ': ' + md5s[t].file);
+      //console.log(md5s[t].char + ': ' + md5s[t].file);
+      console.log('<img src="resources/' + md5s[t].file + '" id="' +
+        md5s[t].file.substr(0, md5s[t].file.length - 4) +
+        '" data-is-solid="" data-character="' + md5s[t].char + '">');
     }
     console.log('Level:\n' + levelString + '\n');
     console.log(md5s);

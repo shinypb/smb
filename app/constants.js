@@ -32,106 +32,23 @@ var kSMBlockWoodPlank = 's';
 var kSMBlockBlackCurtain = 'v';
 var kSMBlockBlackSolid = 'b';
 
+var kSMTop = 0;
+var kSMRight = 1;
+var kSMBottom = 2;
+var kSMLeft = 3;
 //  Map block characteristics
+
 window.SMBlockProperties = {};
 SMBlockProperties[kSMBlockOutOfBounds] = {
   color: '#000',
   isSolid: true,
   isTransparent: false
-}
+};
 SMBlockProperties[kSMBlockSky] = {
   color: kSMColorSkyBlue,
-  isTransparent: false
-};
-SMBlockProperties[kSMBlockWood] = {
-  image: 'wood-block',
-  isSolid: true,
-  isTransparent: true
-};
-SMBlockProperties[kSMBlockQuestion] = {
-  image: 'question-block',
-  isSolid: true,
-  isTransparent: false
-};
-SMBlockProperties[kSMBlockBush] = {
-  image: 'bush',
   isSolid: false,
-  isTransparent: true
-};
-
-SMBlockProperties[kSMBlockGreenPipeLeft] = {
-  image: 'green-pipe-left',
-  isSolid: true,
-  isTransparent: true
-};
-SMBlockProperties[kSMBlockGreenPipeRight] = {
-  image: 'green-pipe-right',
-  isSolid: true,
-  isTransparent: true
-};
-SMBlockProperties[kSMBlockGreenPipeTopLeft] = {
-  image: 'green-pipe-top-left',
-  isSolid: true,
   isTransparent: false
 };
-SMBlockProperties[kSMBlockGreenPipeTopRight] = {
-  image: 'green-pipe-top-right',
-  isSolid: true,
-  isTransparent: false
-};
-
-SMBlockProperties[kSMBlockBrick] = {
-  image: 'brick',
-  isSolid: true,
-  isTransparent: false
-};
-
-SMBlockProperties[kSMBlockWoodPlankLeft] = {
-  image: 'wood-plank-left',
-  isSolid: true,
-  isTransparent: false
-};
-SMBlockProperties[kSMBlockWoodPlankRight] = {
-  image: 'wood-plank-right',
-  isSolid: true,
-  isTransparent: false
-};
-SMBlockProperties[kSMBlockWoodPlankTopLeft] = {
-  image: 'wood-plank-top-left',
-  isSolid: true,
-  isTransparent: true
-};
-SMBlockProperties[kSMBlockWoodPlankTopRight] = {
-  image: 'wood-plank-top-right',
-  isSolid: true,
-  isTransparent: true
-};
-SMBlockProperties[kSMBlockWoodPlankTop] = {
-  image: 'wood-plank-top',
-  isSolid: true,
-  isTransparent: false
-};
-SMBlockProperties[kSMBlockWoodPlank] = {
-  image: 'wood-plank',
-  isSolid: true,
-  isTransparent: false
-};
-
-SMBlockProperties[kSMBlockBlackCurtain] = {
-  image: 'black-curtain',
-  isSolid: false,
-  isTransparent: true
-};
-SMBlockProperties[kSMBlockBlackSolid] = {
-  image: 'black-solid',
-  isSolid: false,
-  isTransparent: true
-};
-
-Object.keys(SMBlockProperties).forEach(function(blockName) {
-  //  Cross-reference
-  SMBlockProperties[blockName].name = blockName;
-});
 
 //  Player
 var kSMPlayerHeightPx = 32;
