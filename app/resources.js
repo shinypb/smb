@@ -10,10 +10,15 @@ Array.prototype.slice.apply(document.querySelectorAll('#resources img')).forEach
       element: elem,
       image: elem.id,
       isSolid: elem.dataset.isSolid || false,
-      isTransparent: elem.dataset.isTransparent || true,
-      color:  elem.dataset.isTransparent || kSMColorSkyBlue,
+      isTransparent: true,
       canStandOn: elem.dataset.canStandOn || false
     };
+    if (elem.dataset.isTransparent) {
+      window.SMBlockProperties[elem.dataset.character].isTransparent = Boolean(elem.dataset.isTransparent);
+    }
+    if (elem.dataset.color) {
+      window.SMBlockProperties[elem.dataset.character].color = elem.dataset.color;
+    }
   }
 });
 console.log('Images:', SMImages);
