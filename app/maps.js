@@ -33,8 +33,8 @@ SMLevel([
 '                          ?                                                                                                                             vbbbbbbbbbbbbbbbbbbbbbbbb',
 '                                                                                                                                                        vbbbbbbbbbbbbbbbbbbbbbbbb',
 '          ??                                                                                                                                            vbbbbbbbbbbbbbbbbbbbbbbbb',
-'                     <>                                                                            #   #           <>      oooo             ##          vbbbbbbbbbbbbbbbbbbbbbbbb',
-'                     []                 ?%%%%%%                 %%                                ##   ##      <>  []     ooooo   o         []  <>      vbbbbbbbbbbbbbbbbbbbbbbbb',
+'               %%%   <>                                                                            #   #           <>      oooo             ##          vbbbbbbbbbbbbbbbbbbbbbbbb',
+'            %%%      []                 ?%%%%%%                 %%                                ##   ##      <>  []     ooooo   o         []  <>      vbbbbbbbbbbbbbbbbbbbbbbbb',
 '         %%%         []               qwwwwwwwwwwwwwwwwwwwwwwwwwwwe      %%%                     ###   ### %%% []  []    ooooooo  oo        []  []      vbbbbbbbbbbbbbbbbbbbbbbbb',
 'qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwweasssssssssssssssssssssssssssd    qwwwwwwwwwwwwwwwwwwwwe  qwwwe   qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe'
 ], {

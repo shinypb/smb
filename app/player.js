@@ -94,19 +94,20 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
     }
   },
   updateVState: function() {
+    this.vSpeed += kSMPlayerGravity;
     if (!this.alive) {
-      this.vSpeed += kSMPlayerGravity;
       this.pxPos.y = Math.min(this.pxPos.y + (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit), 388);
       return;
     }
 
     this.standing = false;
-    this.vSpeed += kSMPlayerGravity;
 
-    this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
+    var delta = (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
+    this.pxPos.y += delta;
     var top = this.pxPos.y + this.bounds[kSMTop],
       right = this.pxPos.x + this.bounds[kSMRight],
       bottom = this.pxPos.y + this.bounds[kSMBottom],
+      oldBottom = this.pxPos.y + this.bounds[kSMBottom] - delta - 1,
       left = this.pxPos.x + this.bounds[kSMLeft];
 
     if ((this.engine.map.getBlockAtPx(left + 1, top).isSolid || this.engine.map.getBlockAtPx(right - 1, top).isSolid) && this.vSpeed < 0) {
@@ -114,10 +115,9 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.pxPos.y = eng.map.getBlockBottomPx(top) + this.bounds[kSMTop];
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (this.vSpeed > 0 && (this.engine.map.getBlockAtPx(left + 1, bottom).isSolid ||
-        this.engine.map.getBlockAtPx(right - 1, bottom).isSolid ||
-        this.engine.map.getBlockAtPx(left + 1, bottom).canStandOn ||
-        this.engine.map.getBlockAtPx(right - 1, bottom).canStandOn)) {
+    } else if (this.vSpeed >= 0 && (this.engine.map.getBlockAtPx(left + 1, bottom).isSolid || this.engine.map.getBlockAtPx(right - 1, bottom).isSolid ||
+        (!this.engine.map.getBlockAtPx(left + 1, oldBottom).canStandOn && this.engine.map.getBlockAtPx(left + 1, bottom).canStandOn) || 
+        (!this.engine.map.getBlockAtPx(right - 1, oldBottom).canStandOn && this.engine.map.getBlockAtPx(right - 1, bottom).canStandOn))) {
       // Check lower left vertical movement point (moving down)
       this.pxPos.y = eng.map.getBlockTopPx(bottom) - this.bounds[kSMBottom];
       this.vSpeed = 0;
