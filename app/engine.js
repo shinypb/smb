@@ -1,11 +1,12 @@
-defineClass('SMEngine', function(aCanvas) {
+defineClass('SMEngine', function(canvasElement) {
   this.tickNumber = 0;
 
-  this.canvas = new SMCanvas(aCanvas);
+  this.canvasElement = canvasElement;
+
   this.registerEventListeners();
-  this.agents = [];
 
   this.map = new SMMap(0);
+  this.canvas = new SMCanvas(canvasElement, this.map);
 
   //  DEBUG
   window.pixelsDrawn = [];
@@ -19,13 +20,13 @@ defineClass('SMEngine', function(aCanvas) {
     height: kSMEngineGameHeight * kSMEngineBlockSize
   }
 
-  this.map.agents.forEach(function(agentDefinition) {
+  this.agents = this.map.agents.map(function(agentDefinition) {
     var newAgent = SMAgent.FromDefinition(this, agentDefinition);
-    this.addAgent(newAgent);
-
     if (newAgent instanceof SMPlayer) {
       this.player = newAgent;
     }
+
+    return newAgent;
   }.bind(this));
 
   if (!this.player) {
@@ -33,10 +34,6 @@ defineClass('SMEngine', function(aCanvas) {
   }
 
 }, {
-  addAgent: function(anAgent) {
-    this.agents.push(anAgent);
-  },
-
   registerEventListeners: function() {
     this.keyMap = {};
     document.addEventListener('keydown', this.onKeyPress.bind(this, true), false);

@@ -72,7 +72,7 @@ defineClass('SMMap', function(mapId) {
 
       this.renderSubframe(canvas, minX, minY, maxX, maxY);
 
-      if (false && dirtyRect.fromPlayer) {
+      if (true && dirtyRect.fromPlayer) {
         canvas.context.strokeStyle = 'red';
         canvas.context.strokeRect(minX * kSMEngineBlockSize, minY * kSMEngineBlockSize, (maxX - minX) * kSMEngineBlockSize, (maxY - minY) * kSMEngineBlockSize);
       }
