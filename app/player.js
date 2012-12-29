@@ -15,7 +15,7 @@ defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
   bounds: kSMAgentHitBounds.player,
 
   draw: function() {
-    this.engine.canvas.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y);
+    this.engine.canvas.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y, true);
   },
   updateHState: function() {
     /**

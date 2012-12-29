@@ -1,4 +1,5 @@
 window.addEventListener('deviceorientation', function (event) {
+  return;
   document.getElementById('debug').innerHTML = 'gamma: ' + parseInt(event.gamma, 10) + ' // beta: ' + parseInt(event.beta, 10);
 
   if (event.beta < -8) {

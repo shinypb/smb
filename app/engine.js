@@ -1,12 +1,18 @@
-defineClass('SMEngine', function(aCanvas) {
+defineClass('SMEngine', function(canvasElement) {
   this.tickNumber = 0;
 
-  this.canvas = new SMCanvas(aCanvas);
+  this.canvasElement = canvasElement;
+
   this.registerEventListeners();
-  this.agents = [];
   this.enableSounds = document.getElementById('background-music-1')['autoplay'];
 
   this.map = new SMMap(0);
+  this.canvas = new SMCanvas(canvasElement, this.map);
+
+  //  DEBUG
+  window.pixelsDrawn = [];
+  window.pixelsPerFrame = [];
+  //  END DEBUG
 
   this.viewportPx = {
     x: 0,
@@ -15,13 +21,13 @@ defineClass('SMEngine', function(aCanvas) {
     height: kSMEngineGameHeight * kSMEngineBlockSize
   };
 
-  this.map.agents.forEach(function(agentDefinition) {
+  this.agents = this.map.agents.map(function(agentDefinition) {
     var newAgent = SMAgent.FromDefinition(this, agentDefinition);
-    this.addAgent(newAgent);
-
     if (newAgent instanceof SMPlayer) {
       this.player = newAgent;
     }
+
+    return newAgent;
   }.bind(this));
 
   if (!this.player) {
@@ -85,17 +91,24 @@ defineClass('SMEngine', function(aCanvas) {
     try {
       this.tickNumber++;
 
-      this.canvas.clear(); // TODO: stop doing this once we can do incremental draws
+      window.pixelsDrawn = [];
+
       this.updateViewport();
-      this.canvas.setViewport(this.viewportPx);
+
       this.map.renderFrame(this.canvas);
-      var that = this;
       this.agents.forEach(function(agent) {
         agent.tick();
-        if (that.player !== agent) {
-          that.player.checkCollision(agent);
+        if (this.player !== agent) {
+          this.player.checkCollision(agent);
         }
+      }.bind(this));
+
+      var pixelsThisTick = 0;
+      window.pixelsDrawn.forEach(function(pixelCount) {
+        pixelsThisTick += pixelCount;
       });
+      window.pixelsPerFrame.push(pixelsThisTick);
+
     } catch (e) {
       console.log('Uncaught exception; halting run loop :(');
       this.stopRunLoop();
@@ -117,6 +130,7 @@ defineClass('SMEngine', function(aCanvas) {
     //  TODO: follow player's position;
     if (this.tickNumber % 4 == 0 && document.getElementById('auto-scroll').checked) {
       this.viewportPx.x = Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + 1);
+      this.canvas.setViewport(this.viewportPx);
     }
 
     var diff = this.player.pxPos.x - this.viewportPx.x;
@@ -131,8 +145,7 @@ defineClass('SMEngine', function(aCanvas) {
 
   pauseFor: function(milliseconds) {
     this.stopRunLoop();
-    var that = this;
-    setTimeout(function() { that.startRunLoop(); }, milliseconds);
+    setTimeout(this.startRunLoop.bind(this), milliseconds);
     this.tick();
   },
 
