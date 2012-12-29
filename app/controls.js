@@ -1,5 +1,9 @@
 window.addEventListener('deviceorientation', function (event) {
-  document.getElementById('debug').innerHTML = 'gamma: ' + parseInt(event.gamma, 10) + ' // beta: ' + parseInt(event.beta, 10);
+  if (!window.eng) {
+    //  eng hasn't been set yet
+    return;
+  }
+  document.getElementById('controls-debug').innerHTML = 'gamma: ' + parseInt(event.gamma, 10) + ' // beta: ' + parseInt(event.beta, 10);
 
   if (event.beta < -8) {
     eng.keyMap[kSMKeyRight] = true;

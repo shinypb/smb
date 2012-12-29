@@ -2,6 +2,10 @@ html {
   background: #000;
 }
 
+body {
+  overflow: hidden;
+}
+
 #rotate-me {
   display: none;
 }

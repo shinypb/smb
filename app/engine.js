@@ -1,5 +1,6 @@
 defineClass('SMEngine', function(canvasElement) {
   this.tickNumber = 0;
+  this.tickDurations = [];
 
   this.canvasElement = canvasElement;
 
@@ -87,8 +88,42 @@ defineClass('SMEngine', function(canvasElement) {
     this.keyMap[e.keyCode] = keyState;
   },
 
+  setDebugText: function(text) {
+    document.getElementById('engine-debug').innerHTML = text;
+  },
+
+  updateDebugInfo: function(lastTickDuration) {
+    function average(anArray) {
+      var sum = anArray.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+      return sum / anArray.length;
+    }
+
+    var pixelsThisTick = 0;
+    window.pixelsDrawn.forEach(function(pixelCount) {
+      pixelsThisTick += pixelCount;
+    });
+    window.pixelsPerFrame.push(pixelsThisTick);
+    if (window.pixelsPerFrame.length > kSMEnginePixelsPerFrameHistoryLength) {
+      window.pixelsPerFrame = window.pixelsPerFrame.slice(window.pixelsPerFrame.length - kSMEnginePixelsPerFrameHistoryLength);
+    }
+
+    this.tickDurations.push(lastTickDuration);
+    if (this.tickDurations.length > kSMEngineTickTimeHistoryLength) {
+      this.tickDurations = this.tickDurations.slice(this.tickDurations.length - kSMEngineTickTimeHistoryLength);
+    }
+
+    var pixelsPerFrame = 'Pixels per tick: ' + parseInt(average(window.pixelsPerFrame));
+    var frameCost = 'Tick duration: ' + parseInt(average(this.tickDurations) * 1000) + 'µs';
+
+    this.setDebugText(pixelsPerFrame + '\t' + frameCost);
+
+  },
+
   tick: function() {
     try {
+      var tickStartTime = new Date;
       this.tickNumber++;
 
       window.pixelsDrawn = [];
@@ -103,11 +138,7 @@ defineClass('SMEngine', function(canvasElement) {
         }
       }.bind(this));
 
-      var pixelsThisTick = 0;
-      window.pixelsDrawn.forEach(function(pixelCount) {
-        pixelsThisTick += pixelCount;
-      });
-      window.pixelsPerFrame.push(pixelsThisTick);
+      this.updateDebugInfo((new Date) - tickStartTime);
 
     } catch (e) {
       console.log('Uncaught exception; halting run loop :(');
