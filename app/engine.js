@@ -135,11 +135,11 @@ defineClass('SMEngine', function(canvasElement) {
 
     var diff = this.player.pxPos.x - this.viewportPx.x;
     if (diff > kSMPlayerScreenEdgePushRight) {
-      this.viewportPx.x = Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + diff - kSMPlayerScreenEdgePushRight);
-    }
-
-    if (diff < kSMPlayerScreenEdgePushLeft && this.viewportPx.x > 0) {
-      this.viewportPx.x = Math.max(0, this.viewportPx.x - (kSMPlayerScreenEdgePushLeft - diff));
+      this.viewportPx.x = Math.ceil(Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + diff - kSMPlayerScreenEdgePushRight));
+      this.canvas.setViewport(this.viewportPx);
+    } else if (diff < kSMPlayerScreenEdgePushLeft && this.viewportPx.x > 0) {
+      this.viewportPx.x = Math.ceil(Math.max(0, this.viewportPx.x - (kSMPlayerScreenEdgePushLeft - diff)));
+      this.canvas.setViewport(this.viewportPx);
     }
   },
 

@@ -99,8 +99,8 @@ defineClass('SMCanvas', function (aCanvas, engine) {
       //  e.g. if the new viewport is offset by 10px horizontally, move current contents over horizontally
       var destX = prevViewport.x - newViewport.x;
       var destY = prevViewport.y - newViewport.y;
-      var destWidth = prevViewport.width - Math.abs(destX);
-      var destHeight = prevViewport.height - Math.abs(destY);
+      var destWidth = prevViewport.width;
+      var destHeight = prevViewport.height;
 
       this.context.drawImage(this.element, 0, 0, destWidth, destHeight, destX, destY, destWidth, destHeight);
 
@@ -109,8 +109,7 @@ defineClass('SMCanvas', function (aCanvas, engine) {
       //  If we move vertically, we need to draw a wide, short rectangle on the top or bottom edge
       if (newViewport.x != prevViewport.x) {
         var hRectWidth = Math.abs(newViewport.x - prevViewport.x);
-        var hRectX = newViewport.width - hRectWidth;
-
+        var hRectX = (newViewport.x > prevViewport.x) ? (newViewport.width - hRectWidth) : 0;
         this.markRelativeRectDirty(hRectX, 0, hRectWidth, newViewport.height);
       }
       if (newViewport.y != newViewport.y) {

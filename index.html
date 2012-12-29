@@ -12,7 +12,6 @@
     <div id="rotate-me">Rotate me! I only work in landscape mode.<img src="resources/player-dead.png"></div>
 
     <canvas id="c"></canvas>
-    <img src="resources/button.png" id="button">
 
     <div id="resources">
       <!-- player frames -->
@@ -43,7 +42,7 @@
       <img src="resources/wood-block.png" id="wood-block" data-character="#" data-is-solid="true">
       <img src="resources/question-block.png" id="question-block" data-character="?" data-is-solid="true">
       <img src="resources/bush.png" id="bush" data-character="%"  data-can-stand-on="true">
-      
+
       <img src="resources/green-pipe-left.png" id="green-pipe-left" data-character="[" data-is-solid="true">
       <img src="resources/green-pipe-right.png" id="green-pipe-right" data-character="]" data-is-solid="true">
       <img src="resources/green-pipe-top-left.png" id="green-pipe-top-left" data-character="<" data-is-solid="true">
@@ -142,7 +141,7 @@ Arrow keys to move, Z to run, X to jump.
     (function() {
       console.log(+new Date);
       var eng = window.eng = new SMEngine(document.getElementById('c'));
-      eng.startRunLoop();
+      window.addEventListener('load', eng.startRunLoop.bind(eng));
     })();
   </script>
 
