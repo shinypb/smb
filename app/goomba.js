@@ -50,7 +50,7 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
       this.changeDirection();
     }
 
-    this.pxPos.x += (this.direction * this.speed * kSMEngineBlockSize * kSMFrameUnit);
+    this.pxPos.x += this.direction * this.speed * kSMEngineBlockSize * kSMFrameUnit;
   },
   updateVState: function() {
     //  TODO: falling/jumping

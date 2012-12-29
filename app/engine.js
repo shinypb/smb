@@ -72,7 +72,6 @@ defineClass('SMEngine', function(canvasElement) {
       window.pixelsDrawn = [];
 
       this.updateViewport();
-      this.canvas.setViewport(this.viewportPx);
 
       this.map.renderFrame(this.canvas);
       this.agents.forEach(function(agent) {
@@ -97,6 +96,7 @@ defineClass('SMEngine', function(canvasElement) {
     //  TODO: follow player's position;
     if (this.tickNumber % 4 == 0 && document.getElementById('auto-scroll').checked) {
       this.viewportPx.x = Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + 1);
+      this.canvas.setViewport(this.viewportPx);
     }
   },
 

@@ -56,8 +56,9 @@ defineClass('SMMap', function(mapId) {
   },
 
   renderFrame: function(canvas) {
+    var dirtyRects = canvas.dirtyRects;
 
-    canvas.dirtyRects.forEach(function(dirtyRect) {
+    dirtyRects.forEach(function(dirtyRect) {
       if (!SMMetrics.IsRectWithinRect(dirtyRect, canvas.viewport)) {
         //  out of bounds, don't bother
         return;
@@ -65,14 +66,19 @@ defineClass('SMMap', function(mapId) {
 
       window.pixelsDrawn.push(dirtyRect.width * dirtyRect.height);
 
-      var minX = Math.floor(dirtyRect.x / kSMEngineBlockSize);
-      var minY = Math.floor(dirtyRect.y / kSMEngineBlockSize);
-      var maxX = minX + Math.ceil((dirtyRect.x + dirtyRect.width) / kSMEngineBlockSize);
-      var maxY = minY + Math.ceil((dirtyRect.y + dirtyRect.height) / kSMEngineBlockSize);
+//       var minX = Math.floor(dirtyRect.x / kSMEngineBlockSize);
+//       var minY = Math.floor(dirtyRect.y / kSMEngineBlockSize);
+//       var maxX = minX + Math.ceil((dirtyRect.x + dirtyRect.width) / kSMEngineBlockSize);
+//       var maxY = minY + Math.ceil((dirtyRect.y + dirtyRect.height) / kSMEngineBlockSize);
+
+      var minX = SMMetrics.PxToBlock(dirtyRect.x);
+      var maxX = SMMetrics.PxToBlock(dirtyRect.x + dirtyRect.width) + 1;
+      var minY = SMMetrics.PxToBlock(dirtyRect.y);
+      var maxY = SMMetrics.PxToBlock(dirtyRect.y + dirtyRect.height) + 1;
 
       this.renderSubframe(canvas, minX, minY, maxX, maxY);
 
-      if (true && dirtyRect.fromPlayer) {
+      if (false && dirtyRect) {
         canvas.context.strokeStyle = 'red';
         canvas.context.strokeRect(minX * kSMEngineBlockSize, minY * kSMEngineBlockSize, (maxX - minX) * kSMEngineBlockSize, (maxY - minY) * kSMEngineBlockSize);
       }
@@ -84,7 +90,12 @@ defineClass('SMMap', function(mapId) {
 
   renderSubframe: function(canvas, minX, minY, maxX, maxY) {
     canvas.context.fillStyle = this.backgroundColor;
-    canvas.fillRect(SMMetrics.BlockToPx(minX), SMMetrics.BlockToPx(minY), SMMetrics.BlockToPx(maxX - minX), SMMetrics.BlockToPx(maxY - minY));
+    canvas.fillRect(
+      SMMetrics.BlockToPx(minX),
+      SMMetrics.BlockToPx(minY),
+      SMMetrics.BlockToPx(maxX - minX),
+      SMMetrics.BlockToPx(maxY - minY)
+    );
 
     var x, y, blockInfo, xPx, yPx;
     for(x = minX; x <= maxX; x++) {
