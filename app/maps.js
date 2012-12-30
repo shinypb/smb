@@ -55,7 +55,7 @@ SMLevel([
   id: 0,
   backgroundColor: kSMColorSkyBlue,
   agents: [
-    ['SMPlayer', { x: 1.5*18, y: 10}],
+    ['SMPlayer', { x: 1.5, y: 10}],
     ['SMGoomba', { x: 14, y: 9 }],
     ['SMGoomba', { x: 10, y: 7}],
     ['SMGoomba', { x: 17, y: 9 }],
