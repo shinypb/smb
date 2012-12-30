@@ -1,31 +1,42 @@
-//  Load images
-console.log('Loading images');
-window.SMImages = {};
+'use strict';
+(function() {
+  //  Load images
+  console.log('Loading images');
+  window.SMImages = {};
+  window.SMBlockProperties = window.SMBlockProperties || {};
 
-Array.prototype.slice.apply(document.querySelectorAll('#resources img')).forEach(function(elem) {
-  SMImages[elem.id] = elem;
-  if (elem.dataset.character) {
+  var distinctCharacters = [];
+  Array.prototype.slice.apply(document.querySelectorAll('#resources img')).forEach(function(elem) {
+    if (!elem.id) {
+      //  Give the image a unique ID based on its filename (e.g. resources/foo.png -> foo)
+      elem.id = elem.src.match(/(\/([^/]+).png)$/)[2];
+    }
+
+    SMImages[elem.id] = elem;
+    if (!elem.dataset.character) {
+      return;
+    }
+
+    if (distinctCharacters.indexOf(elem.dataset.character) >= 0) {
+      throw new Error('Duplicate data-character attribute "' + elem.dataset.character + '"');
+    }
+    distinctCharacters.push(elem.dataset.character);
+
     // Load block properties from HTML data (and set defaults for missing properties.)
-    window.SMBlockProperties[elem.dataset.character] = {
+    SMBlockProperties[elem.dataset.character] = {
       element: elem,
       image: elem.id,
-      isSolid: elem.dataset.isSolid || false,
-      isTransparent: true,
-      canStandOn: elem.dataset.canStandOn || false
+      isSolid: !!elem.dataset.isSolid,
+      isTransparent: !!elem.dataset.isTransparent,
+      canStandOn: !!elem.dataset.canStandOn,
+      color: elem.dataset.color
     };
-    if (elem.dataset.isTransparent) {
-      window.SMBlockProperties[elem.dataset.character].isTransparent = Boolean(elem.dataset.isTransparent);
-    }
-    if (elem.dataset.color) {
-      window.SMBlockProperties[elem.dataset.character].color = elem.dataset.color;
-    }
-  }
-});
-console.log('Images:', SMImages);
+  });
+  console.log('Images:', SMImages);
 
-window.SMAudio = {};
-
-(function() {
+  //  Load images
+  console.log('Loading audio');
+  window.SMAudio = {};
   var playFromStart = function() {
     try {
       if (eng.enableSounds) {
@@ -42,4 +53,5 @@ window.SMAudio = {};
     SMAudio[elem.id] = elem;
     elem.playFromStart = playFromStart;
   });
+
 })();

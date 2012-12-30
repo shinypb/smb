@@ -130,6 +130,9 @@ defineClass('SMMap', function(mapId) {
         yPx = SMMetrics.BlockToPx(y);
 
         blockInfo = this.getBlockAt(x, y);
+        if (!blockInfo) {
+          debugger
+        }
         if (!blockInfo.color && !blockInfo.image) {
           //  Need one or the other
           console.log('Invalid block', x, y, this.data[x][y], blockInfo);
