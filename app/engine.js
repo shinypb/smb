@@ -1,3 +1,4 @@
+'use strict';
 defineClass('SMEngine', function(canvasElement) {
   this.tickNumber = 0;
   this.tickDurations = [];
@@ -149,12 +150,6 @@ defineClass('SMEngine', function(canvasElement) {
   },
 
   updateViewport: function() {
-    //  TODO: follow player's position;
-    if (this.tickNumber % 4 == 0 && document.getElementById('auto-scroll').checked) {
-      this.viewportPx.x = Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + 1);
-      this.canvas.setViewport(this.viewportPx);
-    }
-
     var diff = this.player.pxPos.x - this.viewportPx.x;
     if (diff > kSMPlayerScreenEdgePushRight) {
       this.viewportPx.x = Math.ceil(Math.min(this.map.widthPx - this.viewportPx.width, this.viewportPx.x + diff - kSMPlayerScreenEdgePushRight));

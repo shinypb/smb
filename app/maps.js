@@ -1,3 +1,5 @@
+'use strict';
+
 var kSMLevelPropertyAgents = 'agents';
 var kSMLevelPropertyBackgroundColor = 'backgroundColor';
 var kSMLevelPropertyMapId = 'id';

@@ -1,3 +1,4 @@
+'use strict';
 defineClass('SMAgent', function(engine) {
   this.engine = engine;
 }, {

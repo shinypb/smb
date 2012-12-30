@@ -1,3 +1,4 @@
+'use strict';
 defineClass('SMSprite',  function (elem) {
   this.element = elem;
   this.width = elem.width;

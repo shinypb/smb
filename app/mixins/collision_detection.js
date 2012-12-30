@@ -1,3 +1,4 @@
+'use strict';
 defineMixin('SMCollisionDetection', {
   colliding: function(bounds1, bounds2) {
     if (bounds1[kSMBottom] < bounds2[kSMTop])    return false;

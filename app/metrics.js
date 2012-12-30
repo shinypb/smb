@@ -1,3 +1,4 @@
+'use strict';
 window.SMMetrics = {
   BlockToPx: function(blockValue) {
     return blockValue * kSMEngineBlockSize;

@@ -1,3 +1,5 @@
+'use strict';
+
 var kSMColorSkyBlue = '#A9FDF4';
 
 var kSMEngineFPS = 60;

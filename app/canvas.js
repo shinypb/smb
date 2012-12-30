@@ -1,3 +1,4 @@
+'use strict';
 /**
  *  SMCanvas is an intermediary between the game and the HTML element that it draws into.
  *  It is used by SMAgents and SMMap in order to draw; they never draw directly onto the

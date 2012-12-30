@@ -1,3 +1,4 @@
+'use strict';
 defineClass('SMPlayer', 'SMAgent', function(engine, startBlockX, startBlockY) {
   SMAgent.prototype.constructor.apply(this, arguments);
   this.direction = kSMPlayerDirectionRight;

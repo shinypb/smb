@@ -1,3 +1,5 @@
+'use strict';
+
 defineClass('SMMap', function(mapId) {
 
   if (!SMLevels[mapId]) {

@@ -1,3 +1,4 @@
+'use strict';
 defineClass('SMAnimation',  function (arr) {
   this.spriteArray = arr;
   this.currentIndex = 0;
