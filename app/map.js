@@ -116,8 +116,8 @@ defineClass('SMMap', function(mapId) {
   },
 
   renderSubframe: function(canvas, minX, minY, maxX, maxY) {
-    canvas.context.fillStyle = this.backgroundColor;
     canvas.fillRect(
+      this.backgroundColor,
       SMMetrics.BlockToPx(minX),
       SMMetrics.BlockToPx(minY),
       SMMetrics.BlockToPx(maxX - minX),

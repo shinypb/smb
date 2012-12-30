@@ -37,7 +37,9 @@ defineClass('SMCanvas', function (aCanvas, engine) {
     var y = SMMetrics.PxToNearestBlockPx(this.viewport.y);
     this.dirtyRects = [{ x: x, y: y, width: this.width, height: this.height }];
   },
-  fillRect: function(absoluteX, absoluteY, width, height) {
+  fillRect: function(fillStyle, absoluteX, absoluteY, width, height) {
+    this.context.fillStyle = fillStyle;
+
     var adjustedPos = this.adjustPos(absoluteX, absoluteY);
     if (adjustedPos.x > this.viewport.x + this.viewport.width || adjustedPos.y > this.viewport.y + this.viewport.height) {
       return;
