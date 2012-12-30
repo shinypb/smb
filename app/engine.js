@@ -34,7 +34,7 @@ defineClass('SMEngine', function(canvasElement) {
   if (!this.player) {
     throw new Error('Map did not specify a player starting position');
   }
-}, {
+}, SMCollisionDetection, {
   addAgent: function(anAgent) {
     this.agents.push(anAgent);
   },
@@ -146,15 +146,6 @@ defineClass('SMEngine', function(canvasElement) {
 
       throw e;
     }
-  },
-
-  colliding: function(bounds1, bounds2) {
-    if (bounds1[kSMBottom] < bounds2[kSMTop])    return false;
-    if (bounds1[kSMTop]    > bounds2[kSMBottom]) return false;
-    if (bounds1[kSMRight]  < bounds2[kSMLeft])   return false;
-    if (bounds1[kSMLeft]   > bounds2[kSMRight])  return false;
-
-    return true;
   },
 
   updateViewport: function() {
