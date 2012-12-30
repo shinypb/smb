@@ -132,12 +132,13 @@ defineClass('SMEngine', function(canvasElement) {
       this.updateViewport();
 
       this.map.renderFrame(this.canvas);
-      this.agents.forEach(function(agent) {
+      Array.prototype.slice.apply(this.agents).forEach(function(agent) {
         agent.tick();
         if (this.player !== agent) {
           this.player.checkCollision(agent);
         }
       }.bind(this));
+      this.canvas.flush();
 
       this.updateDebugInfo((new Date) - tickStartTime);
 
@@ -162,7 +163,15 @@ defineClass('SMEngine', function(canvasElement) {
 
   pauseFor: function(milliseconds) {
     this.stopRunLoop();
+
     setTimeout(this.startRunLoop.bind(this), milliseconds);
+
+    //  We need to flush the canvas now to prevent glitches when the run loop resumes
+    this.canvas.flush();
+
+    //  We need to explicitly tick one last time so agents have a chance to redraw
+    //  themselves -- in particular, we pause when Mario dies, and this tick is when
+    //  the "dead Mario facing forward" image is drawn.
     this.tick();
   },
 

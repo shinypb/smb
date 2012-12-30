@@ -3,6 +3,8 @@
  *  SMCanvas is an intermediary between the game and the HTML element that it draws into.
  *  It is used by SMAgents and SMMap in order to draw; they never draw directly onto the
  *  element.
+ *  All drawing actually happens on an off-screen buffer. Calling .flush() on SMCanvas
+ *  copies the buffer into the on-screen <canvas>.
  */
 defineClass('SMCanvas', function (aCanvas, engine) {
   this.element = aCanvas;
@@ -19,25 +21,33 @@ defineClass('SMCanvas', function (aCanvas, engine) {
     height: this.height
   }
 
-  this.element.height = this.height;
-  this.element.width = this.width;
-  this.element.style.height = this.height + 'px';
-  this.element.style.width = this.width + 'px';
+  //  For silky-smooth graphics, we want double-buffering. Create our own buffer canvas.
+  this.bufferElement = document.createElement('canvas');
+  this.bufferContext = this.bufferElement.getContext('2d');
+
+  [this.element, this.bufferElement].forEach(function(element) {
+    element.height = this.height;
+    element.width = this.width;
+    element.style.height = this.height + 'px';
+    element.style.width = this.width + 'px';
+  }.bind(this));
 
   this.clear();
 }, {
   clear: function() {
-    this.context.fillStyle = '#000';
+    this.bufferContext.fillStyle = '#000';
 
     // note: intentionally not using our wrapper method; we want screen coordinations, not game coordinations
-    this.context.fillRect(0, 0, this.width, this.height);
+    this.bufferContext.fillRect(0, 0, this.width, this.height);
 
     //  Start by marking everything as dirty; this will cause map renderer to render the whole screen.
     var x = SMMetrics.PxToNearestBlockPx(this.viewport.x);
     var y = SMMetrics.PxToNearestBlockPx(this.viewport.y);
     this.dirtyRects = [{ x: x, y: y, width: this.width, height: this.height }];
   },
-  fillRect: function(absoluteX, absoluteY, width, height) {
+  fillRect: function(fillStyle, absoluteX, absoluteY, width, height) {
+    this.bufferContext.fillStyle = fillStyle;
+
     var adjustedPos = this.adjustPos(absoluteX, absoluteY);
     if (adjustedPos.x > this.viewport.x + this.viewport.width || adjustedPos.y > this.viewport.y + this.viewport.height) {
       return;
@@ -48,7 +58,7 @@ defineClass('SMCanvas', function (aCanvas, engine) {
 
     this.markAbsoluteRectDirty(absoluteX, absoluteY, adjustedWidth, adjustedHeight);
 
-    this.context.fillRect(adjustedPos.x, adjustedPos.y, adjustedWidth, adjustedHeight);
+    this.bufferContext.fillRect(adjustedPos.x, adjustedPos.y, adjustedWidth, adjustedHeight);
   },
   adjustPos: function(absoluteX, absoluteY) {
     return {
@@ -71,13 +81,16 @@ defineClass('SMCanvas', function (aCanvas, engine) {
 
     this.markAbsoluteRectDirty(absoluteX, absoluteY, kSMEngineBlockSize, kSMEngineBlockSize, !!fromPlayer);
 
-    this.context.drawImage(image, adjustedPos.x, adjustedPos.y);
+    this.bufferContext.drawImage(image, adjustedPos.x, adjustedPos.y);
   },
   markAbsoluteRectDirty: function(x, y, width, height, fromPlayer) {
     this.dirtyRects.push({ x: x, y: y, width: width, height: height, fromPlayer: fromPlayer });
   },
   markRelativeRectDirty: function(x, y, width, height, fromPlayer) {
     this.markAbsoluteRectDirty(x + this.viewport.x, y + this.viewport.y, width, height, fromPlayer);
+  },
+  flush: function() {
+    this.context.drawImage(this.bufferElement, 0, 0, this.width, this.height);
   },
   setViewport: function(newViewport) {
     //  Set the new viewport
@@ -103,7 +116,7 @@ defineClass('SMCanvas', function (aCanvas, engine) {
       var destWidth = prevViewport.width;
       var destHeight = prevViewport.height;
 
-      this.context.drawImage(this.element, 0, 0, destWidth, destHeight, destX, destY, destWidth, destHeight);
+      this.bufferContext.drawImage(this.element, 0, 0, destWidth, destHeight, destX, destY, destWidth, destHeight);
 
       //  Step two: The disjoint regions of these two viewports must be marked as dirty
       //  If we move horizontally, we need to redraw a tall, skinny rectangle on the left or right edge
