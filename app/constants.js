@@ -2,9 +2,8 @@
 
 var kSMColorSkyBlue = '#A9FDF4';
 
-var kSMEngineFPS = 15;
-var kSMEngineTickTimeHistoryLength = 2 * kSMEngineFPS;
-var kSMEnginePixelsPerFrameHistoryLength = 2 * kSMEngineFPS;
+var kSMEngineTickTimeHistoryLength = 100;
+var kSMEnginePixelsPerFrameHistoryLength = 100;
 var kSMEngineBlockSize = 32;
 
 //  TODO: rename these to kSMEngineViewportHeight/Width
@@ -14,8 +13,6 @@ var kSMEngineGameHeight = 12;
 //  Shrink the viewport in smaller windows
 kSMEngineGameWidth = Math.min(Math.floor(window.innerWidth / kSMEngineBlockSize), kSMEngineGameWidth);
 kSMEngineGameHeight = Math.min(Math.floor(window.innerHeight / kSMEngineBlockSize), kSMEngineGameHeight);
-// kSMEngineGameWidth = Math.max(kSMEngineGameHeight, 15)
-// kSMEngineGameHeight = Math.max(kSMEngineGameHeight, 10);
 
 //  Map data values
 var kSMBlockOutOfBounds = NaN;
@@ -134,8 +131,8 @@ var kSMAgentSquishOffset = 16;
 //  Goomba
 var kSMGoombaSpeed = 1;
 var kSMGoombaStartingDirection = -1;
-var kSMGoombaWalkFrameDuration = kSMEngineFPS * 5.83;
-var kSMGoombaSquishFrameDuration = kSMEngineFPS * 11.6;
+var kSMGoombaWalkFrameDuration = 0.349;
+var kSMGoombaSquishFrameDuration = 1.16;
 
 //  Keycodes
 var kSMKeyAction = 90;
@@ -149,6 +146,7 @@ var kSMKeyDown = 40;
  * Physics
  * Speeds should be measured in blocks-per-second
  * Times should be measured in seconds
+ * TODO: should we switch to using milliseconds instead of seconds?
  */
 
 /**

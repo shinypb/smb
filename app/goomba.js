@@ -48,14 +48,14 @@ defineClass(
         this.goombaImageName = this.animations.normal.squished.currentSprite;
         this.speed = 0;
 
-        var squishDuration = kSMGoombaSquishFrameDuration;
+        var squishDuration = kSMGoombaSquishFrameDuration * 1000;
         if (this.engine.now - this.timeOfLastWalkFrame > squishDuration) {
           this.alive = false;
         }
       } else {
         // Living goomba!
         this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || this.engine.now;
-        if (this.engine.now - this.timeOfLastWalkFrame > kSMGoombaWalkFrameDuration) {
+        if (this.engine.now - this.timeOfLastWalkFrame > (kSMGoombaWalkFrameDuration * 1000)) {
           this.timeOfLastWalkFrame = this.engine.now;
           // Cycle through the array of animation frames.
           this.goombaImageName = this.animations.normal.walking.nextSprite();

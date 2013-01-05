@@ -195,10 +195,8 @@ defineClass('SMEngine', function(canvasElement) {
   nextFrame: function() {
     var now = new Date;
     if (now - this.pauseTime < this.pauseDuration) {
-      document.title = 'p';
       return;
     }
-    document.title = 'g';
 
     var requestAnimationFrame = (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || webkitRequestAnimationFrame);
 
