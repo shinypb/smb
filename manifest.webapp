@@ -10,5 +10,5 @@
     "url": "http://markchristian.org/smb"
   },
   "default_locale": "en",
-  "orientation": ["landscape"]
+  "orientation": ["landscape-primary"]
 }

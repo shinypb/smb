@@ -28,6 +28,8 @@ die: function() {
     this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].dead[0];
     eng.pauseFor(500);
     this.vSpeed = kSMPlayerJumpBoost;
+
+    setTimeout(window.location.reload, 5000);
   },
   reduceSpeedTo: function(speed, maxSpeed, deceleration) {
     if (speed > maxSpeed) {
