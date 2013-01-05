@@ -4,7 +4,7 @@
  *  It is used by SMAgents and SMMap in order to draw; they never draw directly onto the
  *  element.
  */
-defineClass('SMCanvas', function (aCanvas, engine) {
+defineClass('SMCanvas', function (aCanvas, viewport, engine) {
   this.element = aCanvas;
   this.context = aCanvas.getContext('2d');
   this.engine = engine;
@@ -12,12 +12,7 @@ defineClass('SMCanvas', function (aCanvas, engine) {
   this.width = SMMetrics.BlockToPx(kSMEngineGameWidth);
   this.height = SMMetrics.BlockToPx(kSMEngineGameHeight);
 
-  this.viewport = {
-    x: 0,
-    y: 0,
-    width: this.width,
-    height: this.height
-  }
+  this.viewport = viewport;
 
   this.element.height = this.height;
   this.element.width = this.width;
@@ -38,6 +33,9 @@ defineClass('SMCanvas', function (aCanvas, engine) {
     this.dirtyRects = [{ x: x, y: y, width: this.width, height: this.height }];
   },
   fillRect: function(fillStyle, absoluteX, absoluteY, width, height) {
+    if (!fillStyle) {
+      debugger
+    }
     this.context.fillStyle = fillStyle;
 
     var adjustedPos = this.adjustPos(absoluteX, absoluteY);

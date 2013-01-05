@@ -27,7 +27,7 @@ defineClass('SMTurtle', 'SMAgent', function(engine, startBlockX, startBlockY) {
   updateVState: function() {
   },
   squish: function() {
-    SMAudio[kSMAgentAudioSquish].playFromStart();
+//     SMAudio[kSMAgentAudioSquish].playFromStart();
     this.squishTime = +new Date;
   },
   changeDirection: function() {

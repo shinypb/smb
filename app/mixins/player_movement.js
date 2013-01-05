@@ -109,7 +109,7 @@ defineMixin('SMPlayerMovement', {
 
     if (this.engine.keyMap[kSMKeyJump] && this.standing && !this.jumpStarted) {
       this.jumpStarted = this.now;
-      SMAudio[kSMPlayerAudioJumpSmall].playFromStart();
+//       SMAudio[kSMPlayerAudioJumpSmall].playFromStart();
       this.standing = false;
     }
 

@@ -23,8 +23,8 @@ SMPlayerMovement,
 die: function() {
     this.alive = false;
     this.direction = kSMPlayerDirectionCenter;
-    SMAudio[kSMEngineAudioBackgroundMusic1].pause();
-    SMAudio[kSMPlayerAudioLostLife].playFromStart();
+//     SMAudio[kSMEngineAudioBackgroundMusic1].pause();
+//     SMAudio[kSMPlayerAudioLostLife].playFromStart();
     this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].dead[0];
     eng.pauseFor(500);
     this.vSpeed = kSMPlayerJumpBoost;

@@ -6,15 +6,9 @@ defineClass('SMEngine', function(canvasElement) {
   this.canvasElement = canvasElement;
 
   this.registerEventListeners();
-  this.enableSounds = document.getElementById('background-music-1')['autoplay'];
+  this.enableSounds = (document.getElementById('background-music-1') || {})['autoplay'];
 
   this.map = new SMMap(0);
-  this.canvas = new SMCanvas(canvasElement, this.map);
-
-  //  DEBUG
-  window.pixelsDrawn = [];
-  window.pixelsPerFrame = [];
-  //  END DEBUG
 
   this.viewportPx = {
     x: 0,
@@ -22,6 +16,13 @@ defineClass('SMEngine', function(canvasElement) {
     width: kSMEngineGameWidth * kSMEngineBlockSize,
     height: kSMEngineGameHeight * kSMEngineBlockSize
   };
+
+  this.canvas = new SMCanvas(canvasElement, this.viewportPx, this.map);
+
+  //  DEBUG
+  window.pixelsDrawn = [];
+  window.pixelsPerFrame = [];
+  //  END DEBUG
 
   this.agents = this.map.agents.map(function(agentDefinition) {
     var newAgent = SMAgent.FromDefinition(this, agentDefinition);
@@ -86,6 +87,10 @@ defineClass('SMEngine', function(canvasElement) {
   },
 
   onKeyPress: function(keyState, e) {
+    if (e.keyCode >= 37 && e.keyCode <= 40) {
+      e.preventDefault();
+    }
+
     this.keyMap[e.keyCode] = keyState;
   },
 
@@ -116,7 +121,7 @@ defineClass('SMEngine', function(canvasElement) {
     }
 
     var pixelsPerFrame = 'Pixels per tick: ' + parseInt(average(window.pixelsPerFrame));
-    var frameCost = 'Tick duration: ' + parseInt(average(this.tickDurations) * 1000) + 'µs';
+    var frameCost = 'Tick duration: ' + parseInt(average(this.tickDurations) * 1000) + '&#181;s';
 
     this.setDebugText(pixelsPerFrame + '\t' + frameCost);
 

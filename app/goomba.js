@@ -87,7 +87,7 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     }
   },
   squish: function() {
-    SMAudio[kSMAgentAudioSquish].playFromStart();
+//     SMAudio[kSMAgentAudioSquish].playFromStart();
     this.squishTime = +new Date;
   },
   changeDirection: function() {

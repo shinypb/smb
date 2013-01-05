@@ -9,8 +9,14 @@ var kSMEngineBlockSize = 32;
 var kSMFrameUnit = 1 / kSMEngineFPS;
 
 //  TODO: rename these to kSMEngineViewportHeight/Width
-var kSMEngineGameWidth = 16; // should be 16 once scrolling is available
+var kSMEngineGameWidth = 16;
 var kSMEngineGameHeight = 12;
+
+//  Shrink the viewport in smaller windows
+kSMEngineGameWidth = Math.min(Math.floor(window.innerWidth / kSMEngineBlockSize), kSMEngineGameWidth);
+kSMEngineGameHeight = Math.min(Math.floor(window.innerHeight / kSMEngineBlockSize), kSMEngineGameHeight);
+// kSMEngineGameWidth = Math.max(kSMEngineGameHeight, 15)
+// kSMEngineGameHeight = Math.max(kSMEngineGameHeight, 10);
 
 //  Map data values
 var kSMBlockOutOfBounds = NaN;
