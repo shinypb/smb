@@ -108,11 +108,6 @@ defineClass('SMMap', function(mapId) {
 
       window.pixelsDrawn.push(dirtyRect.width * dirtyRect.height);
 
-//       var minX = Math.floor(dirtyRect.x / kSMEngineBlockSize);
-//       var minY = Math.floor(dirtyRect.y / kSMEngineBlockSize);
-//       var maxX = minX + Math.ceil((dirtyRect.x + dirtyRect.width) / kSMEngineBlockSize);
-//       var maxY = minY + Math.ceil((dirtyRect.y + dirtyRect.height) / kSMEngineBlockSize);
-
       var minX = SMMetrics.PxToBlock(dirtyRect.x);
       var maxX = SMMetrics.PxToBlock(dirtyRect.x + dirtyRect.width) + 1;
       var minY = SMMetrics.PxToBlock(dirtyRect.y);

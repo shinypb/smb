@@ -31,8 +31,14 @@ defineClass(
 
   //  Methods
   {
+    setFillStyle: function(fillStyle) {
+      if (fillStyle !== this.prevFillStyle) {
+        this.context.fillStyle = fillStyle;
+        this.prevFillStyle = fillStyle;
+      }
+    },
     clear: function() {
-      this.context.fillStyle = '#000';
+      this.setFillStyle('#000');
 
       // note: intentionally not using our wrapper method; we want screen coordinations, not game coordinations
       this.context.fillRect(0, 0, this.width, this.height);
@@ -43,10 +49,7 @@ defineClass(
       this.dirtyRects = [{ x: x, y: y, width: this.width, height: this.height }];
     },
     fillRect: function(fillStyle, absoluteX, absoluteY, width, height) {
-      if (!fillStyle) {
-        debugger
-      }
-      this.context.fillStyle = fillStyle;
+      this.setFillStyle(fillStyle);
 
       var adjustedPos = this.adjustPos(absoluteX, absoluteY);
       if (adjustedPos.x > this.viewport.x + this.viewport.width || adjustedPos.y > this.viewport.y + this.viewport.height) {
