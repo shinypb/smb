@@ -2,7 +2,7 @@
 
 var kSMColorSkyBlue = '#A9FDF4';
 
-var kSMEngineFPS = 60;
+var kSMEngineFPS = 30;
 var kSMEngineTickTimeHistoryLength = 2 * kSMEngineFPS;
 var kSMEnginePixelsPerFrameHistoryLength = 2 * kSMEngineFPS;
 var kSMEngineBlockSize = 32;

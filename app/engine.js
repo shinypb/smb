@@ -128,9 +128,10 @@ defineClass('SMEngine', function(canvasElement) {
   },
 
   tick: function() {
+    var tickStartTime;
+
     try {
-      var tickStartTime = new Date;
-      this.tickNumber++;
+      tickStartTime = this.now = new Date;
 
       window.pixelsDrawn = [];
 

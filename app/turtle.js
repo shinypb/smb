@@ -1,8 +1,6 @@
 'use strict';
 defineClass('SMTurtle', 'SMAgent', function(engine, startBlockX, startBlockY) {
   SMAgent.prototype.constructor.apply(this, arguments);
-  this.alive = true;
-  this.animFrame = 0;
   this.turtleImageName = kSMTurtleWalkImages[this.animFrame];
   this.lastStep = +new Date;
 
@@ -12,6 +10,10 @@ defineClass('SMTurtle', 'SMAgent', function(engine, startBlockX, startBlockY) {
   };
 }, {
   bounds: kSMAgentHitBounds.turtleGreen,
+  canHurtPlayer: true,
+  alive: true,
+  animFrame: 0,
+
   draw: function() {
     this.now = +new Date;
 
@@ -27,8 +29,10 @@ defineClass('SMTurtle', 'SMAgent', function(engine, startBlockX, startBlockY) {
   updateVState: function() {
   },
   squish: function() {
-//     SMAudio[kSMAgentAudioSquish].playFromStart();
+    //  TODO: move this down into a hypothetical SMSquishableAgent base class, shared with SMGoomba
+    SMAudio.playFromStart(kSMAgentAudioSquish);
     this.squishTime = +new Date;
+    this.canHurtPlayer = false;
   },
   changeDirection: function() {
     this.direction *= -1;

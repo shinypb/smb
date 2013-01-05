@@ -20,11 +20,11 @@ SMPlayerMovement,
   draw: function() {
     this.engine.canvas.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y, true);
   },
-die: function() {
+  die: function() {
     this.alive = false;
     this.direction = kSMPlayerDirectionCenter;
-//     SMAudio[kSMEngineAudioBackgroundMusic1].pause();
-//     SMAudio[kSMPlayerAudioLostLife].playFromStart();
+    SMAudio.pause(kSMEngineAudioBackgroundMusic1);
+    SMAudio.playFromStart(kSMPlayerAudioLostLife);
     this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].dead[0];
     eng.pauseFor(500);
     this.vSpeed = kSMPlayerJumpBoost;
@@ -45,7 +45,8 @@ die: function() {
     if (!this.alive) {
       return;
     }
-    if (otherAgent.squishTime) {
+
+    if (!otherAgent.canHurtPlayer) {
       return;
     }
 

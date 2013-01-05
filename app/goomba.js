@@ -2,13 +2,6 @@
 defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
   SMAgent.prototype.constructor.apply(this, arguments);
 
-  this.speed = kSMGoombaSpeed;
-  this.direction = kSMGoombaStartingDirection;
-  this.vSpeed = kSMPlayerVerticalSpeed;
-  this.alive = true;
-  this.walkFrame = 0;
-  this.squishTime = null;
-
   this.animations = {};
   for (var type in kSMAgentData['goomba']) {
     this.animations[type] = {};
@@ -23,6 +16,13 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     y: SMMetrics.BlockToPx(startBlockY)
   };
 }, {
+  speed: kSMGoombaSpeed,
+  direction: kSMGoombaStartingDirection,
+  vSpeed: kSMPlayerVerticalSpeed,
+  alive: true,
+  walkFrame: 0,
+  squishTime: null,
+  canHurtPlayer: true,
   bounds: kSMAgentHitBounds.goomba,
   draw: function() {
     this.engine.canvas.drawImage(SMImages[this.goombaImageName], this.pxPos.x, this.pxPos.y);
@@ -87,8 +87,10 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     }
   },
   squish: function() {
-//     SMAudio[kSMAgentAudioSquish].playFromStart();
+    //  TODO: move this down into a hypothetical SMSquishableAgent base class, shared with SMTurtle
+    SMAudio.playFromStart(kSMAgentAudioSquish);
     this.squishTime = +new Date;
+    this.canHurtPlayer = false;
   },
   changeDirection: function() {
     this.direction *= -1;
