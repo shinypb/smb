@@ -26,17 +26,17 @@ defineMixin('SMPlayerMovement', {
 
     // Choose animation frames.
     if (this.hSpeed === 0) {
-      this.timeOfLastWalkFrame = this.now;
+      this.timeOfLastWalkFrame = this.engine.now;
       this.walkFrame = kSMPlayerStartWalkFrame;
 
     } else {
       var fractionOfFullSpeed = this.hSpeed / maxSpeed;
       var frameDuration = Math.max((1 / fractionOfFullSpeed) * (kSMPlayerMinimumWalkFrameDuration * kSMEngineFPS), kSMEngineFPS);
 
-      this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || this.now;
+      this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || this.engine.now;
 
-      if (this.now - this.timeOfLastWalkFrame > frameDuration) {
-        this.timeOfLastWalkFrame = this.now;
+      if (this.engine.now - this.timeOfLastWalkFrame > frameDuration) {
+        this.timeOfLastWalkFrame = this.engine.now;
         this.walkFrame = (this.walkFrame + 1) % kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].walking.length;
       }
     }
@@ -108,12 +108,12 @@ defineMixin('SMPlayerMovement', {
     }
 
     if (this.engine.keyMap[kSMKeyJump] && this.standing && !this.jumpStarted) {
-      this.jumpStarted = this.now;
+      this.jumpStarted = this.engine.now;
       SMAudio.playFromStart(kSMPlayerAudioJumpSmall);
       this.standing = false;
     }
 
-    if (this.now - this.jumpStarted < kSMPlayerJumpBoostTime) {
+    if (this.engine.now - this.jumpStarted < kSMPlayerJumpBoostTime) {
       this.vSpeed = kSMPlayerJumpBoost;
     }
 
