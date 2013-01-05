@@ -28,25 +28,24 @@ defineClass('SMGoomba', 'SMAgent', function(engine, startBlockX, startBlockY) {
     this.engine.canvas.drawImage(SMImages[this.goombaImageName], this.pxPos.x, this.pxPos.y);
   },
   updateHState: function() {
-    var now = +new Date;
-    if (!this.squishTime) {
-      // Living goomba!
-      this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || now;
-      if (now - this.timeOfLastWalkFrame > kSMGoombaWalkFrameDuration) {
-        this.timeOfLastWalkFrame = now;
-        // Cycle through the array of animation frames.
-        this.goombaImageName = this.animations.normal.walking.nextSprite();
-      }
-
-
-    } else {
+    if (this.squishTime) {
       // Squished goomba!
+      //  TODO: Consider replacing SMGoomba with SMSquishedGoomba when we are stomped, which would
+      //        let us simplify the implementations of each.
       this.goombaImageName = this.animations.normal.squished.currentSprite;
       this.speed = 0;
 
       var squishDuration = kSMGoombaSquishFrameDuration;
-      if (now - this.timeOfLastWalkFrame > squishDuration) {
+      if (this.engine.now - this.timeOfLastWalkFrame > squishDuration) {
         this.alive = false;
+      }
+    } else {
+      // Living goomba!
+      this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || this.engine.now;
+      if (this.engine.now - this.timeOfLastWalkFrame > kSMGoombaWalkFrameDuration) {
+        this.timeOfLastWalkFrame = this.engine.now;
+        // Cycle through the array of animation frames.
+        this.goombaImageName = this.animations.normal.walking.nextSprite();
       }
     }
 

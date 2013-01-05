@@ -29,7 +29,12 @@ SMPlayerMovement,
     eng.pauseFor(500);
     this.vSpeed = kSMPlayerJumpBoost;
 
-    setTimeout(window.location.reload, 5000);
+    setTimeout(function() {
+      //  This is a temporary measure until we have a lives system. It just reloads the
+      //  window after a delay. (We need to wrap window.location.reload() in a function
+      //  because we can't bind it as a timeout function directly in Chrome.)
+      window.location.reload()
+    }, 5000);
   },
   reduceSpeedTo: function(speed, maxSpeed, deceleration) {
     if (speed > maxSpeed) {
@@ -64,20 +69,22 @@ SMPlayerMovement,
     var playerHorizontal = pright > oleft && pleft < oright;
     var playerVertical = pbottom > otop && ptop < obottom;
 
-    if (playerHorizontal && playerVertical) {
-      // collision
-      if (pbottom < osquish && this.vSpeed > 0) {
-        // squish
-        otherAgent.squish();
-        this.vSpeed = kSMPlayerJumpBoost;
-        this.jumpStarted = this.now + kSMPlayerSquishBoostTime;
-        return false;
-      } else if (pbottom < osquish && this.vSpeed <= 0) {
-        // Player is in the squish zone, but is moving upwards; ignore.
-        return false;
-      } else {
-        this.die();
-      }
+    if (!playerHorizontal || !playerVertical) {
+      //  NO collision
+      return;
+    }
+
+    if (pbottom < osquish && this.vSpeed > 0) {
+      // squish
+      otherAgent.squish();
+      this.vSpeed = kSMPlayerJumpBoost;
+      this.jumpStarted = this.now + kSMPlayerSquishBoostTime;
+      return false;
+    } else if (pbottom < osquish && this.vSpeed <= 0) {
+      // Player is in the squish zone, but is moving upwards; ignore.
+      return false;
+    } else {
+      this.die();
     }
   },
   tick: function() {
