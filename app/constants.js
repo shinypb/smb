@@ -7,43 +7,23 @@ var kSMEnginePixelsPerFrameHistoryLength = 100;
 var kSMEngineBlockSize = 32;
 
 //  TODO: rename these to kSMEngineViewportHeight/Width
-var kSMEngineGameWidth = 16;
-var kSMEngineGameHeight = 12;
+var kSMEngineViewportWidth = 16;
+var kSMEngineViewportHeight = 12;
 
 //  Shrink the viewport in smaller windows
-kSMEngineGameWidth = Math.min(Math.floor(window.innerWidth / kSMEngineBlockSize), kSMEngineGameWidth);
-kSMEngineGameHeight = Math.min(Math.floor(window.innerHeight / kSMEngineBlockSize), kSMEngineGameHeight);
+kSMEngineViewportWidth = Math.min(Math.floor(window.innerWidth / kSMEngineBlockSize), kSMEngineViewportWidth);
+kSMEngineViewportHeight = Math.min(Math.floor(window.innerHeight / kSMEngineBlockSize), kSMEngineViewportHeight);
 
 //  Map data values
 var kSMBlockOutOfBounds = NaN;
 var kSMBlockSky = ' ';
-var kSMBlockWood = '#';
-var kSMBlockQuestion = '?';
-var kSMBlockBush = '%';
-
-var kSMBlockGreenPipeLeft = '[';
-var kSMBlockGreenPipeRight = ']';
-var kSMBlockGreenPipeTopLeft = '<';
-var kSMBlockGreenPipeTopRight = '>';
-
-var kSMBlockBrick = 'o';
-
-var kSMBlockWoodPlankLeft = 'a';
-var kSMBlockWoodPlankRight = 'd';
-var kSMBlockWoodPlankTopLeft = 'q';
-var kSMBlockWoodPlankTopRight = 'e';
-var kSMBlockWoodPlankTop = 'w';
-var kSMBlockWoodPlank = 's';
-
-var kSMBlockBlackCurtain = 'v';
-var kSMBlockBlackSolid = 'b';
 
 var kSMTop = 0;
 var kSMRight = 1;
 var kSMBottom = 2;
 var kSMLeft = 3;
-//  Map block characteristics
 
+//  Map block characteristics
 window.SMBlockProperties = {};
 SMBlockProperties[kSMBlockOutOfBounds] = {
   color: '#000',

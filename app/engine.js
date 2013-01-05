@@ -14,9 +14,9 @@ defineClass('SMEngine', function(canvasElement) {
 
   this.viewportPx = {
     x: 0,
-    y: (this.map.height - kSMEngineGameHeight) * kSMEngineBlockSize,
-    width: kSMEngineGameWidth * kSMEngineBlockSize,
-    height: kSMEngineGameHeight * kSMEngineBlockSize
+    y: (this.map.height - kSMEngineViewportHeight) * kSMEngineBlockSize,
+    width: kSMEngineViewportWidth * kSMEngineBlockSize,
+    height: kSMEngineViewportHeight * kSMEngineBlockSize
   };
 
   this.canvas = new SMCanvas(canvasElement, this.viewportPx, this.map);

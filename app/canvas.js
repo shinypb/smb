@@ -11,8 +11,8 @@ defineClass(
     this.context = aCanvas.getContext('2d');
     this.engine = engine;
 
-    this.width = SMMetrics.BlockToPx(kSMEngineGameWidth);
-    this.height = SMMetrics.BlockToPx(kSMEngineGameHeight);
+    this.width = SMMetrics.BlockToPx(kSMEngineViewportWidth);
+    this.height = SMMetrics.BlockToPx(kSMEngineViewportHeight);
 
     this.viewport = viewport;
 

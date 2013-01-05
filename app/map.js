@@ -30,11 +30,11 @@ defineClass('SMMap', function(mapId) {
       this[key] = rawMapData[key];
     }.bind(this));
 
-    if (rawMapData.length > kSMEngineGameHeight) {
+    if (rawMapData.length > kSMEngineViewportHeight) {
       //  Taller than the viewport! Truncate the height of the map and nudge all of the
       //  agent's starting positions to compensate.
       //  Fix this! Vertical scrolling support required.
-      var heightDifference = rawMapData.length - kSMEngineGameHeight;
+      var heightDifference = rawMapData.length - kSMEngineViewportHeight;
       rawMapData = rawMapData.slice(heightDifference);
       this.agents.map(function(agent) {
         agent[1].y -= heightDifference;
