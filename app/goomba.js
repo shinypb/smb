@@ -69,12 +69,12 @@ defineClass(
         this.changeDirection();
       }
 
-      this.pxPos.x += this.direction * this.speed * kSMEngineBlockSize * kSMFrameUnit;
+      this.pxPos.x += this.direction * this.speed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame;
     },
     updateVState: function() {
       this.vSpeed += kSMPlayerGravity;
 
-      this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
+      this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame);
       var top = this.pxPos.y + kSMAgentHitBounds.goomba[0],
         right = this.pxPos.x + kSMAgentHitBounds.goomba[1],
         bottom = this.pxPos.y + kSMAgentHitBounds.goomba[2],

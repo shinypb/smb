@@ -39,7 +39,7 @@ defineClass(
       SMAudio.playFromStart(kSMPlayerAudioLostLife);
       this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].dead[0];
       eng.pauseFor(500);
-      this.vSpeed = kSMPlayerJumpBoost;
+      this.vSpeed = kSMPlayerJumpBoostDeath;
 
       setTimeout(function() {
         //  This is a temporary measure until we have a lives system. It just reloads the
@@ -50,11 +50,11 @@ defineClass(
     },
     reduceSpeedTo: function(speed, maxSpeed, deceleration) {
       if (speed > maxSpeed) {
-        speed = Math.max(0, speed - (deceleration * kSMFrameUnit));
+        speed = Math.max(0, speed - (deceleration * this.engine.secondsSincePreviousFrame));
       }
 
       if (speed < -maxSpeed) {
-        speed = Math.min(0, speed + (deceleration * kSMFrameUnit));
+        speed = Math.min(0, speed + (deceleration * this.engine.secondsSincePreviousFrame));
       }
       return speed;
     },
@@ -75,7 +75,7 @@ defineClass(
         if (this.vSpeed > 0) {
           // Squish!
           otherAgent.squish();
-          this.vSpeed = kSMPlayerJumpBoost;
+          this.vSpeed = kSMPlayerJumpBoostAfterSquish;
           this.jumpStarted = this.engine.now + kSMPlayerSquishBoostTime;
         } else {
           // Player is in the squish zone, but is moving upwards; ignore.

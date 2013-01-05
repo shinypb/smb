@@ -32,7 +32,6 @@
       color: elem.dataset.color
     };
   });
-  console.log('Images:', SMImages);
 
   //  Load images
   console.log('Loading audio');

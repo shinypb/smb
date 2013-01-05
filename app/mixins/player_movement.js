@@ -31,7 +31,9 @@ defineMixin('SMPlayerMovement', {
 
     } else {
       var fractionOfFullSpeed = this.hSpeed / maxSpeed;
-      var frameDuration = Math.max((1 / fractionOfFullSpeed) * (kSMPlayerMinimumWalkFrameDuration * kSMEngineFPS), kSMEngineFPS);
+      var durationBasedOnCurrentVelocity = (1 / fractionOfFullSpeed) * kSMPlayerMinimumWalkFrameDuration;
+      var minimumDuration = 64;
+      var frameDuration = Math.max(minimumDuration, durationBasedOnCurrentVelocity);
 
       this.timeOfLastWalkFrame = this.timeOfLastWalkFrame || this.engine.now;
 
@@ -54,11 +56,11 @@ defineMixin('SMPlayerMovement', {
       this.hSpeed = this.reduceSpeedTo(this.hSpeed, 0, kSMPlayerSkidDeceleration);
     }
 
-    this.hSpeed += (this.direction * acceleration * kSMFrameUnit);
+    this.hSpeed += (this.direction * acceleration * this.engine.secondsSincePreviousFrame);
     this.hSpeed = this.reduceSpeedTo(this.hSpeed, maxSpeed, kSMPlayerDeceleration);
 
     if (this.hSpeed !== 0) {
-      this.pxPos.x += this.hSpeed * kSMEngineBlockSize * kSMFrameUnit;
+      this.pxPos.x += this.hSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame;
 
       var top = this.pxPos.y + this.bounds[kSMTop],
         right = this.pxPos.x + this.bounds[kSMRight],
@@ -79,13 +81,13 @@ defineMixin('SMPlayerMovement', {
   updateVState: function() {
     this.vSpeed += kSMPlayerGravity;
     if (!this.alive) {
-      this.pxPos.y = Math.min(this.pxPos.y + (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit), 388);
+      this.pxPos.y = Math.min(this.pxPos.y + (this.vSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame), 388);
       return;
     }
 
     this.standing = false;
 
-    var delta = (this.vSpeed * kSMEngineBlockSize * kSMFrameUnit);
+    var delta = (this.vSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame);
     this.pxPos.y += delta;
     var top = this.pxPos.y + this.bounds[kSMTop],
       right = this.pxPos.x + this.bounds[kSMRight],
@@ -114,6 +116,7 @@ defineMixin('SMPlayerMovement', {
     }
 
     if (this.engine.now - this.jumpStarted < kSMPlayerJumpBoostTime) {
+      //  Still jumping upwards
       this.vSpeed = kSMPlayerJumpBoost;
     }
 

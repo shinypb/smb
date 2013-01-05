@@ -2,11 +2,10 @@
 
 var kSMColorSkyBlue = '#A9FDF4';
 
-var kSMEngineFPS = 30;
+var kSMEngineFPS = 15;
 var kSMEngineTickTimeHistoryLength = 2 * kSMEngineFPS;
 var kSMEnginePixelsPerFrameHistoryLength = 2 * kSMEngineFPS;
 var kSMEngineBlockSize = 32;
-var kSMFrameUnit = 1 / kSMEngineFPS;
 
 //  TODO: rename these to kSMEngineViewportHeight/Width
 var kSMEngineGameWidth = 16;
@@ -168,8 +167,11 @@ var kSMPlayerScreenEdgePushLeft = 150;
 // Vertical physics
 var kSMPlayerGravity = 1.2;
 var kSMPlayerJumpBoost = -12;
+var kSMPlayerJumpBoostDeath = kSMPlayerJumpBoost * 1.5;
+var kSMPlayerJumpBoostAfterSquish = kSMPlayerJumpBoost * 1.75;
+
 // This time is in milliseconds.
-var kSMPlayerJumpBoostTime = 220;
+var kSMPlayerJumpBoostTime = 260;
 var kSMPlayerSquishBoostTime = 120;
 
 //  Times

@@ -62,6 +62,9 @@ defineClass('SMMap', function(mapId) {
     if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
       return SMBlockProperties[kSMBlockOutOfBounds];
     }
+    if (!this.data[x]) {
+      debugger;
+    }
     return SMBlockProperties[this.data[x][y]];
   },
 

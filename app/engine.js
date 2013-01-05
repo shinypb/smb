@@ -2,6 +2,8 @@
 defineClass('SMEngine', function(canvasElement) {
   this.tickNumber = 0;
   this.tickDurations = [];
+  this.secondsSincePreviousFrame = 0;
+  this.now = new Date;
 
   this.canvasElement = canvasElement;
 
@@ -131,7 +133,10 @@ defineClass('SMEngine', function(canvasElement) {
     var tickStartTime;
 
     try {
-      tickStartTime = this.now = new Date;
+      //  Update time info
+      tickStartTime = new Date;
+      this.secondsSincePreviousFrame = (tickStartTime - this.now) / 1000;
+      this.now = tickStartTime;
 
       window.pixelsDrawn = [];
 
@@ -189,6 +194,7 @@ defineClass('SMEngine', function(canvasElement) {
       return;
     }
 
+    this.now = new Date;
     this.runTimer = setInterval(this.tick.bind(this), 1000 / kSMEngineFPS);
   },
 
