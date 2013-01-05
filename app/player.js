@@ -87,8 +87,6 @@ defineClass(
     tick: function() {
       this.updateHState();
       this.updateVState();
-
-      this.draw();
     }
   }
 );

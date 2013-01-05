@@ -155,6 +155,7 @@ defineClass('SMEngine', function(canvasElement) {
           this.player.checkCollision(agent);
         }
       }.bind(this));
+      this.player.draw();
 
       this.updateDebugInfo((new Date) - tickStartTime);
 
@@ -164,6 +165,8 @@ defineClass('SMEngine', function(canvasElement) {
 
       throw e;
     }
+
+    this.nextFrame();
   },
 
   updateViewport: function() {
@@ -178,7 +181,8 @@ defineClass('SMEngine', function(canvasElement) {
   },
 
   pauseFor: function(milliseconds) {
-    this.stopRunLoop();
+    this.pauseDuration = milliseconds;
+    this.pauseTime = new Date;
 
     setTimeout(this.startRunLoop.bind(this), milliseconds);
 
@@ -188,19 +192,28 @@ defineClass('SMEngine', function(canvasElement) {
     this.tick();
   },
 
-  startRunLoop: function() {
-    console.log('Starting run loop');
-    if (this.runTimer) {
+  nextFrame: function() {
+    var now = new Date;
+    if (now - this.pauseTime < this.pauseDuration) {
+      document.title = 'p';
       return;
     }
+    document.title = 'g';
+
+    var requestAnimationFrame = (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || webkitRequestAnimationFrame);
+
+    requestAnimationFrame(this.tick.bind(this), this.canvasElement);
+  },
+
+  startRunLoop: function() {
+    console.log('Starting run loop');
 
     this.now = new Date;
-    this.runTimer = setInterval(this.tick.bind(this), 1000 / kSMEngineFPS);
+    this.nextFrame();
   },
 
   stopRunLoop: function() {
     console.log('Stopping run loop');
-    clearTimeout(this.runTimer);
     this.runTimer = null;
   }
 });
