@@ -28,6 +28,7 @@ program
   .option('-d, --outputDir [outputDir]', 'Specify a tile output directory', 'tiles')
   .option('-p, --outputFileName [outputFileName]', 'Specify a tile output prefix for images. (Make sure you\'re not overwriting other tiles!')
   .option('-t, --transparencyColor [transparencyColor]', 'Specify a tile transparency color as a hex color (Do not use a "#" -- ex: 9CFCF0)')
+  .option('-b, --transparentBlock [transparentBlock]', 'Specify a transparent block', '00')
   .parse(process.argv);
 
 tileSize = parseInt(program.tileSize);
@@ -189,7 +190,11 @@ function processTile() {
     removeTile('temp.png')
       .then(deferred.resolve, dumpError);
   }
-  levelString += md5s[currentMD5].encoding;
+  if (md5s[currentMD5].encoding == program.transparentBlock) {
+    levelString += '  ';
+  } else {
+    levelString += md5s[currentMD5].encoding;
+  }
 
   return deferred.promise;
 }
@@ -198,7 +203,7 @@ function processTile() {
 function createMontage() {
   var deferred = Q.defer();
 
-  var command = 'montage ' + program.outputDir + '/' + dateStr + '*.png -background transparent -tile ' + Math.min(62, uniqueTileCount) + 'x' + (Math.floor(uniqueTileCount / chars.length) + 1) + ' -geometry 16x16+0+0 ' + program.outputDir + '/' + program.outputFileName;
+  var command = 'montage ' + program.outputDir + '/' + dateStr + '*.png -background transparent -tile ' + Math.min(chars.length, uniqueTileCount) + 'x' + (Math.floor(uniqueTileCount / chars.length) + 1) + ' -geometry 16x16+0+0 ' + program.outputDir + '/' + program.outputFileName;
   childProcess.exec(command, function (error, stdout, stderr) {
     if (error) {
       deferred.reject(error);
