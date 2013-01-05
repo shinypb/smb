@@ -1,0 +1,14 @@
+{
+  "name": "Markio2",
+  "description": "An homage",
+  "launch_path": "/smbdebug/index.html",
+  "icons": {
+    "128": "/img/icon-128.png"
+  },
+  "developer": {
+    "name": "@shinypb and @mootcycle",
+    "url": "http://markchristian.org/smb"
+  },
+  "default_locale": "en",
+  "orientation": ["landscape-primary"]
+}

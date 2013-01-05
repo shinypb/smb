@@ -52,7 +52,7 @@ SMLevel([
 ' ijgikik       SUT)&V <> GIIIHNNO523V                                                               #   #           <>      oooo             ##          bvvvvvvvvvvvvvvvvvvvvvvvv',
 ' chjfgchk      MNO(&V [] DEEEFNNGIIIIH   ?%%%%%%                 %%                                ##   ##      <>  []     ooooo   o         []  <>      bvvvvvvvvvvvvvvvvvvvvvvvv',
 ' cfffhjfg %%%  JLK*!V [] ACCCBNNACCCCB qwwwwwwwwwwwwwwwwwwwwwwwwwwwe      %%%                     ###   ### %%% []  []    ooooooo  oo        []  []      bvvvvvvvvvvvvvvvvvvvvvvvv',
-'qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwweasssssssssssssssssssssssssssd    qwwwwwwwwwwwwwwwwwwwwe  qwwwe   qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe'
+'qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwweasssssssssssssssssssssssssssd    qwwwwwwwwwwwwwwwwwwwwe  qwwwe # qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe'
 ], {
   id: 0,
   backgroundColor: kSMColorSkyBlue,
@@ -61,6 +61,7 @@ SMLevel([
     ['SMGoomba', { x: 10, y: 10 }],
     ['SMGoomba', { x: 14, y: 10 }],
     ['SMGoomba', { x: 19, y: 10 }],
+    ['SMGoomba', { x: 22.5, y: 0 }],
     ['SMGoomba', { x: 33, y: 10 }],
     ['SMGoomba', { x: 52, y: 7 }],
     ['SMGoomba', { x: 55, y: 7 }],

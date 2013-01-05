@@ -1,9 +1,6 @@
 html {
   background: #000;
-}
-
-body {
-  overflow: hidden;
+  overflow: hidden; /* hides the scrollbar in Firefox */
 }
 
 #rotate-me {
@@ -11,15 +8,16 @@ body {
 }
 
 body {
-  background: #000 left top url(background.png);
+  background: #000;
   color: #fff;
   font-family: monospace;
   margin: 0;
-  padding: 10px;
   height: 440px !important;
+  overflow: hidden;
 }
 
 #instructions {
+  display: none;
   background: #F8D5AA;
   color: #000;
   height: 358px;
@@ -35,18 +33,17 @@ body {
 }
 
 #c {
-  float: left;
+  height: 100%;
+  width: 100%;
 }
 
 @media only screen and (max-width: 480px), only screen and (max-device-width: 480px) {
   * {
     -webkit-overflow-scrolling: touch;
     -webkit-user-select: none;
+    -moz-overflow-scrolling: touch;
+    -moz-user-select: none;
     overflow-y: auto;
-  }
-
-  #c {
-    margin-left: 35px;
   }
 
   #instructions {
@@ -70,4 +67,11 @@ body {
   margin: 10px auto;
   height: 128px;
   width: 128px;
+}
+
+#engine-debug {
+  background: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  left: 0;
+  top: 0;
 }

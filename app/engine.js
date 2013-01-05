@@ -2,26 +2,29 @@
 defineClass('SMEngine', function(canvasElement) {
   this.tickNumber = 0;
   this.tickDurations = [];
+  this.secondsSincePreviousFrame = 0;
+  this.now = new Date;
 
   this.canvasElement = canvasElement;
 
   this.registerEventListeners();
-  this.enableSounds = document.getElementById('background-music-1')['autoplay'];
+  this.enableSounds = (document.getElementById('background-music-1') || {})['autoplay'];
 
   this.map = new SMMap(0);
-  this.canvas = new SMCanvas(canvasElement, this.map);
+
+  this.viewportPx = {
+    x: 0,
+    y: (this.map.height - kSMEngineViewportHeight) * kSMEngineBlockSize,
+    width: kSMEngineViewportWidth * kSMEngineBlockSize,
+    height: kSMEngineViewportHeight * kSMEngineBlockSize
+  };
+
+  this.canvas = new SMCanvas(canvasElement, this.viewportPx, this.map);
 
   //  DEBUG
   window.pixelsDrawn = [];
   window.pixelsPerFrame = [];
   //  END DEBUG
-
-  this.viewportPx = {
-    x: 0,
-    y: (this.map.height - kSMEngineGameHeight) * kSMEngineBlockSize,
-    width: kSMEngineGameWidth * kSMEngineBlockSize,
-    height: kSMEngineGameHeight * kSMEngineBlockSize
-  };
 
   this.agents = this.map.agents.map(function(agentDefinition) {
     var newAgent = SMAgent.FromDefinition(this, agentDefinition);
@@ -86,6 +89,10 @@ defineClass('SMEngine', function(canvasElement) {
   },
 
   onKeyPress: function(keyState, e) {
+    if (e.keyCode >= 37 && e.keyCode <= 40) {
+      e.preventDefault();
+    }
+
     this.keyMap[e.keyCode] = keyState;
   },
 
@@ -116,16 +123,20 @@ defineClass('SMEngine', function(canvasElement) {
     }
 
     var pixelsPerFrame = 'Pixels per tick: ' + parseInt(average(window.pixelsPerFrame));
-    var frameCost = 'Tick duration: ' + parseInt(average(this.tickDurations) * 1000) + 'µs';
+    var frameCost = 'Tick duration: ' + parseInt(average(this.tickDurations) * 1000) + '&#181;s';
 
     this.setDebugText(pixelsPerFrame + '\t' + frameCost);
 
   },
 
   tick: function() {
+    var tickStartTime;
+
     try {
-      var tickStartTime = new Date;
-      this.tickNumber++;
+      //  Update time info
+      tickStartTime = new Date;
+      this.secondsSincePreviousFrame = (tickStartTime - this.now) / 1000;
+      this.now = tickStartTime;
 
       window.pixelsDrawn = [];
 
@@ -144,6 +155,7 @@ defineClass('SMEngine', function(canvasElement) {
           this.player.checkCollision(agent);
         }
       }.bind(this));
+      this.player.draw();
 
       this.updateDebugInfo((new Date) - tickStartTime);
 
@@ -153,6 +165,8 @@ defineClass('SMEngine', function(canvasElement) {
 
       throw e;
     }
+
+    this.nextFrame();
   },
 
   updateViewport: function() {
@@ -167,7 +181,8 @@ defineClass('SMEngine', function(canvasElement) {
   },
 
   pauseFor: function(milliseconds) {
-    this.stopRunLoop();
+    this.pauseDuration = milliseconds;
+    this.pauseTime = new Date;
 
     setTimeout(this.startRunLoop.bind(this), milliseconds);
 
@@ -177,18 +192,26 @@ defineClass('SMEngine', function(canvasElement) {
     this.tick();
   },
 
-  startRunLoop: function() {
-    console.log('Starting run loop');
-    if (this.runTimer) {
+  nextFrame: function() {
+    var now = new Date;
+    if (now - this.pauseTime < this.pauseDuration) {
       return;
     }
 
-    this.runTimer = setInterval(this.tick.bind(this), 1000 / kSMEngineFPS);
+    var requestAnimationFrame = (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || webkitRequestAnimationFrame);
+
+    requestAnimationFrame(this.tick.bind(this), this.canvasElement);
+  },
+
+  startRunLoop: function() {
+    console.log('Starting run loop');
+
+    this.now = new Date;
+    this.nextFrame();
   },
 
   stopRunLoop: function() {
     console.log('Stopping run loop');
-    clearTimeout(this.runTimer);
     this.runTimer = null;
   }
 });

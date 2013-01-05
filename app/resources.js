@@ -32,26 +32,12 @@
       color: elem.dataset.color
     };
   });
-  console.log('Images:', SMImages);
 
   //  Load images
   console.log('Loading audio');
-  window.SMAudio = {};
-  var playFromStart = function() {
-    try {
-      if (eng.enableSounds) {
-        this.currentTime = 0;
-        this.play();
-      }
-    } catch(err) {
-      // Audio probably not loaded yet?
-      console.log('Audio error: ' + err);
-    }
-  };
-
+  window.SMAudioData = {};
   Array.prototype.slice.apply(document.querySelectorAll('#resources audio')).forEach(function(elem) {
-    SMAudio[elem.id] = elem;
-    elem.playFromStart = playFromStart;
+    SMAudioData[elem.id] = elem;
   });
 
 })();

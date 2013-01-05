@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    #install {
+      font-size: 4em;
+      width: 80%;
+    }
+  </style>
+  <body>
+    <button id="install">Install Now</button>
+  </body>
+  <script>
+    document.getElementById('install').addEventListener('click', function() {
+      var result = window.navigator.mozApps.install('http://markchristian.org/smbdebug/manifest.webapp');
+
+      result.onsuccess = function() {
+        alert('Success');
+      };
+
+      result.onerror = function() {
+        alert('Error: ' + this.error.name + "\n" + this.error.description);
+      };
+
+    }, false);
+  </script>
+</html>

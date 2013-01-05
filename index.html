@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Super Markio Bros.</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   </head>
 
@@ -9,6 +10,7 @@
 
   <body>
     <div id="rotate-me">Rotate me! I only work in landscape mode.<img src="resources/player-dead.png"></div>
+    <span id="engine-debug"></span>
 
     <canvas id="c"></canvas>
 
@@ -114,6 +116,7 @@
       <img src="resources/black-curtain.png" data-character="b">
 
       <!-- audio -->
+      <!--
       <audio src="resources/1-up.mp3" preload="auto" id="1-up"></audio>
       <audio src="resources/background-music-1.mp3" preload="auto" id="background-music-1"></audio>
       <audio src="resources/coin.mp3" preload="auto" id="coin"></audio>
@@ -126,12 +129,12 @@
       <audio src="resources/squish.mp3" preload="auto" id="squish"></audio>
       <audio src="resources/star-music.mp3" preload="auto" id="star-music"></audio>
       <audio src="resources/vine.mp3" preload="auto" id="vine"></audio>
+      -->
     </div>
 
     <div id="instructions"><pre><img src="resources/title.png" alt="Super Markio Bros." height="150" width="392">
 
 Arrow keys to move, Z to run, X to jump.</pre>
-      <pre id="engine-debug"></pre>
       <pre id="controls-debug"></pre>
     </div>
   </body>
@@ -141,10 +144,12 @@ Arrow keys to move, Z to run, X to jump.</pre>
   <script src="app/define_class.js"></script>
   <script src="app/mixins/player_movement.js"></script>
   <script src="app/mixins/collision_detection.js"></script>
+  <script src="app/mixins/with_bounding_box.js"></script>
   <script src="app/constants.js"></script>
   <script src="app/sprite.js"></script>
   <script src="app/animation.js"></script>
   <script src="app/resources.js"></script>
+  <script src="app/audio.js"></script>
   <script src="app/metrics.js"></script>
   <script src="app/canvas.js"></script>
   <script src="app/maps.js"></script>

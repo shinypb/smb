@@ -2,46 +2,28 @@
 
 var kSMColorSkyBlue = '#A9FDF4';
 
-var kSMEngineFPS = 60;
-var kSMEngineTickTimeHistoryLength = 2 * kSMEngineFPS;
-var kSMEnginePixelsPerFrameHistoryLength = 2 * kSMEngineFPS;
+var kSMEngineTickTimeHistoryLength = 100;
+var kSMEnginePixelsPerFrameHistoryLength = 100;
 var kSMEngineBlockSize = 32;
-var kSMFrameUnit = 1 / kSMEngineFPS;
 
 //  TODO: rename these to kSMEngineViewportHeight/Width
-var kSMEngineGameWidth = 16; // should be 16 once scrolling is available
-var kSMEngineGameHeight = 12;
+var kSMEngineViewportWidth = 16;
+var kSMEngineViewportHeight = 12;
+
+//  Shrink the viewport in smaller windows
+kSMEngineViewportWidth = Math.min(Math.floor(window.innerWidth / kSMEngineBlockSize), kSMEngineViewportWidth);
+kSMEngineViewportHeight = Math.min(Math.floor(window.innerHeight / kSMEngineBlockSize), kSMEngineViewportHeight);
 
 //  Map data values
 var kSMBlockOutOfBounds = NaN;
 var kSMBlockSky = ' ';
-var kSMBlockWood = '#';
-var kSMBlockQuestion = '?';
-var kSMBlockBush = '%';
-
-var kSMBlockGreenPipeLeft = '[';
-var kSMBlockGreenPipeRight = ']';
-var kSMBlockGreenPipeTopLeft = '<';
-var kSMBlockGreenPipeTopRight = '>';
-
-var kSMBlockBrick = 'o';
-
-var kSMBlockWoodPlankLeft = 'a';
-var kSMBlockWoodPlankRight = 'd';
-var kSMBlockWoodPlankTopLeft = 'q';
-var kSMBlockWoodPlankTopRight = 'e';
-var kSMBlockWoodPlankTop = 'w';
-var kSMBlockWoodPlank = 's';
-
-var kSMBlockBlackCurtain = 'v';
-var kSMBlockBlackSolid = 'b';
 
 var kSMTop = 0;
 var kSMRight = 1;
 var kSMBottom = 2;
 var kSMLeft = 3;
-//  Map block characteristics
 
+//  Map block characteristics
 window.SMBlockProperties = {};
 SMBlockProperties[kSMBlockOutOfBounds] = {
   color: '#000',
@@ -129,8 +111,8 @@ var kSMAgentSquishOffset = 16;
 //  Goomba
 var kSMGoombaSpeed = 1;
 var kSMGoombaStartingDirection = -1;
-var kSMGoombaWalkFrameDuration = kSMEngineFPS * 5.83;
-var kSMGoombaSquishFrameDuration = kSMEngineFPS * 11.6;
+var kSMGoombaWalkFrameDuration = 0.349;
+var kSMGoombaSquishFrameDuration = 1.16;
 
 //  Keycodes
 var kSMKeyAction = 90;
@@ -144,6 +126,7 @@ var kSMKeyDown = 40;
  * Physics
  * Speeds should be measured in blocks-per-second
  * Times should be measured in seconds
+ * TODO: should we switch to using milliseconds instead of seconds?
  */
 
 /**
@@ -162,8 +145,11 @@ var kSMPlayerScreenEdgePushLeft = 150;
 // Vertical physics
 var kSMPlayerGravity = 1.2;
 var kSMPlayerJumpBoost = -12;
+var kSMPlayerJumpBoostDeath = kSMPlayerJumpBoost * 1.5;
+var kSMPlayerJumpBoostAfterSquish = kSMPlayerJumpBoost * 1.75;
+
 // This time is in milliseconds.
-var kSMPlayerJumpBoostTime = 220;
+var kSMPlayerJumpBoostTime = 260;
 var kSMPlayerSquishBoostTime = 120;
 
 //  Times
