@@ -124,5 +124,8 @@ SMTilesets['grassland'].blockProperties = {
   },
   '1U': {
     isSolid: true
+  },
+  '1V': {
+    isSolid: true
   }
 };
