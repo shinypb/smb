@@ -1,3 +1,4 @@
 /app/scratch.js
 /tools/tiles/
 .DS_Store
+/tools/node_modules
