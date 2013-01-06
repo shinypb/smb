@@ -69,7 +69,8 @@ defineClass(
         y: absoluteY + this.viewport.y
       };
     },
-    drawImage: function(image, absoluteX, absoluteY, fromPlayer) {
+
+    drawImageSlice: function(image, srcX, srcY, absoluteX, absoluteY, fromPlayer) {
       absoluteX = parseInt(absoluteX);
       absoluteY = parseInt(absoluteY);
 
@@ -84,7 +85,21 @@ defineClass(
 
       this.markAbsoluteRectDirty(absoluteX, absoluteY, kSMEngineBlockSize, kSMEngineBlockSize, !!fromPlayer);
 
-      this.context.drawImage(image, adjustedPos.x, adjustedPos.y);
+      this.context.drawImage(
+        image,
+        //  Position within source image
+        srcX, srcY,
+        //  Size in source image
+        kSMEngineBlockSize, kSMEngineBlockSize,
+        //  Position in destination image
+        adjustedPos.x, adjustedPos.y,
+        //  Size in destination image
+        kSMEngineBlockSize, kSMEngineBlockSize
+      );
+    },
+
+    drawImage: function(image, absoluteX, absoluteY, fromPlayer) {
+      this.drawImageSlice(image, 0, 0, absoluteX, absoluteY)
     },
     markAbsoluteRectDirty: function(x, y, width, height, fromPlayer) {
       this.dirtyRects.push({ x: x, y: y, width: width, height: height, fromPlayer: fromPlayer });

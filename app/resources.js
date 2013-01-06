@@ -5,6 +5,17 @@
   window.SMImages = {};
   window.SMBlockProperties = window.SMBlockProperties || {};
 
+  //  Load tilesets
+  window.SMTilesets = {};
+  Array.prototype.slice.apply(document.querySelectorAll('#resources img.tileset')).forEach(function(elem) {
+    if (!elem.id) {
+      throw new Error('Tileset images must include an id');
+    }
+
+    SMTilesets[elem.id] = elem;
+  });
+
+  //  Load blocks
   var distinctCharacters = [];
   Array.prototype.slice.apply(document.querySelectorAll('#resources img')).forEach(function(elem) {
     if (!elem.id) {

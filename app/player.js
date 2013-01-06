@@ -11,7 +11,7 @@ defineClass(
     this.vSpeed = kSMPlayerVerticalSpeed;
     this.walkFrame = kSMPlayerStartWalkFrame;
     this.alive = kSMPlayerStartAlive;
-
+debugger
     this.pxPos = {
       x: SMMetrics.BlockToPx(startBlockX),
       y: SMMetrics.BlockToPx(startBlockY)

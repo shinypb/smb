@@ -14,27 +14,10 @@ var kSMEngineViewportHeight = 12;
 kSMEngineViewportWidth = Math.min(Math.floor(window.innerWidth / kSMEngineBlockSize), kSMEngineViewportWidth);
 kSMEngineViewportHeight = Math.min(Math.floor(window.innerHeight / kSMEngineBlockSize), kSMEngineViewportHeight);
 
-//  Map data values
-var kSMBlockOutOfBounds = NaN;
-var kSMBlockSky = ' ';
-
 var kSMTop = 0;
 var kSMRight = 1;
 var kSMBottom = 2;
 var kSMLeft = 3;
-
-//  Map block characteristics
-window.SMBlockProperties = {};
-SMBlockProperties[kSMBlockOutOfBounds] = {
-  color: '#000',
-  isSolid: true,
-  isTransparent: false
-};
-SMBlockProperties[kSMBlockSky] = {
-  color: kSMColorSkyBlue,
-  isSolid: false,
-  isTransparent: false
-};
 
 //  Player
 var kSMPlayerHeightPx = 32;
