@@ -93,7 +93,7 @@ var kSMAgentData = {
 var kSMAgentSquishOffset = 16;
 
 //  Goomba
-var kSMGoombaSpeed = 1;
+var kSMGoombaSpeed = 1.75;
 var kSMGoombaStartingDirection = -1;
 var kSMGoombaWalkFrameDuration = 0.349;
 var kSMGoombaSquishFrameDuration = 1.16;
