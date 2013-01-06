@@ -46,7 +46,6 @@ defineClass(
         var heightDifference = rawMapData.length - kSMEngineViewportHeight;
         rawMapData = rawMapData.slice(heightDifference);
         this.agents.map(function(agent) {
-          debugger
           agent[1].y -= heightDifference;
           return agent;
         });
