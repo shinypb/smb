@@ -89,16 +89,15 @@ SMLevel([
   backgroundColor: kSMColorSkyBlue,
   agents: [
     ['SMPlayer', { x: 1.5, y: 10 }],
+
     ['SMQuestionBlock', { x: 11, y: 7 }],
     ['SMQuestionBlock', { x: 12, y: 7 }],
     ['SMQuestionBlock', { x: 14, y: 4 }],
     ['SMQuestionBlock', { x: 15, y: 4 }],
-
     ['SMQuestionBlock', { x: 26, y: 5 }],
     ['SMQuestionBlock', { x: 41, y: 9 }],
     ['SMQuestionBlock', { x: 44, y: 7 }],
     ['SMQuestionBlock', { x: 92, y: 8 }],
-
 
     ['SMGoomba', { x: 10, y: 10 }],
     ['SMGoomba', { x: 14, y: 10 }],

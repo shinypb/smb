@@ -68,7 +68,8 @@ var kSMPlayerVerticalBounds   = [0, 28, 32, 4];
 var kSMAgentHitBounds = {
   player: [0, 28, 32, 4],
   goomba: [0, 28, 32, 4],
-  turtleGreen: [0, 28, 32, 4]
+  turtleGreen: [0, 28, 32, 4],
+  block: [0, 32, 32, 0]
 };
 var kSMAgentData = {
   goomba: {

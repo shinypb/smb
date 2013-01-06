@@ -11,6 +11,9 @@ defineClass(
     };
   },
 
+  //  Mixins
+  WithBoundingBox,
+
   //  Properties
   {
     animationFrameCount: 4,
@@ -23,11 +26,22 @@ defineClass(
   {
     draw: function() {
       var frameNumber = Math.ceil(this.engine.now / this.animationFrameDuration) % this.animationFrameCount;
-      document.title = frameNumber;
       var srcY = kSMEngineBlockSize * frameNumber;
       this.engine.canvas.drawImageSlice(this.image, 0, srcY, this.pxPos.x, this.pxPos.y);
     },
     tick: function() {
+      var playerBoundingBox = this.engine.player.boundingBox();
+      var ourBoundingBox = this.boundingBox();
+
+      var isUnderBlock = (playerBoundingBox.right >= ourBoundingBox.left)
+                      && (playerBoundingBox.left <= ourBoundingBox.right);
+
+      if (isUnderBlock && playerBoundingBox.top == ourBoundingBox.bottom) {
+        //  Bonk!
+        this.engine.removeAgent(this);
+        return;
+      }
+
       this.draw();
     }
   }
