@@ -98,6 +98,10 @@ var kSMGoombaStartingDirection = -1;
 var kSMGoombaWalkFrameDuration = 0.349;
 var kSMGoombaSquishFrameDuration = 1.16;
 
+//  Question block
+var kSMQuestionBlockBounceDuration = 110;
+var kSMQuestionBlockBounceAmount = kSMEngineBlockSize * 0.75;
+
 //  Keycodes
 var kSMKeyAction = 90;
 var kSMKeyJump = 88;
