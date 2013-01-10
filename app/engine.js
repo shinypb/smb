@@ -1,5 +1,6 @@
 'use strict';
 defineClass('SMEngine', function(canvasElement) {
+  this.catchExceptions = true;
   this.tickNumber = 0;
   this.tickDurations = [];
   this.secondsSincePreviousFrame = 0;
@@ -129,44 +130,56 @@ defineClass('SMEngine', function(canvasElement) {
 
   },
 
+  tickUnsafe: function() {
+    var tickStartTime = tickStartTime = new Date;
+    this.secondsSincePreviousFrame = (tickStartTime - this.now) / 1000;
+    this.now = tickStartTime;
+
+    window.pixelsDrawn = [];
+
+    this.updateViewport();
+
+    this.map.renderFrame(this.canvas);
+
+    //  We need to work with a copy of the agents array, because during their .tick method,
+    //  some may choose to remove themselves. Mutating the array does weird things with
+    //  iteration; the copy ensures that's not a problem.
+    var copyOfAgents = Array.prototype.slice.apply(this.agents);
+
+    var activeAgents = 0;
+
+    copyOfAgents.forEach(function(agent) {
+      if (agent != this.player && agent.isLazy && agent.boundingBox && !agent.isOnScreen()) {
+        //  Don't tick when off screen
+        return;
+      }
+      activeAgents++;
+      agent.tick();
+      if (this.player !== agent) {
+        this.player.checkCollision(agent);
+      }
+    }.bind(this));
+    this.player.draw();
+    document.title = activeAgents + " / " + copyOfAgents.length;
+
+    this.updateDebugInfo((new Date) - tickStartTime);
+
+    this.nextFrame();
+  },
+
   tick: function() {
-    var tickStartTime;
+    if (!this.catchExceptions) {
+      this.tickUnsafe();
+      return;
+    }
 
     try {
-      //  Update time info
-      tickStartTime = new Date;
-      this.secondsSincePreviousFrame = (tickStartTime - this.now) / 1000;
-      this.now = tickStartTime;
-
-      window.pixelsDrawn = [];
-
-      this.updateViewport();
-
-      this.map.renderFrame(this.canvas);
-
-      //  We need to work with a copy of the agents array, because during their .tick method,
-      //  some may choose to remove themselves. Mutating the array does weird things with
-      //  iteration; the copy ensures that's not a problem.
-      var copyOfAgents = Array.prototype.slice.apply(this.agents);
-
-      copyOfAgents.forEach(function(agent) {
-        agent.tick();
-        if (this.player !== agent) {
-          this.player.checkCollision(agent);
-        }
-      }.bind(this));
-      this.player.draw();
-
-      this.updateDebugInfo((new Date) - tickStartTime);
-
+      this.tickUnsafe();
     } catch (e) {
       console.log('Uncaught exception; halting run loop :(');
       this.stopRunLoop();
-
       throw e;
     }
-
-    this.nextFrame();
   },
 
   updateViewport: function() {

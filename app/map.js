@@ -171,7 +171,7 @@ defineClass(
 
       var x, y, blockInfo, xPx, yPx;
       for(x = minX; x <= maxX; x++) {
-        for(y = minY; y < maxY; y++) {
+        for(y = minY; y <= maxY; y++) {
 
           xPx = SMMetrics.BlockToPx(x);
           yPx = SMMetrics.BlockToPx(y);
@@ -185,7 +185,7 @@ defineClass(
           if (blockInfo.color || blockInfo.isTransparent) {
             canvas.fillRect(blockInfo.color || this.backgroundColor, xPx, yPx, kSMEngineBlockSize, kSMEngineBlockSize);
           }
-          canvas.drawImageSlice(this.tileset, blockInfo.srcX, blockInfo.srcY, xPx, yPx);
+          blockInfo.srcX && canvas.drawImageSlice(this.tileset, blockInfo.srcX, blockInfo.srcY, xPx, yPx);
         }
       }
     }
