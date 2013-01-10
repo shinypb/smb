@@ -101,7 +101,7 @@ defineClass('SMEngine', function(canvasElement) {
     document.getElementById('engine-debug').innerHTML = text;
   },
 
-  updateDebugInfo: function(lastTickDuration) {
+  updateDebugInfo: function(lastTickDuration, activeAgents) {
     function average(anArray) {
       var sum = anArray.reduce(function(a, b) {
         return a + b;
@@ -123,10 +123,13 @@ defineClass('SMEngine', function(canvasElement) {
       this.tickDurations = this.tickDurations.slice(this.tickDurations.length - kSMEngineTickTimeHistoryLength);
     }
 
-    var pixelsPerFrame = 'Pixels per tick: ' + parseInt(average(window.pixelsPerFrame));
-    var frameCost = 'Tick duration: ' + parseInt(average(this.tickDurations) * 1000) + '&#181;s';
+    var debugInfo = [
+      'Pixels: ' + parseInt(average(window.pixelsPerFrame)),
+      'Speed: ' + parseInt(average(this.tickDurations) * 1000) + '&#181;s',
+      'Active agents: ' + (activeAgents + '/' + this.agents.length)
+    ];
 
-    this.setDebugText(pixelsPerFrame + '\t' + frameCost);
+    this.setDebugText(debugInfo.join('\t'));
 
   },
 
@@ -160,9 +163,10 @@ defineClass('SMEngine', function(canvasElement) {
       }
     }.bind(this));
     this.player.draw();
-    document.title = activeAgents + " / " + copyOfAgents.length;
 
-    this.updateDebugInfo((new Date) - tickStartTime);
+    var tickDuration = (new Date) - tickStartTime;
+
+    this.updateDebugInfo(tickDuration, activeAgents);
 
     this.nextFrame();
   },
