@@ -144,19 +144,27 @@ defineClass('SMEngine', function(canvasElement) {
 
     this.map.renderFrame(this.canvas);
 
-    //  We need to work with a copy of the agents array, because during their .tick method,
-    //  some may choose to remove themselves. Mutating the array does weird things with
-    //  iteration; the copy ensures that's not a problem.
-    var copyOfAgents = Array.prototype.slice.apply(this.agents);
+    //  Filter out inactive agents and build a solidity map for intersection calculations
+    this.agentSolidityMap = {};
+    var activeAgents = Array.prototype.slice.apply(this.agents).filter(function(agent) {
+      if (agent != this.player && agent.isLazy && agent.boundingBox && !agent.isOnScreen()) {
+        //  Don't tick when off screen
+        return false;
+      }
 
-    var activeAgents = 0;
+      if (agent.boundingBox) {
+        var agentBlockX = SMMetrics.PxToBlock(agent.pxPos.x);
+        this.agentSolidityMap[agentBlockX] = (this.agentSolidityMap[agentBlockX] || []).concat(agent);
+      }
 
-    copyOfAgents.forEach(function(agent) {
+      return true;
+    }.bind(this));
+
+    activeAgents.forEach(function(agent) {
       if (agent != this.player && agent.isLazy && agent.boundingBox && !agent.isOnScreen()) {
         //  Don't tick when off screen
         return;
       }
-      activeAgents++;
       agent.tick();
       if (this.player !== agent) {
         this.player.checkCollision(agent);
@@ -166,7 +174,7 @@ defineClass('SMEngine', function(canvasElement) {
 
     var tickDuration = (new Date) - tickStartTime;
 
-    this.updateDebugInfo(tickDuration, activeAgents);
+    this.updateDebugInfo(tickDuration, activeAgents.length);
 
     this.nextFrame();
   },
