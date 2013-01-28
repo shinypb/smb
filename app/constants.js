@@ -122,6 +122,8 @@ var kSMKeyDown = 40;
  * once I get closer to mario-like movement.
  */
 
+// Minimum height/width for a collision detection on an object.
+var kSMMinimumCollisionPixels = 32;
 // Horizontal physics
 var kSMPlayerDeceleration = 30;
 var kSMPlayerSkidDeceleration = 20;
