@@ -56,10 +56,11 @@ defineMixin('SMPlayerMovement', {
     this.hSpeed = this.reduceSpeedTo(this.hSpeed, maxSpeed, kSMPlayerDeceleration);
 
     if (this.hSpeed) {
-      var safePx = this.engine.requestSafeHorizontalPixel(this);
+      var safePx = this.requestSafeHorizontalPixel();
       this.pxPos.x += safePx.delta_x;
       if (safePx.collision) {
         this.hSpeed = 0;
+        this.pxPos.x = Math.round(this.pxPos.x);
       }
     }
   },
@@ -71,7 +72,7 @@ defineMixin('SMPlayerMovement', {
       return;
     }
 
-    var safePx = this.engine.requestSafeVerticalPixel(this);
+    var safePx = this.requestSafeVerticalPixel();
 
     this.standing = false;
 
