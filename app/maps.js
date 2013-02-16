@@ -99,7 +99,7 @@ SMLevel([
     ['SMQuestionBlock', { x: 44, y: 7 }],
     ['SMQuestionBlock', { x: 92, y: 8 }],
 
-    ['SMGoomba', { x: 14, y: 10 }],
+//     ['SMGoomba', { x: 14, y: 10 }],
 //     ['SMGoomba', { x: 14, y: 10 }],
 //     ['SMGoomba', { x: 19, y: 10 }],
 //     ['SMGoomba', { x: 22.5, y: 0 }],

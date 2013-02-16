@@ -20,11 +20,13 @@ defineClass(
 
   //  Mixins
   SMPlayerMovement,
+  SMPlayerAnimation,
   WithBoundingBox,
 
   //  Properties
   {
-    bounds: kSMAgentHitBounds.player
+    bounds: kSMAgentHitBounds.player,
+    pxBounds: {}
   },
 
   //  Methods
@@ -58,6 +60,12 @@ defineClass(
       }
       return speed;
     },
+    calculatePxBounds: function() {
+      this.pxBounds.top = this.pxPos.y + this.bounds.top;
+      this.pxBounds.right = this.pxPos.x + this.bounds.right;
+      this.pxBounds.bottom = this.pxPos.y + this.bounds.bottom;
+      this.pxBounds.left = this.pxPos.x + this.bounds.left;
+    },
     checkCollision: function(otherAgent) {
       if (!this.alive || !otherAgent.canHurtPlayer) {
         return;
@@ -85,8 +93,10 @@ defineClass(
       }
     },
     tick: function() {
+      this.calculatePxBounds();
       this.updateHState();
       this.updateVState();
+      this.chooseAnimationFrames();
     }
   }
 );

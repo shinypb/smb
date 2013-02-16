@@ -75,10 +75,10 @@ defineClass(
       this.vSpeed += kSMPlayerGravity;
 
       this.pxPos.y += (this.vSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame);
-      var top = this.pxPos.y + kSMAgentHitBounds.goomba[0],
-        right = this.pxPos.x + kSMAgentHitBounds.goomba[1],
-        bottom = this.pxPos.y + kSMAgentHitBounds.goomba[2],
-        left = this.pxPos.x + kSMAgentHitBounds.goomba[3];
+      var top = this.pxPos.y + kSMAgentHitBounds.goomba.top,
+        right = this.pxPos.x + kSMAgentHitBounds.goomba.right,
+        bottom = this.pxPos.y + kSMAgentHitBounds.goomba.bottom,
+        left = this.pxPos.x + kSMAgentHitBounds.goomba.left;
 
       if (this.engine.map.getBlockAtPx(left, top).isSolid) {
         // Check upper left vertical movement point (moving up)

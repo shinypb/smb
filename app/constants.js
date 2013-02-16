@@ -14,11 +14,6 @@ var kSMEngineViewportHeight = 12;
 kSMEngineViewportWidth = Math.min(Math.floor(window.innerWidth / kSMEngineBlockSize), kSMEngineViewportWidth);
 kSMEngineViewportHeight = Math.min(Math.floor(window.innerHeight / kSMEngineBlockSize), kSMEngineViewportHeight);
 
-var kSMTop = 0;
-var kSMRight = 1;
-var kSMBottom = 2;
-var kSMLeft = 3;
-
 //  Player
 var kSMPlayerHeightPx = 32;
 var kSMPlayerWidthPx = 32;
@@ -63,13 +58,13 @@ var kSMEngineAudioBackgroundMusic1 = 'background-music-1';
  * I separated them. Bounding is measured in pixels inwards from the edge of
  * the sprite, starting at the top and moving clockwise.
  */
-var kSMPlayerHorizontalBounds = [4, 32, 28, 0];
-var kSMPlayerVerticalBounds   = [0, 28, 32, 4];
+var kSMPlayerHorizontalBounds = {top: 4, right: 32, bottom: 28, left: 0};
+var kSMPlayerVerticalBounds   = {top: 0, right: 28, bottom: 32, left: 4};
 var kSMAgentHitBounds = {
-  player: [0, 28, 32, 4],
-  goomba: [0, 28, 32, 4],
-  turtleGreen: [0, 28, 32, 4],
-  block: [0, 32, 32, 0]
+  player:      {top: 0, right: 28, bottom: 32, left: 4},
+  goomba:      {top: 0, right: 28, bottom: 32, left: 4},
+  turtleGreen: {top: 0, right: 28, bottom: 32, left: 4},
+  block:       {top: 0, right: 32, bottom: 32, left: 0}
 };
 var kSMAgentData = {
   goomba: {

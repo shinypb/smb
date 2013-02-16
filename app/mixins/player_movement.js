@@ -43,39 +43,22 @@ defineMixin('SMPlayerMovement', {
       }
     }
 
-    this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].walking[this.walkFrame];
-
     if (this.hSpeed > 0 && this.engine.keyMap[kSMKeyLeft]) {
       // Player is moving right, but wants to go left; skid.
-      this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction * -1]].skidding[0];
       this.hSpeed = this.reduceSpeedTo(this.hSpeed, 0, kSMPlayerSkidDeceleration);
 
     } else if (this.hSpeed < 0 && this.engine.keyMap[kSMKeyRight]) {
       // Player is moving left, but wants to go right; skid.
-      this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction * -1]].skidding[0];
       this.hSpeed = this.reduceSpeedTo(this.hSpeed, 0, kSMPlayerSkidDeceleration);
     }
 
     this.hSpeed += (this.direction * acceleration * this.engine.secondsSincePreviousFrame);
     this.hSpeed = this.reduceSpeedTo(this.hSpeed, maxSpeed, kSMPlayerDeceleration);
 
-    if (this.hSpeed !== 0) {
-      this.pxPos.x += this.hSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame;
-
-      var top = this.pxPos.y + this.bounds[kSMTop],
-        right = this.pxPos.x + this.bounds[kSMRight],
-        bottom = this.pxPos.y + this.bounds[kSMBottom],
-        left = this.pxPos.x + this.bounds[kSMLeft];
-
-      if ((eng.map.getBlockAtPx(left, top + 1).isSolid || eng.map.getBlockAtPx(left, bottom - 1).isSolid) && this.hSpeed < 0) {
-        // Check upper left horizontal movement point (moving left)
-        this.pxPos.x = eng.map.getBlockRightPx(left) - this.bounds[kSMLeft];
-        this.hSpeed = 0;
-      } else if ((eng.map.getBlockAtPx(right, top + 1).isSolid || eng.map.getBlockAtPx(right, bottom - 1).isSolid) && this.hSpeed > 0) {
-        // Check upper right horizontal movement point (moving right)
-        this.pxPos.x = eng.map.getBlockLeftPx(right) - this.bounds[kSMRight];
-        this.hSpeed = 0;
-      }
+    if (this.hSpeed) {
+      var temp = this.engine.requestSafeHorizontalPixel(this);
+      console.log(temp);
+      this.pxPos.x += temp.delta_x;
     }
   },
   updateVState: function() {
@@ -89,22 +72,22 @@ defineMixin('SMPlayerMovement', {
 
     var delta = (this.vSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame);
     this.pxPos.y += delta;
-    var top = this.pxPos.y + this.bounds[kSMTop],
-      right = this.pxPos.x + this.bounds[kSMRight],
-      bottom = this.pxPos.y + this.bounds[kSMBottom],
-      oldBottom = this.pxPos.y + this.bounds[kSMBottom] - delta - 1,
-      left = this.pxPos.x + this.bounds[kSMLeft];
+    var top = this.pxPos.y + this.bounds.top,
+      right = this.pxPos.x + this.bounds.right,
+      bottom = this.pxPos.y + this.bounds.bottom,
+      oldBottom = this.pxPos.y + this.bounds.bottom - delta - 1,
+      left = this.pxPos.x + this.bounds.left;
 
     if ((this.engine.map.getBlockAtPx(left + 1, top).isSolid || this.engine.map.getBlockAtPx(right - 1, top).isSolid) && this.vSpeed < 0) {
       // Check upper left vertical movement point (moving up)
-      this.pxPos.y = eng.map.getBlockBottomPx(top) + this.bounds[kSMTop];
+      this.pxPos.y = this.engine.map.getBlockBottomPx(top) + this.bounds.top;
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
     } else if (this.vSpeed >= 0 && (this.engine.map.getBlockAtPx(left + 1, bottom).isSolid || this.engine.map.getBlockAtPx(right - 1, bottom).isSolid ||
         (!this.engine.map.getBlockAtPx(left + 1, oldBottom).canStandOn && this.engine.map.getBlockAtPx(left + 1, bottom).canStandOn) ||
         (!this.engine.map.getBlockAtPx(right - 1, oldBottom).canStandOn && this.engine.map.getBlockAtPx(right - 1, bottom).canStandOn))) {
       // Check lower left vertical movement point (moving down)
-      this.pxPos.y = eng.map.getBlockTopPx(bottom) - this.bounds[kSMBottom];
+      this.pxPos.y = this.engine.map.getBlockTopPx(bottom) - this.bounds.bottom;
       this.vSpeed = 0;
       this.standing = true;
     }
@@ -122,10 +105,6 @@ defineMixin('SMPlayerMovement', {
 
     if (!this.engine.keyMap[kSMKeyJump]) {
       this.jumpStarted = null;
-    }
-
-    if (!this.standing) {
-      this.playerImageName = kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].jumping[0];
     }
   }
 });

@@ -9,10 +9,10 @@ defineMixin('WithBoundingBox', {
 
   boundingBox: function() {
     return {
-        left: this.pxPos.x + this.bounds[kSMLeft],
-       right: this.pxPos.x + this.bounds[kSMRight],
-         top: this.pxPos.y + this.bounds[kSMTop],
-      bottom: this.pxPos.y + this.bounds[kSMBottom]
+        left: this.pxPos.x + this.bounds.left,
+       right: this.pxPos.x + this.bounds.right,
+         top: this.pxPos.y + this.bounds.top,
+      bottom: this.pxPos.y + this.bounds.bottom
     }
   },
 
