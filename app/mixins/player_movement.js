@@ -56,38 +56,31 @@ defineMixin('SMPlayerMovement', {
     this.hSpeed = this.reduceSpeedTo(this.hSpeed, maxSpeed, kSMPlayerDeceleration);
 
     if (this.hSpeed) {
-      var temp = this.engine.requestSafeHorizontalPixel(this);
-      console.log(temp);
-      this.pxPos.x += temp.delta_x;
+      var safePx = this.engine.requestSafeHorizontalPixel(this);
+      this.pxPos.x += safePx.delta_x;
+      if (safePx.collision) {
+        this.hSpeed = 0;
+      }
     }
   },
   updateVState: function() {
     this.vSpeed += kSMPlayerGravity;
+
     if (!this.alive) {
       this.pxPos.y = Math.min(this.pxPos.y + (this.vSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame), 388);
       return;
     }
 
+    var safePx = this.engine.requestSafeVerticalPixel(this);
+
     this.standing = false;
 
-    var delta = (this.vSpeed * kSMEngineBlockSize * this.engine.secondsSincePreviousFrame);
-    this.pxPos.y += delta;
-    var top = this.pxPos.y + this.bounds.top,
-      right = this.pxPos.x + this.bounds.right,
-      bottom = this.pxPos.y + this.bounds.bottom,
-      oldBottom = this.pxPos.y + this.bounds.bottom - delta - 1,
-      left = this.pxPos.x + this.bounds.left;
-
-    if ((this.engine.map.getBlockAtPx(left + 1, top).isSolid || this.engine.map.getBlockAtPx(right - 1, top).isSolid) && this.vSpeed < 0) {
-      // Check upper left vertical movement point (moving up)
-      this.pxPos.y = this.engine.map.getBlockBottomPx(top) + this.bounds.top;
+    if (this.vSpeed < 0 && safePx.collision) {
+      // moving up with a collision
       this.vSpeed = 0;
       this.jumpStarted -= kSMPlayerJumpBoostTime;
-    } else if (this.vSpeed >= 0 && (this.engine.map.getBlockAtPx(left + 1, bottom).isSolid || this.engine.map.getBlockAtPx(right - 1, bottom).isSolid ||
-        (!this.engine.map.getBlockAtPx(left + 1, oldBottom).canStandOn && this.engine.map.getBlockAtPx(left + 1, bottom).canStandOn) ||
-        (!this.engine.map.getBlockAtPx(right - 1, oldBottom).canStandOn && this.engine.map.getBlockAtPx(right - 1, bottom).canStandOn))) {
-      // Check lower left vertical movement point (moving down)
-      this.pxPos.y = this.engine.map.getBlockTopPx(bottom) - this.bounds.bottom;
+    } else if (this.vSpeed >= 0 && safePx.collision) {
+      // moving down with a collision
       this.vSpeed = 0;
       this.standing = true;
     }
@@ -105,6 +98,11 @@ defineMixin('SMPlayerMovement', {
 
     if (!this.engine.keyMap[kSMKeyJump]) {
       this.jumpStarted = null;
+    }
+
+    this.pxPos.y += safePx.delta_y;
+    if (safePx.collision) {
+      this.pxPos.y = Math.round(this.pxPos.y);
     }
   }
 });

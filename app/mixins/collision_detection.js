@@ -30,7 +30,7 @@ defineMixin('SMCollisionDetection', {
     var delta_x = agent.hSpeed * kSMEngineBlockSize * this.secondsSincePreviousFrame;
 
     if (delta_x === 0) {
-      return { collision: false, delta_x: delta_x };
+      return { collision: false, delta_x: 0 };
     }
 
     var actual_delta_x = 0;
@@ -75,22 +75,31 @@ defineMixin('SMCollisionDetection', {
     var delta_y = agent.vSpeed * kSMEngineBlockSize * this.secondsSincePreviousFrame;
 
     if (delta_y === 0) {
-      return { collision: false, delta_y: delta_y };
+      return { collision: false, delta_y: 0 };
     }
 
     var actual_delta_y = 0;
     var sign = this.getSign(delta_y);
-    var collision = false;
+    var collision = '';
+    var p = {
+      y: delta_y > 0 ? agent.pxBounds.bottom : agent.pxBounds.top,
+      left: agent.pxBounds.left + 1, // hack -- remove +/- 1
+      right: agent.pxBounds.right - 1
+    };
     delta_y = Math.abs(delta_y);
 
     while (delta_y > 0) {
-      if (this.isPixelSolid(agent.pxPos.x, agent.pxPos.y + (actual_delta_y + kSMMinimumCollisionPixels) * sign)) {
-        collision = true;
+      if (this.isPixelSolid(p.left, p.y + (actual_delta_y + Math.min(delta_y, kSMMinimumCollisionPixels)) * sign)) {
+        collision = 'left';
+      } else if (this.isPixelSolid(p.right, p.y + (actual_delta_y + Math.min(delta_y, kSMMinimumCollisionPixels)) * sign)) {
+        collision = 'right';
+      }
 
+      if (collision) {
         var middle = kSMMinimumCollisionPixels >> 1;
 
         while (middle > 0) {
-          if (!this.isPixelSolid(agent.pxPos.x, agent.pxPos.y + (actual_delta_y + middle) * sign)) {
+          if (!this.isPixelSolid(p[collision], p.y + (actual_delta_y + middle) * sign)) {
             actual_delta_y += middle;
           }
 
@@ -99,11 +108,11 @@ defineMixin('SMCollisionDetection', {
 
         delta_y = 0;
       } else {
-        actual_delta_y += kSMMinimumCollisionPixels;
-        delta_y -= kSMMinimumCollisionPixels;
+        actual_delta_y += delta_y > kSMMinimumCollisionPixels ? kSMMinimumCollisionPixels : delta_y;
+        delta_y -= delta_y > kSMMinimumCollisionPixels ? kSMMinimumCollisionPixels : delta_y;
       }
     }
 
-    return { collision: collision, delta_y: (actual_delta_y * sign) };
+    return { collision: !!collision, delta_y: (actual_delta_y * sign) };
   }
 });
