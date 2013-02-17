@@ -60,7 +60,7 @@ defineMixin('SMPlayerMovement', {
       this.pxPos.x += safePx.delta_x;
       if (safePx.collision) {
         this.hSpeed = 0;
-        this.pxPos.x = Math.round(this.pxPos.x);
+        this.pxPos.x = Math.floor(this.pxPos.x);
       }
     }
   },
@@ -74,7 +74,7 @@ defineMixin('SMPlayerMovement', {
 
     var safePx = this.requestSafeVerticalPixel();
 
-    this.standing = false;
+    this.standing = this.engine.isPixelStandable(this.pxBounds.left, this.pxBounds.bottom + 1) || this.engine.isPixelStandable(this.pxBounds.right, this.pxBounds.bottom + 1);
 
     if (this.vSpeed < 0 && safePx.collision) {
       // moving up with a collision
@@ -83,13 +83,11 @@ defineMixin('SMPlayerMovement', {
     } else if (this.vSpeed >= 0 && safePx.collision) {
       // moving down with a collision
       this.vSpeed = 0;
-      this.standing = true;
     }
 
     if (this.engine.keyMap[kSMKeyJump] && this.standing && !this.jumpStarted) {
       this.jumpStarted = this.engine.now;
       SMAudio.playFromStart(kSMPlayerAudioJumpSmall);
-      this.standing = false;
     }
 
     if (this.engine.now - this.jumpStarted < kSMPlayerJumpBoostTime) {
@@ -103,7 +101,7 @@ defineMixin('SMPlayerMovement', {
 
     this.pxPos.y += safePx.delta_y;
     if (safePx.collision) {
-      this.pxPos.y = Math.round(this.pxPos.y);
+      this.pxPos.y = Math.floor(this.pxPos.y);
     }
   }
 });

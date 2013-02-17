@@ -63,26 +63,34 @@ defineClass(
 
       var actual_delta_y = 0;
       var sign = this.engine.getSign(delta_y);
-      var collision = '';
+      var collision = null;
       var p = {
         y: delta_y > 0 ? this.pxBounds.bottom : this.pxBounds.top,
         left: this.pxBounds.left + 1, // hack -- remove +/- 1
         right: this.pxBounds.right - 1
       };
+
       delta_y = Math.abs(delta_y);
 
       while (delta_y > 0) {
-        if (this.engine.isPixelSolid(p.left, p.y + (actual_delta_y + Math.min(delta_y, kSMMinimumCollisionPixels)) * sign)) {
+        p.y_next = p.y + (actual_delta_y + Math.min(delta_y, kSMMinimumCollisionPixels)) * sign;
+        if (this.engine.isPixelSolid(p.left, p.y_next)) {
           collision = 'left';
-        } else if (this.engine.isPixelSolid(p.right, p.y + (actual_delta_y + Math.min(delta_y, kSMMinimumCollisionPixels)) * sign)) {
+        } else if (this.engine.isPixelSolid(p.right, p.y_next)) {
           collision = 'right';
+        } else if (sign == 1) {
+          if (!this.engine.map.getBlockAtPx(p.left, p.y).canStandOn && this.engine.map.getBlockAtPx(p.left, p.y_next).canStandOn) {
+            collision = 'left';
+          } else if (!this.engine.map.getBlockAtPx(p.right, p.y).canStandOn && this.engine.map.getBlockAtPx(p.right, p.y_next).canStandOn) {
+            collision = 'right';
+          }
         }
 
         if (collision) {
           var middle = kSMMinimumCollisionPixels >> 1;
 
           while (middle > 0) {
-            if (!this.engine.isPixelSolid(p[collision], p.y + (actual_delta_y + middle) * sign)) {
+            if (!this.engine.isPixelStandable(p[collision], p.y + (actual_delta_y + middle) * sign)) {
               actual_delta_y += middle;
             }
 

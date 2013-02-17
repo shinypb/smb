@@ -25,5 +25,9 @@ defineMixin('SMCollisionDetection', {
   isPixelSolid: function(x, y) {
     // For now, just checking the map; in the future, we will check solidity map too.
     return this.map.getBlockAtPx(x, y).isSolid;
+  },
+  isPixelStandable: function(x, y) {
+    // For now, just checking the map; in the future, we will check solidity map too.
+    return this.map.getBlockAtPx(x, y).isSolid || this.map.getBlockAtPx(x, y).canStandOn;
   }
 });
