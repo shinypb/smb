@@ -61,7 +61,7 @@ var kSMEngineAudioBackgroundMusic1 = 'background-music-1';
 var kSMPlayerHorizontalBounds = {top: 4, right: 32, bottom: 28, left: 0};
 var kSMPlayerVerticalBounds   = {top: 0, right: 28, bottom: 32, left: 4};
 var kSMAgentHitBounds = {
-  player:      {top: 0, right: 28, bottom: 32, left: 4},
+  player:      {top: 0, right: 28, bottom: 31, left: 4},
   goomba:      {top: 0, right: 28, bottom: 32, left: 4},
   turtleGreen: {top: 0, right: 28, bottom: 32, left: 4},
   block:       {top: 0, right: 32, bottom: 32, left: 0}
