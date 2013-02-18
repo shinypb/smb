@@ -1,5 +1,15 @@
 'use strict';
 defineMixin('SMPlayerMovement', {
+  reduceSpeedTo: function(speed, maxSpeed, deceleration) {
+    if (speed > maxSpeed) {
+      speed = Math.max(maxSpeed, speed - (deceleration * this.engine.secondsSincePreviousFrame));
+    }
+
+    if (speed < -maxSpeed) {
+      speed = Math.min(-maxSpeed, speed + (deceleration * this.engine.secondsSincePreviousFrame));
+    }
+    return speed;
+  },
   updateHState: function() {
     /**
      *  Updates the player's horizontal state — that is, movement to the left or right from
@@ -11,6 +21,13 @@ defineMixin('SMPlayerMovement', {
 
     var acceleration = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunAcceleration : kSMPlayerWalkAcceleration;
     var maxSpeed = this.engine.keyMap[kSMKeyAction] ? kSMPlayerRunMaxBlocksPerSecond : kSMPlayerWalkMaxBlocksPerSecond;
+    this.sprinting = false;
+
+    // If sprinting, increase max speed.
+    if (this.ran && this.engine.now - this.ran > kSMPlayerSprintTime) {
+      maxSpeed = kSMPlayerSprintMaxBlocksPerSecond;
+      this.sprinting = true;
+    }
 
     if (this.engine.keyMap[kSMKeyLeft]) {
       // Player pushing left
@@ -53,6 +70,14 @@ defineMixin('SMPlayerMovement', {
     }
 
     this.hSpeed += (this.direction * acceleration * this.engine.secondsSincePreviousFrame);
+
+    // Sprint detection
+    if (!this.ran && Math.abs(this.hSpeed) >= kSMPlayerRunMaxBlocksPerSecond) {
+      this.ran = +new Date;
+    } else if (Math.abs(this.hSpeed) < kSMPlayerRunMaxBlocksPerSecond) {
+      this.ran = null;
+    }
+
     this.hSpeed = this.reduceSpeedTo(this.hSpeed, maxSpeed, kSMPlayerDeceleration);
 
     if (this.hSpeed) {
@@ -72,6 +97,22 @@ defineMixin('SMPlayerMovement', {
       return;
     }
 
+    var maxSpeed = kSMPlayerFallMaxBlocksPerSecond;
+
+    // Find out if the player is trying to jump.
+    if (this.engine.keyMap[kSMKeyJump] && this.standing) {
+      this.jumpStarted = this.engine.now;
+      if (!this.ran) {
+        this.jumpedBoostTime = kSMPlayerStandJumpBoostTime;
+      } else if (!this.sprinting) {
+        this.jumpedBoostTime = kSMPlayerRunJumpBoostTime;
+      } else {
+        this.jumpedBoostTime = kSMPlayerSprintJumpBoostTime;
+      }
+
+      SMAudio.playFromStart(kSMPlayerAudioJumpSmall);
+    }
+
     var safePx = this.requestSafeVerticalPixel();
 
     this.standing = this.vSpeed > 0 && (this.engine.isPixelStandable(this.pxBounds.left, this.pxBounds.bottom + 1) || this.engine.isPixelStandable(this.pxBounds.right, this.pxBounds.bottom + 1));
@@ -79,18 +120,13 @@ defineMixin('SMPlayerMovement', {
     if (this.vSpeed < 0 && safePx.collision) {
       // moving up with a collision
       this.vSpeed = 0;
-      this.jumpStarted -= kSMPlayerJumpBoostTime;
+      this.jumpStarted -= this.jumpedBoostTime;
     } else if (this.vSpeed >= 0 && safePx.collision) {
       // moving down with a collision
       this.vSpeed = 0;
     }
 
-    if (this.engine.keyMap[kSMKeyJump] && this.standing && !this.jumpStarted) {
-      this.jumpStarted = this.engine.now;
-      SMAudio.playFromStart(kSMPlayerAudioJumpSmall);
-    }
-
-    if (this.engine.now - this.jumpStarted < kSMPlayerJumpBoostTime) {
+    if (this.engine.now - this.jumpStarted < this.jumpedBoostTime) {
       //  Still jumping upwards
       this.vSpeed = kSMPlayerJumpBoost;
     }

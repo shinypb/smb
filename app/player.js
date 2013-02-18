@@ -7,10 +7,27 @@ defineClass(
 
     this.direction = kSMPlayerDirectionRight;
     this.state = kSMPlayerStartState;
+
     this.hSpeed = kSMPlayerHorizontalSpeed;
     this.vSpeed = kSMPlayerVerticalSpeed;
     this.walkFrame = kSMPlayerStartWalkFrame;
     this.alive = kSMPlayerStartAlive;
+
+    // Boolean state
+    this.ducking = false;
+    this.holdingShell = false;
+    this.skidding = false;
+    this.sprinting = false;
+    
+    // Time based state.
+    this.ran = null;
+    this.jumped = null;
+    this.jumpedBoostTime = null;
+    this.landed = null;
+    this.floated = null;
+    this.shellKicked = null;
+    this.invincibled = null;
+    this.tanookiStatued = null;
 
     this.pxPos = {
       x: SMMetrics.BlockToPx(startBlockX),
@@ -49,16 +66,6 @@ defineClass(
         //  because we can't bind it as a timeout function directly in Chrome.)
         window.location.reload()
       }, 5000);
-    },
-    reduceSpeedTo: function(speed, maxSpeed, deceleration) {
-      if (speed > maxSpeed) {
-        speed = Math.max(0, speed - (deceleration * this.engine.secondsSincePreviousFrame));
-      }
-
-      if (speed < -maxSpeed) {
-        speed = Math.min(0, speed + (deceleration * this.engine.secondsSincePreviousFrame));
-      }
-      return speed;
     },
     calculatePxBounds: function() {
       this.pxBounds.top = this.pxPos.y + this.bounds.top;

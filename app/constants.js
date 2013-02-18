@@ -134,12 +134,18 @@ var kSMPlayerJumpBoostDeath = kSMPlayerJumpBoost * 1.5;
 var kSMPlayerJumpBoostAfterSquish = kSMPlayerJumpBoost * 1.75;
 
 // This time is in milliseconds.
-var kSMPlayerJumpBoostTime = 260;
+var kSMPlayerStandJumpBoostTime = 10;
+var kSMPlayerRunJumpBoostTime = 600;
+var kSMPlayerSprintJumpBoostTime = 1200;
 var kSMPlayerSquishBoostTime = 120;
+var kSMPlayerSprintTime = 4000;
 
 //  Times
 var kSMPlayerMinimumWalkFrameDuration = 0.25;
 
 //  Speeds, measured in blocks per second
+var kSMPlayerMinimumJumpBoostBlocksPerSecond = 2.0;
 var kSMPlayerWalkMaxBlocksPerSecond = 5.3;
 var kSMPlayerRunMaxBlocksPerSecond = 12;
+var kSMPlayerSprintMaxBlocksPerSecond = 15;
+var kSMPlayerFallMaxBlocksPerSecond = 12;
