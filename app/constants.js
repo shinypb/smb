@@ -45,6 +45,53 @@ var kSMPlayerImages = {
     center: {
       dead: ['player-dead']
     }
+  },
+  tanooki: {
+    left: {
+      duck: [[4, 0]],
+      float: [[6, 0], [2, 1], [5, 0], [2, 1]],
+      fly: [[0, 1], [8, 0], [7, 0], [8, 0]],
+      jump: [[1, 1], [2, 1]],
+      kick: [[3, 1]],
+      run: [[4, 1], [5, 1]],
+      shellJump: [[6, 1]],
+      shellStand: [[7, 1]],
+      shellWalk: [[8, 1], [7, 1]],
+      skid: [[0, 2]],
+      slide: [[1, 2]],
+      spin: [[5, 1], [3, 0], [5, 4], [0, 0], [5, 1]],
+      sprint: [[2, 2], [2, 3], [2, 4], [2, 3]],
+      sprintJump: [[7, 0], [8, 0]],
+      stand: [[5, 2]],
+      starJump: [[6, 2], [7, 2], [8, 2], [0, 3]],
+      statue: [[1, 3]],
+      swim: [[3, 3], [2, 3], [8, 0], [2, 3]]
+    },
+    right: {
+      duck: [[4, 3]],
+      float: [[6, 3], [2, 4], [5, 3], [2, 4]],
+      fly: [[0, 4], [8, 3], [7, 3], [8, 3]],
+      jump: [[1, 4], [2, 4]],
+      kick: [[3, 4]],
+      run: [[4, 4], [5, 4]],
+      shellJump: [[6, 4]],
+      shellStand: [[7, 4]],
+      shellWalk: [[8, 4], [7, 4]],
+      skid: [[0, 5]],
+      slide: [[1, 5]],
+      spin: [[5, 4], [3, 0], [5, 1], [0, 0], [5, 4]],
+      sprint: [[2, 5], [3, 5], [4, 5], [3, 5]],
+      sprintJump: [[7, 3], [8, 3]],
+      stand: [[5, 5]],
+      starJump: [[6, 5], [7, 5], [8, 5], [0, 6]],
+      statue: [[1, 6]],
+      swim: [[3, 6], [2, 6], [8, 3], [2, 6]]
+    },
+    center: {
+      back: [[0, 0]],
+      climb: [[1, 0], [2, 0]],
+      front: [[3, 0]]
+    }
   }
 };
 var kSMPlayerAudioLostLife = 'lost-life';
