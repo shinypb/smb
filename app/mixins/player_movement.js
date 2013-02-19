@@ -115,7 +115,7 @@ defineMixin('SMPlayerMovement', {
 
     var safePx = this.requestSafeVerticalPixel();
 
-    this.standing = this.vSpeed > 0 && (this.engine.isPixelStandable(this.pxBounds.left, this.pxBounds.bottom + 1) || this.engine.isPixelStandable(this.pxBounds.right, this.pxBounds.bottom + 1));
+    this.standing = this.vSpeed >= 0 && safePx.collision;
 
     if (this.vSpeed < 0 && safePx.collision) {
       // moving up with a collision

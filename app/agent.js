@@ -21,15 +21,17 @@ defineClass(
       var collision = '';
       var p = {
         x: delta_x > 0 ? this.pxBounds.right : this.pxBounds.left,
+        x_next: null,
         top: this.pxBounds.top + 1, // hack -- remove +/- 1
         bottom: this.pxBounds.bottom - 1
       };
       delta_x = Math.abs(delta_x);
 
       while (delta_x > 0) {
-        if (this.engine.isPixelSolid(p.x + (actual_delta_x + Math.min(delta_x, kSMMinimumCollisionPixels)) * sign, p.top)) {
+        p.x_next = Math.ceil(p.x + (actual_delta_x + Math.min(delta_x, kSMMinimumCollisionPixels)) * sign);
+        if (this.engine.isPixelSolid(p.x_next, p.top)) {
           collision = 'top';
-        } else if (this.engine.isPixelSolid(p.x + (actual_delta_x + Math.min(delta_x, kSMMinimumCollisionPixels)) * sign, p.bottom)) {
+        } else if (this.engine.isPixelSolid(p.x_next, p.bottom)) {
           collision = 'bottom';
         }
 
@@ -66,6 +68,7 @@ defineClass(
       var collision = null;
       var p = {
         y: delta_y > 0 ? this.pxBounds.bottom : this.pxBounds.top,
+        y_next: null,
         left: this.pxBounds.left + 1, // hack -- remove +/- 1
         right: this.pxBounds.right - 1
       };
@@ -73,7 +76,7 @@ defineClass(
       delta_y = Math.abs(delta_y);
 
       while (delta_y > 0) {
-        p.y_next = p.y + (actual_delta_y + Math.min(delta_y, kSMMinimumCollisionPixels)) * sign;
+        p.y_next = Math.ceil(p.y + (actual_delta_y + Math.min(delta_y, kSMMinimumCollisionPixels)) * sign);
         if (this.engine.isPixelSolid(p.left, p.y_next)) {
           collision = 'left';
         } else if (this.engine.isPixelSolid(p.right, p.y_next)) {
