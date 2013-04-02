@@ -39,7 +39,9 @@ defineClass(
       if (this.hitTime) {
         var t = this.engine.now - this.hitTime;
         if (t < kSMQuestionBlockBounceDuration) {
-          yOffset = kSMQuestionBlockBounceAmount * (t / kSMQuestionBlockBounceDuration);
+          var frameDuration = kSMQuestionBlockBounceDuration / kSMQuestionBlockBounceDistances.length;
+          var frameNumber = Math.floor(t / frameDuration);
+          yOffset = kSMQuestionBlockBounceDistances[frameNumber];
         } else {
           this.hitTime = null;
         }
