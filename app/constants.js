@@ -102,6 +102,10 @@ var kSMGoombaSquishFrameDuration = 1.16;
 var kSMQuestionBlockBounceDuration = 261;
 var kSMQuestionBlockBounceDistances = [0, 0, 4, 7, 9, 10, 10, 9, 7, 4, 0, 0];
 
+//  Points marker
+var kSMPointsMarkerAnimationDuration = 750;
+var kSMPointsMarkerMaxOffset = 48;
+
 //  Keycodes
 var kSMKeyAction = 90;
 var kSMKeyJump = 88;

@@ -103,6 +103,9 @@ defineClass(
       SMAudio.playFromStart(kSMAgentAudioSquish);
       this.squishTime = +new Date;
       this.canHurtPlayer = false;
+
+      //  Points marker
+      this.engine.addAgent(new SMPointsMarker(this.engine, this.pxPos.x, this.pxPos.y - kSMAgentHitBounds.goomba[2]));
     },
     changeDirection: function() {
       this.direction *= -1;
