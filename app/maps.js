@@ -34,26 +34,6 @@ SMLevel.ValidProperties = [
   kSMLevelPropertyTilesetName
 ];
 
-/*
-      <img src="resources/big-block-white-bottom-left.png"    data-character="X">
-      <img src="resources/big-block-white-bottom-right.png"   data-character="Y">
-      <img src="resources/big-block-white-bottom.png"         data-character="Z">
-      <img src="resources/big-block-white-left.png"           data-character="1">
-      <img src="resources/big-block-white-middle.png"         data-character="2">
-      <img src="resources/big-block-white-right.png"          data-character="3">
-      <img src="resources/big-block-white-shadow-bottom.png"  data-character="4">
-      <img src="resources/big-block-white-shadow-middle.png"  data-character="5">
-      <img src="resources/big-block-white-shadow-top.png"     data-character="6">
-      <img src="resources/big-block-white-top-left.png"       data-character="7" data-can-stand-on="true">
-      <img src="resources/big-block-white-top-right.png"      data-character="8" data-can-stand-on="true">
-      <img src="resources/big-block-white-top.png"            data-character="9" data-can-stand-on="true">
-
-      <img src="resources/big-block-shadow-middle.png"        data-character="V">
-      <img src="resources/big-block-shadow-top.png"           data-character="W">
-*/
-
-
-
 SMLevel([
 /*
 '                                                                                                                                                                                                                                                                                                          01      01  020303030303030303030303030303030303030303',
@@ -100,9 +80,6 @@ SMLevel([
     ['SMQuestionBlock', { x: 92, y: 8 }],
 
     ['SMGoomba', { x: 14, y: 10 }],
-//     ['SMGoomba', { x: 14, y: 10 }],
-//     ['SMGoomba', { x: 19, y: 10 }],
-//     ['SMGoomba', { x: 22.5, y: 0 }],
     ['SMGoomba', { x: 33, y: 10 }],
     ['SMGoomba', { x: 52, y: 7 }],
     ['SMGoomba', { x: 55, y: 7 }],
