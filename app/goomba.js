@@ -104,8 +104,7 @@ defineClass(
       this.squishTime = +new Date;
       this.canHurtPlayer = false;
 
-      //  Points marker
-      this.engine.addAgent(new SMPointsMarker(this.engine, this.pxPos.x, this.pxPos.y - kSMAgentHitBounds.goomba[2]));
+      this.engine.player.didStompEnemy(this);
     },
     changeDirection: function() {
       this.direction *= -1;

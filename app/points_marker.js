@@ -2,13 +2,17 @@
 defineClass(
   'SMPointsMarker',
   'SMAgent',
-  function(engine, startPxX, startPxY) {
+  function(engine, consecutiveStomps, startPxX, startPxY) {
     SMAgent.prototype.constructor.apply(this, arguments);
+    console.log(consecutiveStomps);
 
     this.pxPos = {
       x: startPxX,
       y: startPxY
     };
+
+    this.spriteOffset = (Math.min(consecutiveStomps, kSMPointsAmounts.length) - 1) * this.bounds[1];
+    console.log(this.spriteOffset + 'px');
 
     this.startTime = engine.now;
   },
@@ -20,7 +24,7 @@ defineClass(
   {
     isLazy: false,
     startTime: null,
-    bounds: kSMAgentHitBounds.block,
+    bounds: kSMAgentHitBounds.pointsMarker,
     image: SMImages['sprite-misc'],
     isEmpty: false,
     yOffset: 0
@@ -29,8 +33,13 @@ defineClass(
   //  Methods
   {
     draw: function () {
-      var srcX = 0, srcY = 0;
-      this.engine.canvas.drawImageSlice(this.image, 0, srcY, this.pxPos.x, this.pxPos.y - this.yOffset);
+      this.engine.canvas.drawImageSlice(
+        this.image,
+        this.spriteOffset, 0,
+        this.pxPos.x, this.pxPos.y - this.yOffset,
+        false,
+        this.bounds[1], this.bounds[2]
+      );
     },
     tick: function() {
       var t = this.engine.now - this.startTime;

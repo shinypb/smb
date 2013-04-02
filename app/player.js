@@ -24,13 +24,18 @@ defineClass(
 
   //  Properties
   {
-    bounds: kSMAgentHitBounds.player
+    bounds: kSMAgentHitBounds.player,
+    consecutiveStomps: 0
   },
 
   //  Methods
   {
     draw: function() {
       this.engine.canvas.drawImage(SMImages[this.playerImageName], this.pxPos.x, this.pxPos.y, true);
+    },
+    didStompEnemy: function(enemy) {
+      this.consecutiveStomps++;
+      this.engine.addAgent(new SMPointsMarker(this.engine, this.consecutiveStomps, enemy.pxPos.x, enemy.pxPos.y - enemy.bounds[2]));
     },
     die: function() {
       this.alive = false;

@@ -69,7 +69,8 @@ var kSMAgentHitBounds = {
   player: [0, 28, 32, 4],
   goomba: [0, 28, 32, 4],
   turtleGreen: [0, 28, 32, 4],
-  block: [0, 32, 32, 0]
+  block: [0, 32, 32, 0],
+  pointsMarker: [0, 40, 40, 0]
 };
 var kSMAgentData = {
   goomba: {
@@ -105,6 +106,7 @@ var kSMQuestionBlockBounceDistances = [0, 0, 4, 7, 9, 10, 10, 9, 7, 4, 0, 0];
 //  Points marker
 var kSMPointsMarkerAnimationDuration = 750;
 var kSMPointsMarkerMaxOffset = 48;
+var kSMPointsAmounts = [100, 200, 400, 800, 1000, 2000, 5000, 8000, Infinity];
 
 //  Keycodes
 var kSMKeyAction = 90;

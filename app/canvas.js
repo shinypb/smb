@@ -70,7 +70,10 @@ defineClass(
       };
     },
 
-    drawImageSlice: function(image, srcX, srcY, absoluteX, absoluteY, fromPlayer) {
+    drawImageSlice: function(image, srcX, srcY, absoluteX, absoluteY, fromPlayer, width, height) {
+      width = width || kSMEngineBlockSize;
+      height = height || kSMEngineBlockSize;
+
       absoluteX = parseInt(absoluteX);
       absoluteY = parseInt(absoluteY);
 
@@ -90,7 +93,7 @@ defineClass(
         //  Position within source image
         srcX, srcY,
         //  Size in source image
-        kSMEngineBlockSize, kSMEngineBlockSize,
+        width, height,
         //  Position in destination image
         adjustedPos.x, adjustedPos.y,
         //  Size in destination image

@@ -107,6 +107,7 @@ defineMixin('SMPlayerMovement', {
       this.pxPos.y = eng.map.getBlockTopPx(bottom) - this.bounds[kSMBottom];
       this.vSpeed = 0;
       this.standing = true;
+      this.consecutiveStomps = 0;
     }
 
     if (this.engine.keyMap[kSMKeyJump] && this.standing && !this.jumpStarted) {
