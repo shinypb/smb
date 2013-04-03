@@ -79,6 +79,22 @@ SMLevel([
     ['SMQuestionBlock', { x: 44, y: 7 }],
     ['SMQuestionBlock', { x: 92, y: 8 }],
 
+    ['SMGoomba', { x: 17, y: 10 }],
+    ['SMGoomba', { x: 16, y: 10 }],
+    ['SMGoomba', { x: 15, y: 10 }],
+    ['SMGoomba', { x: 13, y: 10 }],
+    ['SMGoomba', { x: 12, y: 10 }],
+    ['SMGoomba', { x: 11, y: 10 }],
+    ['SMGoomba', { x: 10, y: 10 }],
+    ['SMGoomba', { x:  9, y: 10 }],
+    ['SMGoomba', { x:  8, y: 10 }],
+    ['SMGoomba', { x:  7, y: 10 }],
+    ['SMGoomba', { x:  6, y: 10 }],
+
+
+    ['SMPiranhaPlant', { x: 2, y: 8 }],
+
+
     ['SMGoomba', { x: 14, y: 10 }],
     ['SMGoomba', { x: 33, y: 10 }],
     ['SMGoomba', { x: 52, y: 7 }],

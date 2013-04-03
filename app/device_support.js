@@ -29,6 +29,7 @@
   });
 
   window.addEventListener('deviceorientation', function (event) {
+    return;
     if (!window.eng) {
       //  eng hasn't been set yet
       return;
