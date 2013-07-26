@@ -83,18 +83,24 @@ defineClass(
 
       //  TODO: clip right-hand edge of image to edge of viewable area in canvas (only needed when canvas is wider than viewport)
 
-      this.markAbsoluteRectDirty(absoluteX, absoluteY, kSMEngineBlockSize, kSMEngineBlockSize, !!fromPlayer);
+      var mySize = kSMEngineBlockSize;
+
+      if (image.src.match('player')) {
+        mySize = 64;
+      }
+
+      this.markAbsoluteRectDirty(absoluteX, absoluteY, mySize, mySize, !!fromPlayer);
 
       this.context.drawImage(
         image,
         //  Position within source image
         srcX, srcY,
         //  Size in source image
-        kSMEngineBlockSize, kSMEngineBlockSize,
+        mySize, mySize,
         //  Position in destination image
         adjustedPos.x, adjustedPos.y,
         //  Size in destination image
-        kSMEngineBlockSize, kSMEngineBlockSize
+        mySize, mySize
       );
     },
 

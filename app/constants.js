@@ -108,7 +108,7 @@ var kSMEngineAudioBackgroundMusic1 = 'background-music-1';
 var kSMPlayerHorizontalBounds = {top: 4, right: 32, bottom: 28, left: 0};
 var kSMPlayerVerticalBounds   = {top: 0, right: 28, bottom: 32, left: 4};
 var kSMAgentHitBounds = {
-  player:      {top: 0, right: 28, bottom: 31, left: 4},
+  player:      {top: 0, right: 48, bottom: 62, left: 16},
   goomba:      {top: 0, right: 28, bottom: 32, left: 4},
   turtleGreen: {top: 0, right: 28, bottom: 32, left: 4},
   block:       {top: 0, right: 32, bottom: 32, left: 0}
@@ -181,7 +181,7 @@ var kSMPlayerJumpBoostDeath = kSMPlayerJumpBoost * 1.5;
 var kSMPlayerJumpBoostAfterSquish = kSMPlayerJumpBoost * 1.75;
 
 // This time is in milliseconds.
-var kSMPlayerStandJumpBoostTime = 10;
+var kSMPlayerStandJumpBoostTime = 200;
 var kSMPlayerRunJumpBoostTime = 600;
 var kSMPlayerSprintJumpBoostTime = 1200;
 var kSMPlayerSquishBoostTime = 120;

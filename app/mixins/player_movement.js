@@ -41,7 +41,7 @@ defineMixin('SMPlayerMovement', {
       this.hSpeed = this.reduceSpeedTo(this.hSpeed, 0, kSMPlayerDeceleration);
     }
 
-    // Choose animation frames.
+    /*
     if (this.hSpeed === 0) {
       this.timeOfLastWalkFrame = this.engine.now;
       this.walkFrame = kSMPlayerStartWalkFrame;
@@ -56,9 +56,9 @@ defineMixin('SMPlayerMovement', {
 
       if (this.engine.now - this.timeOfLastWalkFrame > frameDuration) {
         this.timeOfLastWalkFrame = this.engine.now;
-        this.walkFrame = (this.walkFrame + 1) % kSMPlayerImages[this.state][kSMPlayerDirectionString[this.direction]].walking.length;
       }
     }
+    */
 
     if (this.hSpeed > 0 && this.engine.keyMap[kSMKeyLeft]) {
       // Player is moving right, but wants to go left; skid.
